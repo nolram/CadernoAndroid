@@ -6,8 +6,18 @@ package com.lab11.nolram.database.model;
 public class Folha {
     private long id;
     private String local_folha;
+    private String titulo;
     private String data_adicionado;
     private long fk_caderno;
+
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
     public long getFk_caderno() {
         return fk_caderno;

@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lab11.nolram.components.AdapterCardsCaderno;
+import com.lab11.nolram.components.RecyclerItemClickListener;
+import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.CadernoDataSource;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -49,7 +51,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_main, container, false);
+        final View v = inflater.inflate(R.layout.fragment_main, container, false);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.rec_view_main);
         btnCaderno = (FloatingActionButton) v.findViewById(R.id.fab);
         linearLayoutManager = new LinearLayoutManager(v.getContext());
@@ -60,6 +62,19 @@ public class MainActivityFragment extends Fragment {
 
         mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos());
         mRecyclerView.swapAdapter(mAdapter, true);
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(v.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent a = new Intent(v.getContext(), NotesActivity.class);
+                        Bundle b = new Bundle();
+                        b.putLong(Database.FOLHA_FK_CADERNO, cadernoDataSource.getAllCadernos().get(position).getId());
+                        a.putExtras(b);
+                        startActivity(a);
+                    }
+                })
+        );
 
         btnCaderno.attachToRecyclerView(mRecyclerView);
 

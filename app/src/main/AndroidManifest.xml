@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lab11.nolram.cadernocamera" >
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -31,6 +36,22 @@
         <activity
             android:name=".CriarCadernoActivity"
             android:label="@string/title_activity_criar_caderno" >
+        </activity>
+        <activity
+            android:name=".FolhaActivity"
+            android:label="@string/title_activity_folha"
+            android:parentActivityName=".NotesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lab11.nolram.cadernocamera.NotesActivity" />
+        </activity>
+        <activity
+            android:name=".CriarFolhaActivity"
+            android:label="@string/title_activity_criar_folha"
+            android:parentActivityName=".NotesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lab11.nolram.cadernocamera.NotesActivity" />
         </activity>
     </application>
 

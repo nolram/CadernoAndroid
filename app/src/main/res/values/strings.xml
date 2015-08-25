@@ -7,4 +7,6 @@
     <string name="txt_teste_card">Descrição do Card</string>
     <string name="txt_ultima_modificacao">Última Modificação</string>
     <string name="title_activity_criar_caderno">CriarCadernoActivity</string>
+    <string name="title_activity_folha">FolhaActivity</string>
+    <string name="title_activity_criar_folha">CriarFolhaActivity</string>
 </resources>
