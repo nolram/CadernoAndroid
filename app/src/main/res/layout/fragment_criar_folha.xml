@@ -36,7 +36,7 @@
             android:layout_height="200dp"
             android:background="@null"
             android:clickable="true"
-            android:src="@drawable/plus_icon"/>
+            android:src="@drawable/new_img"/>
 
         <TextView
             android:layout_width="wrap_content"

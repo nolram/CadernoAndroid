@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 
@@ -62,9 +63,14 @@ public class CriarFolhaActivityFragment extends Fragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES);
+        String imageFileName = "IMG_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                getString(R.string.app_name));
+
+        if(!storageDir.isDirectory()){
+            storageDir.mkdirs();
+        }
+
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -72,16 +78,20 @@ public class CriarFolhaActivityFragment extends Fragment {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            btnImagem.setImageBitmap(imageBitmap);
+            File imgFile = new  File(mCurrentPhotoPath);
+            Log.d("local", mCurrentPhotoPath);
+            if(imgFile.exists()){
+                Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(), 100, 200);
+                btnImagem.setImageBitmap(myBitmap);
+
+            }
         }
     }
 
@@ -134,8 +144,13 @@ public class CriarFolhaActivityFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String titulo = edtTitulo.getText().toString();
+                String tags = edtTags.getText().toString();
+                String[] res_tags = null;
+                if(!tags.isEmpty()){
+                    res_tags = tags.split(";");
+                }
                 if((!mCurrentPhotoPath.isEmpty()) || (!titulo.isEmpty())) {
-                    folhaDataSource.criarFolha(mCurrentPhotoPath, fk_caderno, titulo);
+                    folhaDataSource.criarFolha(mCurrentPhotoPath, fk_caderno, titulo, res_tags);
                     getActivity().finish();
                 }else {
                     Toast.makeText(v.getContext(), "O Titulo não pode estar em branco",

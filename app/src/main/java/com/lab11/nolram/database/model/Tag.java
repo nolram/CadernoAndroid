@@ -6,8 +6,7 @@ package com.lab11.nolram.database.model;
 public class Tag {
     private long id;
     private String tag;
-    private String tag_min;
-    private String data_adicionado;
+    private String tagMin;
 
     public long getId() {
         return id;
@@ -25,20 +24,12 @@ public class Tag {
         this.tag = tag;
     }
 
-    public String getTag_min() {
-        return tag_min;
+    public String getTagMin() {
+        return tagMin;
     }
 
-    public void setTag_min(String tag_min) {
-        this.tag_min = tag_min;
-    }
-
-    public String getData_adicionado() {
-        return data_adicionado;
-    }
-
-    public void setData_adicionado(String data_adicionado) {
-        this.data_adicionado = data_adicionado;
+    public void setTagMin(String tagMin) {
+        this.tagMin = tagMin;
     }
 
     @Override

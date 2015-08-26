@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.lab11.nolram.cadernocamera.R;
 import com.lab11.nolram.database.model.Folha;
+import com.lab11.nolram.database.model.Tag;
 
 import java.util.List;
 
@@ -34,8 +35,13 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Folha folha = mDataset.get(position);
-        holder.mNumPageView.setText(position+1);
-        //holder.mTagView.setText();
+        List<Tag> tags = folha.getTags();
+        String tags_st = "";
+        holder.mNumPageView.setText(Integer.toString(position+1));
+        for(int i=0; i < tags.size(); i++){
+            tags_st += tags.get(i) + "; ";
+        }
+        holder.mTagView.setText(tags_st);
         //holder.mThumbFolhaView
         holder.mTitleView.setText(folha.getTitulo());
 

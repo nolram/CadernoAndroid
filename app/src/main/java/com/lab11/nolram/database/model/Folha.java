@@ -1,5 +1,7 @@
 package com.lab11.nolram.database.model;
 
+import java.util.List;
+
 /**
  * Created by nolram on 24/08/15.
  */
@@ -9,7 +11,15 @@ public class Folha {
     private String titulo;
     private String data_adicionado;
     private long fk_caderno;
+    private List<Tag> tags;
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
 
     public String getTitulo() {
         return titulo;

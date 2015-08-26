@@ -32,7 +32,6 @@ public class Database extends SQLiteOpenHelper {
     public static final String TAG_ID = "_id";
     public static final String TAG_TAG = "tag";
     public static final String TAG_MIN_TAG = "min_tag";
-    public static final String TAG_DATA = "data_adicionado";
 
     public static final String TABLE_TAG_DA_FOLHA = "tag_da_folha";
     public static final String TAG_DA_FOLHA_ID_TAG = "id_tag";
@@ -48,7 +47,7 @@ public class Database extends SQLiteOpenHelper {
             "FOREIGN KEY ("+FOLHA_FK_CADERNO+") REFERENCES "+TABLE_CADERNO+"("+CADERNO_ID+"));";
 
     private static final String CREATE_TAG = "CREATE TABLE "+TABLE_TAG+"("+TAG_ID+" INTEGER PRIMARY KEY, "+
-            TAG_TAG+" TEXT, "+TAG_MIN_TAG+" TEXT, "+TAG_DATA+" DATE);";
+            TAG_TAG+" TEXT, "+TAG_MIN_TAG+" TEXT);";
 
     private static final String CREATE_TAG_DA_FOLHA = "CREATE TABLE "+TABLE_TAG_DA_FOLHA+
             "("+TAG_DA_FOLHA_ID_TAG+" INTEGER, "+TAG_DA_FOLHA_ID_FOLHA+" INTEGER, " +
