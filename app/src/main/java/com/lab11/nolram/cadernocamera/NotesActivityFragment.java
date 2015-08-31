@@ -35,9 +35,9 @@ public class NotesActivityFragment extends Fragment {
     public void onResume() {
         folhaDataSource.open();
 
-        mAdapter = new AdapterCardsFolha(folhaDataSource.getAllFolhas(fk_caderno));
+        /*mAdapter = new AdapterCardsFolha(folhaDataSource.getAllFolhas(fk_caderno));
         mRecyclerView.swapAdapter(mAdapter, true);
-        mAdapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();*/
 
         super.onResume();
     }

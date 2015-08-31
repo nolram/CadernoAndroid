@@ -34,8 +34,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String TAG_MIN_TAG = "min_tag";
 
     public static final String TABLE_TAG_DA_FOLHA = "tag_da_folha";
-    public static final String TAG_DA_FOLHA_ID_TAG = "id_tag";
-    public static final String TAG_DA_FOLHA_ID_FOLHA = "id_folha";
+    public static final String TAG_DA_FOLHA_ID = "_id";
+    public static final String TAG_DA_FOLHA_ID_TAG = "fk_tag";
+    public static final String TAG_DA_FOLHA_ID_FOLHA = "fk_folha";
 
     private static final String CREATE_CADERNO = "CREATE TABLE "+TABLE_CADERNO+"("+CADERNO_ID+" INTEGER PRIMARY KEY," +
             CADERNO_TITULO+" TEXT,"+CADERNO_BADGE+" TEXT NULL,"+CADERNO_DESCRICAO+" TEXT NULL,"+CADERNO_DATA+" DATE," +
@@ -50,10 +51,10 @@ public class Database extends SQLiteOpenHelper {
             TAG_TAG+" TEXT, "+TAG_MIN_TAG+" TEXT);";
 
     private static final String CREATE_TAG_DA_FOLHA = "CREATE TABLE "+TABLE_TAG_DA_FOLHA+
-            "("+TAG_DA_FOLHA_ID_TAG+" INTEGER, "+TAG_DA_FOLHA_ID_FOLHA+" INTEGER, " +
+            "("+TAG_DA_FOLHA_ID+" INTEGER PRIMARY KEY, "+TAG_DA_FOLHA_ID_TAG+" INTEGER, "+TAG_DA_FOLHA_ID_FOLHA+" INTEGER, " +
             "FOREIGN KEY ("+TAG_DA_FOLHA_ID_FOLHA+") REFERENCES "+TABLE_FOLHA+"("+FOLHA_ID+")," +
             "FOREIGN KEY ("+TAG_DA_FOLHA_ID_TAG+") REFERENCES "+TABLE_TAG+"("+TAG_ID+
-            "), PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
+            "));";//, PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
 
 
     public Database(Context context) {

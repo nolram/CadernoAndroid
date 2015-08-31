@@ -23,6 +23,7 @@ import com.lab11.nolram.database.controller.FolhaDataSource;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -66,6 +67,16 @@ public class CriarFolhaActivityFragment extends Fragment {
         String imageFileName = "IMG_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));
+
+        if(!mCurrentPhotoPath.isEmpty()){
+            File mExistente = new File(mCurrentPhotoPath);
+            if(mExistente.exists()){
+                boolean temp = mExistente.delete();
+                if(temp){
+                    Log.d("img_deletado", "Imagem deletada");
+                }
+            }
+        }
 
         if(!storageDir.isDirectory()){
             storageDir.mkdirs();
@@ -147,8 +158,9 @@ public class CriarFolhaActivityFragment extends Fragment {
                 String tags = edtTags.getText().toString();
                 String[] res_tags = null;
                 if(!tags.isEmpty()){
-                    res_tags = tags.split(";");
+                    res_tags = tags.split("[#.;,]");
                 }
+                //Toast.makeText(v.getContext(), Arrays.toString(res_tags), Toast.LENGTH_SHORT).show();
                 if((!mCurrentPhotoPath.isEmpty()) || (!titulo.isEmpty())) {
                     folhaDataSource.criarFolha(mCurrentPhotoPath, fk_caderno, titulo, res_tags);
                     getActivity().finish();
