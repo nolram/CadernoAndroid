@@ -2,11 +2,12 @@ package com.lab11.nolram.cadernocamera;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class CriarCadernoActivity extends ActionBarActivity {
+public class CriarCadernoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

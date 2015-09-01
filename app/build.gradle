@@ -26,4 +26,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     compile 'com.melnykov:floatingactionbutton:1.2.0'
     compile 'joda-time:joda-time:2.8.2'
+    compile('com.mikepenz:materialdrawer:3.1.2@aar') {
+        transitive = true
+    }
 }

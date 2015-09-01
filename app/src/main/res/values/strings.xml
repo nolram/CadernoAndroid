@@ -9,4 +9,8 @@
     <string name="title_activity_criar_caderno">CriarCadernoActivity</string>
     <string name="title_activity_folha">FolhaActivity</string>
     <string name="title_activity_criar_folha">CriarFolhaActivity</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_categorias">Categorias</string>
+    <string name="menu_favoritos">Favoritos</string>
+    <string name="menu_configuracoes">Configurações</string>
 </resources>
