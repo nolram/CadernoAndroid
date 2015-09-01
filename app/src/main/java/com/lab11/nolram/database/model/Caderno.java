@@ -10,6 +10,28 @@ public class Caderno {
     private String descricao;
     private String dataAdicionado;
     private String ultimaModificacao;
+    private String corPrincipal;
+    private String corSecundaria;
+
+    public String getCorSecundaria() {
+        return corSecundaria;
+    }
+
+    public void setCorSecundaria(String corSecundaria) {
+        this.corSecundaria = corSecundaria;
+    }
+
+    public void setUltimaModificacao(String ultimaModificacao) {
+        this.ultimaModificacao = ultimaModificacao;
+    }
+
+    public String getCorPrincipal() {
+        return corPrincipal;
+    }
+
+    public void setCorPrincipal(String corPrincipal) {
+        this.corPrincipal = corPrincipal;
+    }
 
     public long getId() {
         return id;

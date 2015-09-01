@@ -12,45 +12,167 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:elevation="4dp" />
 
-    <LinearLayout
-        android:layout_below="@id/toolbar"
-        android:orientation="vertical"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:id="@+id/linearLayout">
+        android:layout_below="@id/toolbar"
+        android:id="@+id/scrollView" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Titulo"
-            android:id="@+id/txt_titulo" />
-
-        <EditText
+        <LinearLayout
+            android:layout_below="@id/toolbar"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:id="@+id/edtxt_titulo" />
+            android:layout_height="fill_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin"
+            android:id="@+id/linearLayout">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Descrição (Opcional)"
-            android:id="@+id/txt_descricao" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Titulo"
+                android:id="@+id/txt_titulo" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:id="@+id/edtxt_descricao" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:id="@+id/edtxt_titulo" />
 
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Criar Caderno"
-            android:id="@+id/btn_criar_caderno" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Descrição (Opcional)"
+                android:id="@+id/txt_descricao" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="50dp"
+                android:id="@+id/edtxt_descricao" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Cor"
+                android:id="@+id/txt_cor" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/cinza_fundo">
+
+                <RadioGroup
+                    android:id="@+id/rd_cor"
+                    android:orientation="horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:padding="10dp"
+                    android:layout_centerHorizontal="true">
+
+                    <RadioButton
+                        android:id="@+id/rd_alizarin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_alizarin"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_amethyst"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_amethyst"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_carrot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_carrot"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_clouds"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_clouds"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_concrete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_concrete"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_emerald"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_emerald"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_peter_river"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_peter_river"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_sun_flower"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_sun_flower"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_turquoise"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_turquoise"/>
+
+                    <RadioButton
+                        android:id="@+id/rd_wet_asphalt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_wet_asphalt"/>
+
+                </RadioGroup>
+            </HorizontalScrollView>
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="Criar Caderno"
+                android:id="@+id/btn_criar_caderno" />
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

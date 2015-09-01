@@ -13,4 +13,5 @@
     <string name="menu_categorias">Categorias</string>
     <string name="menu_favoritos">Favoritos</string>
     <string name="menu_configuracoes">Configurações</string>
+    <string name="tags">Tags</string>
 </resources>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.lab11.nolram.database.Database;
@@ -65,6 +64,9 @@ public class FolhaDataSource {
         values.put(Database.FOLHA_DATA, now.toString());
         values.put(Database.FOLHA_TITULO, titulo);
         long dbInsertFolha = database.insert(Database.TABLE_FOLHA, null, values);
+        ContentValues cv = new ContentValues();
+        cv.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
+        database.update(Database.TABLE_CADERNO, cv, Database.CADERNO_ID+"="+fk_caderno, null);
         insertTags(tags, dbInsertFolha);
     }
 
@@ -127,7 +129,23 @@ public class FolhaDataSource {
         return folhas;
     }
 
-    public List<Tag> getAllTags(long fk_folha){
+    public List<Tag> getAllTagsGroupBy(){
+        List<Tag> tags = new ArrayList<>();
+        final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
+                "t."+Database.TAG_MIN_TAG+", t."+Database.TAG_ID+" FROM "+Database.TABLE_TAG+" t INNER JOIN "+
+                Database.TABLE_TAG_DA_FOLHA+" tt GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG;
+        Cursor cursor = database.rawQuery(QUERY, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Tag tag = cursorToTagGroupBy(cursor);
+            tags.add(tag);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return tags;
+    }
+
+    public List<Tag> getAllTagsByFolha(long fk_folha){
         List<Tag> tags = new ArrayList<>();
         final String QUERY = "SELECT t."+Database.TAG_ID+", t."+Database.TAG_TAG+
                 ", t."+Database.TAG_MIN_TAG+", tt."+Database.TAG_DA_FOLHA_ID+", tt."+Database.TAG_DA_FOLHA_ID_TAG+
@@ -149,7 +167,7 @@ public class FolhaDataSource {
     public void deleteFolha(Folha folha) {
         long id = folha.getId();
         System.out.println("Comment deleted with id: " + id);
-        database.delete(Database.TABLE_FOLHA, Database.FOLHA_ID+ " = " + id, null);
+        database.delete(Database.TABLE_FOLHA, Database.FOLHA_ID + " = " + id, null);
     }
 
     public void log(){
@@ -170,9 +188,19 @@ public class FolhaDataSource {
         folha.setFk_caderno(cursor.getLong(2));
         folha.setData_adicionado(cursor.getString(3));
         folha.setTitulo(cursor.getString(4));
-        folha.setTags(getAllTags(folha.getId()));
+        folha.setTags(getAllTagsByFolha(folha.getId()));
         return folha;
     }
+
+    private Tag cursorToTagGroupBy(Cursor cursor){
+        Tag tag = new Tag();
+        tag.setContador(cursor.getInt(0));
+        tag.setTag(cursor.getString(1));
+        tag.setTagMin(cursor.getString(2));
+        tag.setId(cursor.getLong(3));
+        return tag;
+    }
+
 
     private Tag cursorToTag(Cursor cursor){
         Tag tag = new Tag();

@@ -7,6 +7,15 @@ public class Tag {
     private long id;
     private String tag;
     private String tagMin;
+    private int contador;
+
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
 
     public long getId() {
         return id;

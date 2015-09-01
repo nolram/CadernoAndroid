@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.lab11.nolram.database.controller.CadernoDataSource;
@@ -20,6 +22,8 @@ public class CriarCadernoActivityFragment extends Fragment{
     private Button btnCriar;
     private EditText edtDescricao;
     private EditText edtTitulo;
+    private RadioGroup radioGroupCor;
+    private RadioButton radioCor;
 
     private CadernoDataSource cadernoDataSource;
 
@@ -38,10 +42,56 @@ public class CriarCadernoActivityFragment extends Fragment{
         super.onPause();
     }
 
+    public String[] escolher_cor(int id){
+        String[] escolhas = new String[2];
+        switch (id){
+            case R.id.rd_alizarin:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_alizarin));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_pomegranate));
+                break;
+            case R.id.rd_amethyst:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_amethyst));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_wisteria));
+                break;
+            case R.id.rd_carrot:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_carrot));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_pumpkin));
+                break;
+            case R.id.rd_clouds:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_clouds));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_silver));
+                break;
+            case R.id.rd_concrete:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_concrete));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_asbestos));
+                break;
+            case R.id.rd_emerald:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_emerald));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_nephritis));
+                break;
+            case R.id.rd_peter_river:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_peter_river));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_belize_hole));
+                break;
+            case R.id.rd_sun_flower:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_sun_flower));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_orange));
+                break;
+            default:
+                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_wet_asphalt));
+                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_midnight_blue));
+                break;
+
+        }
+        return escolhas;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_criar_caderno, container, false);
+        radioGroupCor = (RadioGroup) v.findViewById(R.id.rd_cor);
+
         btnCriar = (Button) v.findViewById(R.id.btn_criar_caderno);
         edtDescricao = (EditText) v.findViewById(R.id.edtxt_descricao);
         edtTitulo = (EditText) v.findViewById(R.id.edtxt_titulo);
@@ -54,9 +104,14 @@ public class CriarCadernoActivityFragment extends Fragment{
             public void onClick(View v) {
                 String titulo = edtTitulo.getText().toString();
                 String descricao = edtDescricao.getText().toString();
-                if (!titulo.isEmpty()) {
-                    cadernoDataSource.criarCaderno(titulo, descricao);
+                int selectedId = radioGroupCor.getCheckedRadioButtonId();
+                String[] cor = escolher_cor(selectedId);
+                if (!titulo.isEmpty() && selectedId != -1) {
+                    cadernoDataSource.criarCaderno(titulo, descricao, cor);
                     getActivity().finish();
+                } else if (selectedId == -1) {
+                    Toast.makeText(v.getContext(), "Escolha uma cor",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(v.getContext(), "O Titulo não pode estar em branco",
                             Toast.LENGTH_SHORT).show();

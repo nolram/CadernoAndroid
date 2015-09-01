@@ -16,10 +16,11 @@ public class Database extends SQLiteOpenHelper {
     public static final String CADERNO_ID = "_id";
     public static final String CADERNO_TITULO = "titulo";
     public static final String CADERNO_BADGE = "badge";
+    public static final String CADERNO_COR_PRINCIPAL = "cor";
+    public static final String CADERNO_COR_SECUNDARIA = "cor_secundaria";
     public static final String CADERNO_DESCRICAO = "descricao";
     public static final String CADERNO_DATA = "data_adicionado";
     public static final String CADERNO_ULTIMA_MODIFICACAO = "ultima_modificacao";
-
 
     public static final String TABLE_FOLHA = "folha";
     public static final String FOLHA_ID = "_id";
@@ -39,8 +40,9 @@ public class Database extends SQLiteOpenHelper {
     public static final String TAG_DA_FOLHA_ID_FOLHA = "fk_folha";
 
     private static final String CREATE_CADERNO = "CREATE TABLE "+TABLE_CADERNO+"("+CADERNO_ID+" INTEGER PRIMARY KEY," +
-            CADERNO_TITULO+" TEXT,"+CADERNO_BADGE+" TEXT NULL,"+CADERNO_DESCRICAO+" TEXT NULL,"+CADERNO_DATA+" DATE," +
-            ""+CADERNO_ULTIMA_MODIFICACAO+" DATE);";
+            CADERNO_TITULO+" TEXT,"+CADERNO_BADGE+" TEXT NULL,"+CADERNO_DESCRICAO+" TEXT NULL,"+
+            CADERNO_COR_PRINCIPAL +" TEXT NULL,"+CADERNO_COR_SECUNDARIA +" TEXT NULL,"+
+            CADERNO_DATA+" DATE," +CADERNO_ULTIMA_MODIFICACAO+" DATE);";
 
     private static final String CREATE_FOLHA = "CREATE TABLE "+TABLE_FOLHA+"("+FOLHA_ID+" INTEGER PRIMARY KEY, " +
             FOLHA_LOCAL_IMAGEM+" TEXT, "+FOLHA_DATA+" DATE, "+FOLHA_FK_CADERNO+" INTEGER, " +
