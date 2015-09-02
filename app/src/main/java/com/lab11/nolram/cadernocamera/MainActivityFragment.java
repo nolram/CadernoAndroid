@@ -1,6 +1,5 @@
 package com.lab11.nolram.cadernocamera;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -44,7 +42,7 @@ public class MainActivityFragment extends Fragment {
     private AdapterCardsCaderno mAdapter;
     private FloatingActionButton btnCaderno;
     private Toolbar toolbar;
-    private Drawer result;
+    private Drawer menu;
 
     private CadernoDataSource cadernoDataSource;
 
@@ -76,7 +74,7 @@ public class MainActivityFragment extends Fragment {
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         tags = cadernoDataSource.getAllTagsGroupBy();
-        result = new DrawerBuilder(getActivity())
+        menu = new DrawerBuilder(getActivity())
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)
                 .addDrawerItems(
@@ -98,7 +96,7 @@ public class MainActivityFragment extends Fragment {
                 .build();
         for(int i = 0; i < tags.size(); i++) {
             Tag tmp_tag = tags.get(i);
-            result.addItem(new SecondaryDrawerItem().withIcon(FontAwesome.Icon.faw_tag).withName(tmp_tag.getTag()).withBadge(
+            menu.addItem(new SecondaryDrawerItem().withIcon(FontAwesome.Icon.faw_tag).withName(tmp_tag.getTag()).withBadge(
                     String.valueOf(tmp_tag.getContador())));
         }
     }
@@ -106,25 +104,25 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.fragment_main, container, false);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.rec_view_main);
-        btnCaderno = (FloatingActionButton) v.findViewById(R.id.fab);
-        toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_main);
+        btnCaderno = (FloatingActionButton) view.findViewById(R.id.fab);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        linearLayoutManager = new LinearLayoutManager(v.getContext());
+        linearLayoutManager = new LinearLayoutManager(view.getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        cadernoDataSource = new CadernoDataSource(v.getContext());
+        cadernoDataSource = new CadernoDataSource(view.getContext());
         cadernoDataSource.open();
 
         mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos());
         mRecyclerView.swapAdapter(mAdapter, true);
 
         mRecyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(v.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent a = new Intent(v.getContext(), NotesActivity.class);
+                        Intent a = new Intent(view.getContext(), NotesActivity.class);
                         Bundle b = new Bundle();
                         Caderno caderno = cadernoDataSource.getAllCadernos().get(position);
                         b.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
@@ -146,6 +144,6 @@ public class MainActivityFragment extends Fragment {
                 startActivity(a);
             }
         });
-        return v;
+        return view;
     }
 }

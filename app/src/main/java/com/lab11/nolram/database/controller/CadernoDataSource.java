@@ -92,6 +92,23 @@ public class CadernoDataSource {
     }
 
 
+    public List<Caderno> searchCadernos(String query) {
+        List<Caderno> cadernos = new ArrayList<Caderno>();
+
+        Cursor cursor = database.query(Database.TABLE_CADERNO,
+                allColumns, Database.CADERNO_TITULO+" LIKE '%"+query+"%'", null, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Caderno caderno = cursorToCaderno(cursor);
+            cadernos.add(caderno);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return cadernos;
+    }
+
+
     public List<Tag> getAllTagsGroupBy(){
         List<Tag> tags = new ArrayList<>();
         final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
