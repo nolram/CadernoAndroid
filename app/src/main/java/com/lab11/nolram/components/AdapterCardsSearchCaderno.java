@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * Created by nolram on 24/08/15.
  */
-public class AdapterCardsCaderno extends RecyclerView.Adapter<AdapterCardsCaderno.ViewHolder> {
+public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<AdapterCardsSearchCaderno.ViewHolder> {
     private List<Caderno> mDataset;
     private View layoutView;
 
-    public AdapterCardsCaderno(List<Caderno> myDataset) {
+    public AdapterCardsSearchCaderno(List<Caderno> myDataset) {
         mDataset = myDataset;
     }
 

@@ -1,5 +1,12 @@
 package com.lab11.nolram.database.model;
 
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
 /**
  * Created by nolram on 24/08/15.
  */
@@ -78,7 +85,23 @@ public class Caderno {
     }
 
     public void setUltimaModificao(String ultimaModificacao){
-        this.ultimaModificacao = ultimaModificacao;
+        DateTime now = new DateTime();
+        DateTime dt = new DateTime(ultimaModificacao);
+        Period period = new Period(dt, now);
+        PeriodFormatter daysHoursMinutes = new PeriodFormatterBuilder()
+                .appendMinutes()
+                .appendSuffix(" minuto", " minutos")
+                .appendSeparator(" e ")
+                .appendSeconds()
+                .appendSuffix(" segundo", " segundos")
+                .toFormatter();
+        String tmp = daysHoursMinutes.print(period);
+        if(tmp.isEmpty()){
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss MM/dd/yyyy");
+            this.ultimaModificacao = dtf.print(dt);
+        }else {
+            this.ultimaModificacao = "Atualizado há: " + tmp;
+        }
     }
 
     @Override

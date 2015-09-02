@@ -1,5 +1,6 @@
 package com.lab11.nolram.cadernocamera;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -73,6 +74,7 @@ public class MainActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
         tags = cadernoDataSource.getAllTagsGroupBy();
         result = new DrawerBuilder(getActivity())
                 .withToolbar(toolbar)
@@ -128,6 +130,7 @@ public class MainActivityFragment extends Fragment {
                         b.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
                         b.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
                         b.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
+                        b.putString(Database.CADERNO_TITULO, caderno.getTitulo());
                         a.putExtras(b);
                         startActivity(a);
                     }

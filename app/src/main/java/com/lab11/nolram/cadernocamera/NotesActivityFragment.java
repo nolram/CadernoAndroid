@@ -1,6 +1,8 @@
 package com.lab11.nolram.cadernocamera;
 
+import android.app.SearchManager;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +12,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.lab11.nolram.components.AdapterCardsCaderno;
 import com.lab11.nolram.components.AdapterCardsFolha;
@@ -26,6 +31,7 @@ public class NotesActivityFragment extends Fragment {
     private long fk_caderno;
     private String cor_principal;
     private String cor_secundaria;
+    private String titulo;
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton btnAddFolha;
@@ -40,7 +46,17 @@ public class NotesActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        getActivity().setTitle(titulo);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setBackgroundColor(Integer.valueOf(cor_principal));
+
+        //toolbar.setTitle(titulo);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Integer.valueOf(cor_secundaria));
+        }
     }
 
     @Override
@@ -77,7 +93,8 @@ public class NotesActivityFragment extends Fragment {
         Bundle bundle = getActivity().getIntent().getExtras();
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
         cor_principal = bundle.getString(Database.CADERNO_COR_PRINCIPAL);
-        cor_principal = bundle.getString(Database.CADERNO_COR_SECUNDARIA);
+        cor_secundaria = bundle.getString(Database.CADERNO_COR_SECUNDARIA);
+        titulo = bundle.getString(Database.CADERNO_TITULO);
 
         folhaDataSource = new FolhaDataSource(view.getContext());
         folhaDataSource.open();

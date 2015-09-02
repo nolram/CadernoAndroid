@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
+        android:layout_above="@+id/btn_criar_caderno"
         android:id="@+id/scrollView" >
 
         <LinearLayout
@@ -167,12 +168,13 @@
                 </RadioGroup>
             </HorizontalScrollView>
 
-            <Button
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Criar Caderno"
-                android:id="@+id/btn_criar_caderno" />
-
         </LinearLayout>
     </ScrollView>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Criar Caderno"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/btn_criar_caderno" />
 </RelativeLayout>

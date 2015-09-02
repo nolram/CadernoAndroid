@@ -14,4 +14,7 @@
     <string name="menu_favoritos">Favoritos</string>
     <string name="menu_configuracoes">Configurações</string>
     <string name="tags">Tags</string>
+    <string name="action_search">Pesquisa</string>
+    <string name="action_search_hint_caderno">Procure o seu caderno</string>
+    <string name="title_activity_search">SearchActivity</string>
 </resources>
