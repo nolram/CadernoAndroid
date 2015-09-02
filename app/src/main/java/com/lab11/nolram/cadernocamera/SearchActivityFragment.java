@@ -64,7 +64,7 @@ public class SearchActivityFragment extends Fragment {
         Intent intent = getActivity().getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            Toast.makeText(getActivity().getApplicationContext(), query, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), query, Toast.LENGTH_SHORT).show();
         }
 
         mAdapter = new AdapterCardsSearchCaderno(cadernoDataSource.searchCadernos(query));

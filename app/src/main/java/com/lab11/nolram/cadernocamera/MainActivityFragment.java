@@ -85,7 +85,14 @@ public class MainActivityFragment extends Fragment {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-                        if (drawerItem instanceof Nameable) {
+                        if (position > 1) {
+                            Tag tag = tags.get(position);
+                            Intent intent = new Intent(view.getContext(), SearchTagActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString(Database.TAG_TAG, tag.getTag());
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else {
                             Toast.makeText(getActivity().getApplicationContext(),
                                     getString(((Nameable) drawerItem).getNameRes()), Toast.LENGTH_SHORT).show();
                         }
@@ -122,15 +129,15 @@ public class MainActivityFragment extends Fragment {
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        Intent a = new Intent(view.getContext(), NotesActivity.class);
-                        Bundle b = new Bundle();
+                        Intent intent = new Intent(view.getContext(), NotesActivity.class);
+                        Bundle bundle = new Bundle();
                         Caderno caderno = cadernoDataSource.getAllCadernos().get(position);
-                        b.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
-                        b.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
-                        b.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
-                        b.putString(Database.CADERNO_TITULO, caderno.getTitulo());
-                        a.putExtras(b);
-                        startActivity(a);
+                        bundle.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
+                        bundle.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
+                        bundle.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
+                        bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
+                        intent.putExtras(bundle);
+                        startActivity(intent);
                     }
                 })
         );

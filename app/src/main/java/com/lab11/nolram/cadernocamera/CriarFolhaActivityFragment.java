@@ -37,6 +37,8 @@ public class CriarFolhaActivityFragment extends Fragment {
 
     private long fk_caderno;
 
+    private String nomeCaderno;
+
     private EditText edtTitulo;
     private EditText edtTags;
     private ImageButton btnImagem;
@@ -64,10 +66,9 @@ public class CriarFolhaActivityFragment extends Fragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
+        String imageFileName = nomeCaderno.toUpperCase()+"_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));
-
         if(!mCurrentPhotoPath.isEmpty()){
             File mExistente = new File(mCurrentPhotoPath);
             if(mExistente.exists()){
@@ -143,6 +144,7 @@ public class CriarFolhaActivityFragment extends Fragment {
 
         Bundle bundle = getActivity().getIntent().getExtras();
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
+        nomeCaderno = bundle.getString(Database.CADERNO_TITULO);
 
         btnImagem.setOnClickListener(new View.OnClickListener() {
             @Override

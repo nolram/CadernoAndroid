@@ -1,6 +1,5 @@
 package com.lab11.nolram.cadernocamera;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -14,62 +13,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.lab11.nolram.components.AdapterCardsCaderno;
 import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
-import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
 import com.melnykov.fab.FloatingActionButton;
+
+import java.util.List;
 
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class NotesActivityFragment extends Fragment {
-
-    private long fk_caderno;
-    private String cor_principal;
-    private String cor_secundaria;
-    private String titulo;
+public class SearchTagActivityFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private FloatingActionButton btnAddFolha;
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsFolha mAdapter;
     private Toolbar toolbar;
 
+    private String query;
+
     private FolhaDataSource folhaDataSource;
+
+    private List<Folha> folhas;
 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        getActivity().setTitle(titulo);
+        getActivity().setTitle(query);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setBackgroundColor(Integer.valueOf(cor_principal));
-
         //toolbar.setTitle(titulo);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getActivity().getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Integer.valueOf(cor_secundaria));
-        }
     }
 
     @Override
     public void onResume() {
         folhaDataSource.open();
-
-        /*mAdapter = new AdapterCardsFolha(folhaDataSource.getAllFolhas(fk_caderno));
-        mRecyclerView.swapAdapter(mAdapter, true);
-        mAdapter.notifyDataSetChanged();*/
-
         super.onResume();
     }
 
@@ -79,30 +62,28 @@ public class NotesActivityFragment extends Fragment {
         super.onPause();
     }
 
-    public NotesActivityFragment() {
+    public SearchTagActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_notes, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_folhas);
-        btnAddFolha = (FloatingActionButton) view.findViewById(R.id.fab_imagem);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        linearLayoutManager = new LinearLayoutManager(view.getContext());
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        final View view = inflater.inflate(R.layout.fragment_search_tag, container, false);
 
         Bundle bundle = getActivity().getIntent().getExtras();
-        fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
-        cor_principal = bundle.getString(Database.CADERNO_COR_PRINCIPAL);
-        cor_secundaria = bundle.getString(Database.CADERNO_COR_SECUNDARIA);
-        titulo = bundle.getString(Database.CADERNO_TITULO);
+        query = bundle.getString(Database.TAG_TAG);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_folhas);
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        linearLayoutManager = new LinearLayoutManager(view.getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
 
         folhaDataSource = new FolhaDataSource(view.getContext());
         folhaDataSource.open();
 
-        mAdapter = new AdapterCardsFolha(folhaDataSource.getAllFolhas(fk_caderno));
+        folhas = folhaDataSource.getAllFolhasByTag(query);
+
+        mAdapter = new AdapterCardsFolha(folhas);
         mRecyclerView.swapAdapter(mAdapter, true);
 
         mRecyclerView.addOnItemTouchListener(
@@ -111,32 +92,21 @@ public class NotesActivityFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(view.getContext(), FolhaActivity.class);
                         Bundle bundle = new Bundle();
-                        Folha folha = folhaDataSource.getAllFolhas(fk_caderno).get(position);
+                        String[] cores;
+                        Folha folha = folhas.get(position);
                         bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
                         bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
                         bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
                         bundle.putString(Database.TAG_TAG, folha.getTags().toString());
-                        bundle.putString(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
-                        bundle.putString(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+                        cores = folhaDataSource.getColor(folha.getFk_caderno());
+                        bundle.putString(Database.CADERNO_COR_SECUNDARIA, cores[0]);
+                        bundle.putString(Database.CADERNO_COR_PRINCIPAL, cores[1]);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }
                 })
         );
 
-        btnAddFolha.attachToRecyclerView(mRecyclerView);
-
-        btnAddFolha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent a = new Intent(view.getContext(), CriarFolhaActivity.class);
-                Bundle b = new Bundle();
-                b.putLong(Database.FOLHA_FK_CADERNO, fk_caderno);
-                b.putString(Database.CADERNO_TITULO, titulo);
-                a.putExtras(b);
-                startActivity(a);
-            }
-        });
         return view;
     }
 }

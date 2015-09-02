@@ -5,10 +5,11 @@ import android.graphics.BitmapFactory;
 
 /**
  * Created by nolram on 26/08/15.
+ * http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
  */
 public class BitmapHelper {
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;

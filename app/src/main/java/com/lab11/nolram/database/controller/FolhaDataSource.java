@@ -22,11 +22,17 @@ import java.util.List;
 public class FolhaDataSource {
     private SQLiteDatabase database;
     private Database dbHelper;
-    private String[] allColumnsFolha = { Database.FOLHA_ID,
+
+    private final static String[] ALL_COLUMNS_FOLHA = { Database.FOLHA_ID,
             Database.FOLHA_LOCAL_IMAGEM, Database.FOLHA_FK_CADERNO, Database.FOLHA_DATA,
             Database.FOLHA_TITULO};
-    private String[] allColumnsTag = { Database.TAG_ID, Database.TAG_TAG, Database.TAG_MIN_TAG };
-    private String[] allTagsFolhas = {Database.TAG_DA_FOLHA_ID, Database.TAG_DA_FOLHA_ID_FOLHA, Database.TAG_DA_FOLHA_ID_TAG};
+    private final static String[] ALL_COLUMNS_TAG = { Database.TAG_ID, Database.TAG_TAG,
+            Database.TAG_MIN_TAG };
+    private final static String[] ALL_TAGS_FOLHAS = {Database.TAG_DA_FOLHA_ID,
+            Database.TAG_DA_FOLHA_ID_FOLHA, Database.TAG_DA_FOLHA_ID_TAG};
+
+    private final static String[] ALL_COLORS = {Database.CADERNO_COR_PRINCIPAL,
+            Database.CADERNO_COR_SECUNDARIA};
 
     public FolhaDataSource(Context context) {
         dbHelper = new Database(context);
@@ -48,7 +54,7 @@ public class FolhaDataSource {
         values.put(Database.FOLHA_DATA, now.toString());
         values.put(Database.FOLHA_TITULO, titulo);
         long dbInsert = database.insert(Database.TABLE_FOLHA, null, values);
-        Cursor cursor = database.query(Database.TABLE_FOLHA, allColumnsFolha, Database.FOLHA_ID + " = " + dbInsert,
+        Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA, Database.FOLHA_ID + " = " + dbInsert,
                 null, null, null, null);
         cursor.moveToFirst();
         Folha folha = cursorToFolha(cursor);
@@ -66,7 +72,7 @@ public class FolhaDataSource {
         long dbInsertFolha = database.insert(Database.TABLE_FOLHA, null, values);
         ContentValues cv = new ContentValues();
         cv.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
-        database.update(Database.TABLE_CADERNO, cv, Database.CADERNO_ID+"="+fk_caderno, null);
+        database.update(Database.TABLE_CADERNO, cv, Database.CADERNO_ID + "=" + fk_caderno, null);
         insertTags(tags, dbInsertFolha);
     }
 
@@ -106,7 +112,7 @@ public class FolhaDataSource {
     public Tag getTag(String min_tag){
         Tag tag = null;
         Cursor cursor = database.query(Database.TABLE_TAG,
-                allColumnsTag, Database.TAG_MIN_TAG + " = '" + min_tag+"'", null, null, null, null);
+                ALL_COLUMNS_TAG, Database.TAG_MIN_TAG + " = '" + min_tag+"'", null, null, null, null);
         if(cursor != null && cursor.moveToFirst()){
             tag = cursorToTag(cursor);
         }
@@ -117,7 +123,7 @@ public class FolhaDataSource {
     public List<Folha> getAllFolhas(long fk_caderno) {
         List<Folha> folhas = new ArrayList<Folha>();
         //log();
-        Cursor cursor = database.query(Database.TABLE_FOLHA, allColumnsFolha,
+        Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA,
                 Database.FOLHA_FK_CADERNO + " = " + fk_caderno, null, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -129,20 +135,51 @@ public class FolhaDataSource {
         return folhas;
     }
 
-    public List<Tag> getAllTagsGroupBy(){
-        List<Tag> tags = new ArrayList<>();
-        final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
-                "t."+Database.TAG_MIN_TAG+", t."+Database.TAG_ID+" FROM "+Database.TABLE_TAG+" t INNER JOIN "+
-                Database.TABLE_TAG_DA_FOLHA+" tt GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG;
-        Cursor cursor = database.rawQuery(QUERY, null);
+    public Folha getFolha(long fk_folha) {
+        Folha folha = null;
+        //log();
+        Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA,
+                Database.FOLHA_ID + " = " + fk_folha, null, null, null, null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
-            Tag tag = cursorToTagGroupBy(cursor);
-            tags.add(tag);
+        while (!cursor.isAfterLast()) {
+            folha = cursorToFolha(cursor);
             cursor.moveToNext();
         }
         cursor.close();
-        return tags;
+        return folha;
+    }
+
+    public String[] getColor(long fk_caderno){
+        String[] cores = new String[2];
+        Cursor cursor = database.query(Database.TABLE_CADERNO, ALL_COLORS,
+                Database.CADERNO_ID + " = " + fk_caderno, null, null, null, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            cores[0] = cursor.getString(0);
+            cores[1] = cursor.getString(1);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return cores;
+    }
+
+    public List<Folha> getAllFolhasByTag(String query){
+        List<Folha> folhas = new ArrayList<>();
+        final String QUERY = "SELECT f."+Database.FOLHA_ID+", f."+Database.FOLHA_LOCAL_IMAGEM+
+                ", f."+Database.FOLHA_FK_CADERNO+", f."+Database.FOLHA_DATA+", f."+Database.FOLHA_TITULO+
+                " FROM "+Database.TABLE_FOLHA+" f INNER JOIN "+Database.TABLE_TAG_DA_FOLHA+" tt INNER JOIN "+
+                Database.TABLE_TAG+" t ON t."+Database.TAG_TAG+" LIKE ?"+" WHERE t."+
+                Database.TAG_ID+"=tt."+Database.TAG_DA_FOLHA_ID_TAG+" AND f."+Database.FOLHA_ID+
+                "=tt."+Database.TAG_DA_FOLHA_ID_FOLHA;
+        Cursor cursor = database.rawQuery(QUERY, new String[]{query});
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Folha folha = cursorToFolha(cursor);
+            folhas.add(folha);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return folhas;
     }
 
     public List<Tag> getAllTagsByFolha(long fk_folha){
@@ -171,7 +208,7 @@ public class FolhaDataSource {
     }
 
     public void log(){
-        Cursor cursor = database.query(Database.TABLE_TAG_DA_FOLHA, allTagsFolhas, null, null, null, null, null);
+        Cursor cursor = database.query(Database.TABLE_TAG_DA_FOLHA, ALL_TAGS_FOLHAS, null, null, null, null, null);
         while (cursor.moveToNext()){
             Log.d(Database.TABLE_TAG_DA_FOLHA, Database.TABLE_TAG_DA_FOLHA);
             Log.d(Database.TAG_DA_FOLHA_ID, String.valueOf(cursor.getLong(0)));
