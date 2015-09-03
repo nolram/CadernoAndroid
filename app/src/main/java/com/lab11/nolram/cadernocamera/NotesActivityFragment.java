@@ -3,10 +3,16 @@ package com.lab11.nolram.cadernocamera;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.pdf.PdfDocument;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CancellationSignal;
@@ -23,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -34,6 +41,7 @@ import android.widget.Toast;
 
 import com.lab11.nolram.components.AdapterCardsCaderno;
 import com.lab11.nolram.components.AdapterCardsFolha;
+import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
@@ -41,6 +49,11 @@ import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
 import com.melnykov.fab.FloatingActionButton;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -77,7 +90,12 @@ public class NotesActivityFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_generate_pdf) {
-            printDocument();
+            if(folhas.size() > 0 ) {
+                printDocument();
+            }else {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Esse caderno não possui folhas!", Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 
@@ -191,7 +209,8 @@ public class NotesActivityFragment extends Fragment {
         private int pageHeight;
         private int pageWidth;
         public PdfDocument myPdfDocument;
-        public int totalpages = 4;
+        public int totalpages = folhas.size()+2;
+        private static final String DOTS = " .............................................. ";
 
         public MyPrintDocumentAdapter(Context context)
         {
@@ -206,10 +225,8 @@ public class NotesActivityFragment extends Fragment {
                              Bundle metadata) {
             myPdfDocument = new PrintedPdfDocument(context, newAttributes);
 
-            pageHeight =
-                    newAttributes.getMediaSize().getHeightMils()/1000 * 72;
-            pageWidth =
-                    newAttributes.getMediaSize().getWidthMils()/1000 * 72;
+            pageHeight = newAttributes.getMediaSize().getHeightMils()/1000 * 72;
+            pageWidth = newAttributes.getMediaSize().getWidthMils()/1000 * 72;
 
             if (cancellationSignal.isCanceled() ) {
                 callback.onLayoutCancelled();
@@ -241,41 +258,117 @@ public class NotesActivityFragment extends Fragment {
         }
 
 
-        private void drawPage(PdfDocument.Page page,
-                              int pagenumber) {
+        private void drawHomePage(PdfDocument.Page page, int pagenumber){
             Canvas canvas = page.getCanvas();
 
-            pagenumber++; // Make sure page numbers start at 1
+            pagenumber++;
 
-            int titleBaseLine = 72;
-            int leftMargin = 54;
+            PdfDocument.PageInfo pageInfo = page.getInfo();
+
+            int y = pageInfo.getPageHeight()/2;
+            int x = pageInfo.getPageWidth()/2;
 
             Paint paint = new Paint();
             paint.setColor(Color.BLACK);
             paint.setTextSize(40);
-            canvas.drawText(
-                    "Test Print Document Page " + pagenumber,
-                    leftMargin,
-                    titleBaseLine,
-                    paint);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(titulo, x, y, paint);
 
-            paint.setTextSize(14);
-            canvas.drawText("This is some test content to verify that custom document printing works", leftMargin, titleBaseLine + 35, paint);
+            DateTime now = new DateTime();
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+            //canvas.drawText();
 
-            if (pagenumber % 2 == 0)
-                paint.setColor(Color.RED);
-            else
-                paint.setColor(Color.GREEN);
+            paint.setTextSize(20);
 
-            PdfDocument.PageInfo pageInfo = page.getInfo();
+            Paint paintRect = new Paint();
+            paintRect.setColor(Integer.valueOf(cor_principal));
+            Rect rect = new Rect(pageInfo.getPageWidth()-50, 0, pageInfo.getPageWidth()-100, 150);
+            canvas.drawRect(rect, paintRect);
 
-
-            canvas.drawCircle(pageInfo.getPageWidth()/2,
-                    pageInfo.getPageHeight()/2,
-                    150,
-                    paint);
+            canvas.drawText(dtf.print(now), x, y + 50, paint);
+            canvas.drawText("Gerado por: "+getString(R.string.app_name), x, y+200, paint);
         }
 
+
+        private void drawSummaryPage(PdfDocument.Page page, int pagenumber){
+            Canvas canvas = page.getCanvas();
+            pagenumber++;
+
+            Paint paint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setTextSize(40);
+
+            PdfDocument.PageInfo pageInfo = page.getInfo();
+            int y = 72;
+            int x = canvas.getWidth()/2;
+            int ySummary = y + 35;
+            int xSummary = 54;
+
+            canvas.drawText("Sumário", x, y, paint);
+
+            //ALERTA: Modificar para que possa suportar multiplas páginas de sumário
+            paint.setTextAlign(Paint.Align.LEFT);
+            paint.setTextSize(18);
+
+            for(int i=0; i < folhas.size(); i++){
+                canvas.drawText(String.valueOf(i+3)+DOTS+folhas.get(i).getTitulo(), xSummary,
+                        ySummary, paint);
+                ySummary = ySummary + 35;
+            }
+        }
+
+        private void drawPage(PdfDocument.Page page, int pagenumber) {
+            Canvas canvas = page.getCanvas();
+
+            File imgFile = new File(folhas.get(pagenumber - 2).getLocal_folha());
+
+            if(imgFile.exists()) {
+                pagenumber++; // Make sure page numbers start at 1
+
+                int titleBaseLine = 72;
+                int leftMargin = 54;
+
+                int height;
+                int width;
+
+                Paint paint = new Paint();
+                paint.setColor(Color.BLACK);
+                paint.setTextSize(40);
+                paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(folhas.get(pagenumber - 3).getTitulo(), leftMargin, titleBaseLine,
+                        paint);
+
+                //Log.d("local", mCurrentPhotoPath);
+
+                PdfDocument.PageInfo pageInfo = page.getInfo();
+
+                //canvas.drawCircle(pageInfo.getPageWidth() / 2, pageInfo.getPageHeight() / 2, 150, paint);
+
+                Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(),
+                        pageInfo.getPageWidth(), pageInfo.getPageHeight());
+
+                RectF content = new RectF(page.getInfo().getContentRect());
+                Matrix matrix = new Matrix();
+                // Compute and apply scale to fill the page.
+                float scale = content.width()-100 / myBitmap.getWidth();
+                //if (fittingMode == SCALE_MODE_FILL) {
+                //    scale = Math.max(scale, content.height() / myBitmap.getHeight());
+                //} else {
+                scale = Math.min(scale, content.height() / myBitmap.getHeight());
+                //}
+                matrix.postScale(scale, scale);
+
+                // Center the content.
+                final float translateX = (content.width()
+                        - myBitmap.getWidth() * scale) / 2;
+                final float translateY = (content.height()
+                        - myBitmap.getHeight() * scale) / 2;
+                matrix.postTranslate(translateX, translateY);
+
+                canvas.drawBitmap(myBitmap, matrix, paint);
+            }
+        }
 
         @Override
         public void onWrite(final PageRange[] pageRanges,
@@ -298,7 +391,13 @@ public class NotesActivityFragment extends Fragment {
                         myPdfDocument = null;
                         return;
                     }
-                    drawPage(page, i);
+                    if(i == 0){
+                        drawHomePage(page, i);
+                    }else if(i == 1){
+                        drawSummaryPage(page, i);
+                    }else {
+                        drawPage(page, i);
+                    }
                     myPdfDocument.finishPage(page);
                 }
             }

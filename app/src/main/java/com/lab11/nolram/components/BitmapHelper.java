@@ -48,4 +48,14 @@ public class BitmapHelper {
     }
 
 
+    public static BitmapFactory.Options size(String res) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(res, options);
+        return options;
+    }
+
+
 }

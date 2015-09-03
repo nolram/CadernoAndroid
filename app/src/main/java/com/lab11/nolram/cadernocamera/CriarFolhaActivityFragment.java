@@ -102,7 +102,6 @@ public class CriarFolhaActivityFragment extends Fragment {
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(), 100, 200);
                 btnImagem.setImageBitmap(myBitmap);
-
             }
         }
     }
