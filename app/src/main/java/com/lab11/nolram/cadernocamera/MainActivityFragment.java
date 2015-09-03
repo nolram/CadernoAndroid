@@ -37,6 +37,8 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
 
+    private final static int QTD_MENUS = 3;
+
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsCaderno mAdapter;
@@ -85,11 +87,13 @@ public class MainActivityFragment extends Fragment {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-                        if (position > 1) {
-                            Tag tag = tags.get(position);
+                        //Toast.makeText(getActivity().getApplicationContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
+                        if (position > 2) {
+                            Tag tag = tags.get(position-QTD_MENUS);
                             Intent intent = new Intent(view.getContext(), SearchTagActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putString(Database.TAG_TAG, tag.getTag());
+                            bundle.putLong(Database.TAG_ID, tag.getId());
                             intent.putExtras(bundle);
                             startActivity(intent);
                         } else {

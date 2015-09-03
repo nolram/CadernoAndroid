@@ -35,6 +35,7 @@ public class SearchTagActivityFragment extends Fragment {
     private Toolbar toolbar;
 
     private String query;
+    private long id;
 
     private FolhaDataSource folhaDataSource;
 
@@ -45,7 +46,7 @@ public class SearchTagActivityFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        getActivity().setTitle(query);
+        getActivity().setTitle("#"+query);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(titulo);
     }
@@ -72,6 +73,7 @@ public class SearchTagActivityFragment extends Fragment {
 
         Bundle bundle = getActivity().getIntent().getExtras();
         query = bundle.getString(Database.TAG_TAG);
+        id = bundle.getLong(Database.TAG_ID);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_folhas);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -81,7 +83,7 @@ public class SearchTagActivityFragment extends Fragment {
         folhaDataSource = new FolhaDataSource(view.getContext());
         folhaDataSource.open();
 
-        folhas = folhaDataSource.getAllFolhasByTag(query);
+        folhas = folhaDataSource.getAllFolhasByTag(id);
 
         mAdapter = new AdapterCardsFolha(folhas);
         mRecyclerView.swapAdapter(mAdapter, true);

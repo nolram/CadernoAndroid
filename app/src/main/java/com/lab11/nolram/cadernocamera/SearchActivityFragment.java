@@ -28,7 +28,6 @@ public class SearchActivityFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsSearchCaderno mAdapter;
-    private FloatingActionButton btnCaderno;
     private Toolbar toolbar;
 
     public SearchActivityFragment() {
@@ -49,9 +48,8 @@ public class SearchActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_search, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_main);
-        btnCaderno = (FloatingActionButton) view.findViewById(R.id.fab);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());

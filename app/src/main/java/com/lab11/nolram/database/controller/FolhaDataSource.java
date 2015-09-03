@@ -182,6 +182,25 @@ public class FolhaDataSource {
         return folhas;
     }
 
+    public List<Folha> getAllFolhasByTag(long id){
+        List<Folha> folhas = new ArrayList<>();
+        final String QUERY = "SELECT f."+Database.FOLHA_ID+", f."+Database.FOLHA_LOCAL_IMAGEM+
+                ", f."+Database.FOLHA_FK_CADERNO+", f."+Database.FOLHA_DATA+", f."+Database.FOLHA_TITULO+
+                " FROM "+Database.TABLE_FOLHA+" f INNER JOIN "+Database.TABLE_TAG_DA_FOLHA+" tt INNER JOIN "+
+                Database.TABLE_TAG+" t ON t."+Database.TAG_ID+" = ?"+" WHERE t."+
+                Database.TAG_ID+"=tt."+Database.TAG_DA_FOLHA_ID_TAG+" AND f."+Database.FOLHA_ID+
+                "=tt."+Database.TAG_DA_FOLHA_ID_FOLHA;
+        Cursor cursor = database.rawQuery(QUERY, new String[]{String.valueOf(id)});
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Folha folha = cursorToFolha(cursor);
+            folhas.add(folha);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return folhas;
+    }
+
     public List<Tag> getAllTagsByFolha(long fk_folha){
         List<Tag> tags = new ArrayList<>();
         final String QUERY = "SELECT t."+Database.TAG_ID+", t."+Database.TAG_TAG+
