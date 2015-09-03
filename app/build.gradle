@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.lab11.nolram.cadernocamera"
-        minSdkVersion 11
+        minSdkVersion 19
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
