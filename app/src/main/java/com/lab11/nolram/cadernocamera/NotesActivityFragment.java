@@ -163,7 +163,7 @@ public class NotesActivityFragment extends Fragment {
 
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
 
-        mAdapter = new AdapterCardsFolha(folhas);
+        mAdapter = new AdapterCardsFolha(folhas, getActivity().getApplicationContext());
         mRecyclerView.swapAdapter(mAdapter, true);
 
         mRecyclerView.addOnItemTouchListener(
@@ -326,22 +326,20 @@ public class NotesActivityFragment extends Fragment {
             if(imgFile.exists()) {
                 pagenumber++; // Make sure page numbers start at 1
 
-                int titleBaseLine = 72;
-                int leftMargin = 54;
+                PdfDocument.PageInfo pageInfo = page.getInfo();
 
-                int height;
-                int width;
+                int titleBaseLine = pageInfo.getPageHeight();
+                int leftMargin = pageInfo.getPageWidth()-20;
+
 
                 Paint paint = new Paint();
                 paint.setColor(Color.BLACK);
-                paint.setTextSize(40);
-                paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText(folhas.get(pagenumber - 3).getTitulo(), leftMargin, titleBaseLine,
+                paint.setTextSize(15);
+                //paint.setTextAlign(Paint.Align.CENTER);
+                canvas.drawText(Integer.toString(pagenumber), leftMargin, titleBaseLine,
                         paint);
 
                 //Log.d("local", mCurrentPhotoPath);
-
-                PdfDocument.PageInfo pageInfo = page.getInfo();
 
                 //canvas.drawCircle(pageInfo.getPageWidth() / 2, pageInfo.getPageHeight() / 2, 150, paint);
 
@@ -351,7 +349,7 @@ public class NotesActivityFragment extends Fragment {
                 RectF content = new RectF(page.getInfo().getContentRect());
                 Matrix matrix = new Matrix();
                 // Compute and apply scale to fill the page.
-                float scale = content.width()-100 / myBitmap.getWidth();
+                float scale = content.width() / myBitmap.getWidth();
                 //if (fittingMode == SCALE_MODE_FILL) {
                 //    scale = Math.max(scale, content.height() / myBitmap.getHeight());
                 //} else {
@@ -423,8 +421,7 @@ public class NotesActivityFragment extends Fragment {
         PrintManager printManager = (PrintManager) getActivity()
                 .getSystemService(Context.PRINT_SERVICE);
 
-        String jobName = this.getString(R.string.app_name) +
-                " Document";
+        String jobName = this.getString(R.string.app_name) +" Documento";
 
         printManager.print(jobName, new MyPrintDocumentAdapter(getActivity()),
                 null);
