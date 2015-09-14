@@ -20,4 +20,9 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_search_tag">SearchTagActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+
+    <string name="transition_name_name">transition:NAME</string>
+    <string name="transition_color">transition:COLOR</string>
+    <string name="transition_image">transition:IMAGE</string>
+
 </resources>

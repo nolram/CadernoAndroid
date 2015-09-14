@@ -23,8 +23,11 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.print.pdf.PrintedPdfDocument;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -180,7 +183,19 @@ public class NotesActivityFragment extends Fragment {
                         bundle.putString(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
                         bundle.putString(Database.CADERNO_COR_PRINCIPAL, cor_principal);
                         intent.putExtras(bundle);
-                        startActivity(intent);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                // the context of the activity
+                                getActivity(),
+                                // For each shared element, add to this method a new Pair item,
+                                // which contains the reference of the view we are transitioning *from*,
+                                // and the value of the transitionName attribute
+                                new Pair<View, String>(view.findViewById(R.id.img_thumb_folha),
+                                        getString(R.string.transition_image))
+                        );
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+
+                        //startActivity(intent);
                     }
                 })
         );

@@ -15,6 +15,7 @@
 
     <com.lab11.nolram.components.TouchImageView
         android:layout_below="@+id/toolbar"
+        android:transitionName="@string/transition_image"
         android:id="@+id/img_foto"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

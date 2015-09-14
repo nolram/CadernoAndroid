@@ -1,8 +1,11 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
@@ -116,6 +120,7 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_main);
         btnCaderno = (FloatingActionButton) view.findViewById(R.id.fab);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -141,7 +146,19 @@ public class MainActivityFragment extends Fragment {
                         bundle.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
                         intent.putExtras(bundle);
-                        startActivity(intent);
+
+                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                // the context of the activity
+                                getActivity(),
+                                // For each shared element, add to this method a new Pair item,
+                                // which contains the reference of the view we are transitioning *from*,
+                                // and the value of the transitionName attribute
+                                new Pair<View, String>(view.findViewById(R.id.img_cor),
+                                        getString(R.string.transition_color))
+                        );
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+
+                        //startActivity(intent);
                     }
                 })
         );
