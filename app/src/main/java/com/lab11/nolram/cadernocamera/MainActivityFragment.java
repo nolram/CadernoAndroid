@@ -61,7 +61,8 @@ public class MainActivityFragment extends Fragment {
     public void onResume() {
         cadernoDataSource.open();
 
-        mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos());
+        mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos(),
+                getActivity().getApplicationContext());
         mRecyclerView.swapAdapter(mAdapter, true);
         mAdapter.notifyDataSetChanged();
 
@@ -83,8 +84,8 @@ public class MainActivityFragment extends Fragment {
         menu = new DrawerBuilder(getActivity())
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)
+                .withActivity(getActivity())
                 .addDrawerItems(
-                        new SectionDrawerItem().withName(R.string.app_name),
                         new PrimaryDrawerItem().withName(R.string.menu_configuracoes).withIcon(FontAwesome.Icon.faw_gear),
                         new SectionDrawerItem().withName(R.string.tags)
                 )
@@ -131,7 +132,7 @@ public class MainActivityFragment extends Fragment {
         cadernoDataSource = new CadernoDataSource(view.getContext());
         cadernoDataSource.open();
 
-        mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos());
+        mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos(), view.getContext());
         mRecyclerView.swapAdapter(mAdapter, true);
 
         mRecyclerView.addOnItemTouchListener(
@@ -147,7 +148,7 @@ public class MainActivityFragment extends Fragment {
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
                         intent.putExtras(bundle);
 
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        /*ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                 // the context of the activity
                                 getActivity(),
                                 // For each shared element, add to this method a new Pair item,
@@ -156,9 +157,9 @@ public class MainActivityFragment extends Fragment {
                                 new Pair<View, String>(view.findViewById(R.id.img_cor),
                                         getString(R.string.transition_color))
                         );
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());*/
 
-                        //startActivity(intent);
+                        startActivity(intent);
                     }
                 })
         );

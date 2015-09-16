@@ -3,10 +3,10 @@
 
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/flatui_clouds"/>
+            <solid android:color="@color/flatui_pink_weak"/>
         </shape>
     </item>
-    <item android:drawable="@color/flatui_clouds"
+    <item android:drawable="@color/flatui_pink_weak"
         android:bottom="20dp"
         android:left="20dp"
         android:right="20dp"

@@ -5,4 +5,7 @@
 
     <dimen name="top_escolhas">0dp</dimen>
     <dimen name="right_escolhas">20dp</dimen>
+
+    <dimen name="item_margin">8dp</dimen>
+    <dimen name="item_margin_half">8dp</dimen>
 </resources>

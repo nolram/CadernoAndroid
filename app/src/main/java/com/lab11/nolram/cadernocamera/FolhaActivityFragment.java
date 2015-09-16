@@ -2,6 +2,7 @@ package com.lab11.nolram.cadernocamera;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.TouchImageView;
@@ -39,7 +42,6 @@ public class FolhaActivityFragment extends Fragment {
     private String cor_secundaria;
 
     public FolhaActivityFragment() {
-
     }
 
     @Override
@@ -49,6 +51,12 @@ public class FolhaActivityFragment extends Fragment {
         getActivity().setTitle(titulo);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setBackgroundColor(Integer.valueOf(cor_principal));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         //toolbar.setTitle(titulo);
 
@@ -74,7 +82,7 @@ public class FolhaActivityFragment extends Fragment {
         imgFoto = (TouchImageView) view.findViewById(R.id.img_foto);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
-        WindowManager wm = (WindowManager) getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+        /*WindowManager wm = (WindowManager) getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
         int width;
@@ -86,15 +94,43 @@ public class FolhaActivityFragment extends Fragment {
         }else {
             width = display.getWidth();  // deprecated
             height = display.getHeight();  // deprecated
-        }
+        }*/
 
         File imgFile = new  File(localImagem);
         //Log.d("local", mCurrentPhotoPath);
         if(imgFile.exists()){
-            Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(), width, height);
-            imgFoto.setImageBitmap(myBitmap);
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            float scalingFactor = this.getBitmapScalingFactor(myBitmap);
+            Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
+            imgFoto.setImageBitmap(newBitmap);
         }
 
         return view;
+    }
+
+    private float getBitmapScalingFactor(Bitmap bm) {
+        // Get display width from device
+        WindowManager wm = (WindowManager) getActivity().getApplicationContext().getSystemService(
+                Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        int displayWidth;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            display.getSize(size);
+            displayWidth = size.x;
+        }else {
+            displayWidth = display.getWidth();  // deprecated
+        }
+        // Get margin to use it for calculating to max width of the ImageView
+        RelativeLayout.LayoutParams layoutParams =
+                (RelativeLayout.LayoutParams) this.imgFoto.getLayoutParams();
+        int leftMargin = layoutParams.leftMargin;
+        int rightMargin = layoutParams.rightMargin;
+
+        // Calculate the max width of the imageView
+        int imageViewWidth = displayWidth - (leftMargin + rightMargin);
+
+        // Calculate scaling factor and return it
+        return ( (float) imageViewWidth / (float) bm.getWidth() );
     }
 }

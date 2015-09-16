@@ -55,7 +55,7 @@ public class CadernoDataSource {
         return caderno;
     }
 
-    public void criarCaderno(String titulo, String descricao, String[] cor){
+    public void criarCaderno(String titulo, String descricao, String[] cor, String badge){
         DateTime now = new DateTime();
         ContentValues values = new ContentValues();
         values.put(Database.CADERNO_TITULO, titulo);
@@ -64,6 +64,7 @@ public class CadernoDataSource {
         values.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
         values.put(Database.CADERNO_COR_PRINCIPAL, cor[0]);
         values.put(Database.CADERNO_COR_SECUNDARIA, cor[1]);
+        values.put(Database.CADERNO_BADGE, badge);
 
         long dbInsert = database.insert(Database.TABLE_CADERNO, null, values);
     }

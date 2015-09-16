@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,6 +32,19 @@ public class SearchActivityFragment extends Fragment {
     private Toolbar toolbar;
 
     public SearchActivityFragment() {
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -65,7 +79,8 @@ public class SearchActivityFragment extends Fragment {
             //Toast.makeText(getActivity().getApplicationContext(), query, Toast.LENGTH_SHORT).show();
         }
 
-        mAdapter = new AdapterCardsSearchCaderno(cadernoDataSource.searchCadernos(query));
+        mAdapter = new AdapterCardsSearchCaderno(cadernoDataSource.searchCadernos(query),
+                view.getContext());
         mRecyclerView.swapAdapter(mAdapter, true);
         return view;
     }

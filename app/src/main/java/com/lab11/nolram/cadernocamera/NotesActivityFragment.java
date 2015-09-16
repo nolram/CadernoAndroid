@@ -112,6 +112,12 @@ public class NotesActivityFragment extends Fragment {
         getActivity().setTitle(titulo);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setBackgroundColor(Integer.valueOf(cor_principal));
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
         //toolbar.setTitle(titulo);
 
@@ -183,7 +189,7 @@ public class NotesActivityFragment extends Fragment {
                         bundle.putString(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
                         bundle.putString(Database.CADERNO_COR_PRINCIPAL, cor_principal);
                         intent.putExtras(bundle);
-
+                        /*
                         ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                                 // the context of the activity
                                 getActivity(),
@@ -194,8 +200,8 @@ public class NotesActivityFragment extends Fragment {
                                         getString(R.string.transition_image))
                         );
                         ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-
-                        //startActivity(intent);
+                        */
+                        startActivity(intent);
                     }
                 })
         );

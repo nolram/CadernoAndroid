@@ -7,6 +7,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +36,6 @@ public class CriarFolhaActivityFragment extends Fragment {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-
     private long fk_caderno;
 
     private String nomeCaderno;
@@ -43,12 +44,26 @@ public class CriarFolhaActivityFragment extends Fragment {
     private EditText edtTags;
     private ImageButton btnImagem;
     private Button btnAddFolha;
+    private Toolbar toolbar;
 
     private FolhaDataSource folhaDataSource;
 
     String mCurrentPhotoPath = "";
 
     public CriarFolhaActivityFragment() {
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
@@ -128,7 +143,6 @@ public class CriarFolhaActivityFragment extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -137,6 +151,8 @@ public class CriarFolhaActivityFragment extends Fragment {
         edtTags = (EditText) view.findViewById(R.id.edtxt_tags);
         btnImagem = (ImageButton) view.findViewById(R.id.btn_add_imagem);
         btnAddFolha = (Button) view.findViewById(R.id.btn_adicionar_folha);
+
+        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         folhaDataSource = new FolhaDataSource(view.getContext());
         folhaDataSource.open();

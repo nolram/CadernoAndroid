@@ -24,5 +24,13 @@
     <string name="transition_name_name">transition:NAME</string>
     <string name="transition_color">transition:COLOR</string>
     <string name="transition_image">transition:IMAGE</string>
+    <string name="criar_caderno">Criar Caderno</string>
+    <string name="title_activity_icon_picker">IconPickerActivity</string>
+    <string name="txt_icon">Icone</string>
+    <string name="txt_cor">Cor</string>
+    <string name="txt_description">Descrição (Opcional)</string>
+    <string name="txt_title">Titulo</string>
+    <string name="add_folha">Adicionar Folha</string>
+    <string name="txt_criar_caderno">Criar Caderno</string>
 
 </resources>

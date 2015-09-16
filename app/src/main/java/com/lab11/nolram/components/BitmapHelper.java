@@ -1,7 +1,15 @@
 package com.lab11.nolram.components;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
+import android.os.Build;
+import android.view.Display;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Created by nolram on 26/08/15.
@@ -56,6 +64,41 @@ public class BitmapHelper {
         BitmapFactory.decodeFile(res, options);
         return options;
     }
+
+    public static Bitmap ScaleBitmap(Bitmap bm, float scalingFactor) {
+        int scaleHeight = (int) (bm.getHeight() * scalingFactor);
+        int scaleWidth = (int) (bm.getWidth() * scalingFactor);
+
+        return Bitmap.createScaledBitmap(bm, scaleWidth, scaleHeight, true);
+    }
+
+
+    public static float getBitmapScalingFactor(Context context, Bitmap bm, final ImageView img) {
+        // Get display width from device
+        WindowManager wm = (WindowManager) context.getApplicationContext().getSystemService(
+                Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        int displayWidth;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            display.getSize(size);
+            displayWidth = size.x;
+        }else {
+            displayWidth = display.getWidth();  // deprecated
+        }
+        // Get margin to use it for calculating to max width of the ImageView
+        LinearLayout.LayoutParams layoutParams =
+                (LinearLayout.LayoutParams) img.getLayoutParams();
+        int leftMargin = layoutParams.leftMargin;
+        int rightMargin = layoutParams.rightMargin;
+
+        // Calculate the max width of the imageView
+        int imageViewWidth = displayWidth - (leftMargin + rightMargin);
+
+        // Calculate scaling factor and return it
+        return ( (float) imageViewWidth / (float) bm.getWidth() );
+    }
+
 
 
 }

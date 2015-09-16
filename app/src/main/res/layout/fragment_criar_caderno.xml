@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/cor_forte"
+        android:title="@string/criar_caderno"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:elevation="4dp" />
@@ -34,7 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Titulo"
+                android:text="@string/txt_title"
                 android:id="@+id/txt_titulo" />
 
             <EditText
@@ -46,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Descrição (Opcional)"
+                android:text="@string/txt_description"
                 android:id="@+id/txt_descricao" />
 
             <EditText
@@ -58,13 +59,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Cor"
+                android:text="@string/txt_cor"
                 android:id="@+id/txt_cor" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/cinza_fundo">
+                android:layout_height="match_parent">
 
                 <RadioGroup
                     android:id="@+id/rd_cor"
@@ -103,7 +103,7 @@
                         android:button="@drawable/cb_carrot"/>
 
                     <RadioButton
-                        android:id="@+id/rd_clouds"
+                        android:id="@+id/rd_pink"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/right_escolhas"
@@ -165,15 +165,37 @@
                         android:layout_marginTop="@dimen/top_escolhas"
                         android:button="@drawable/cb_wet_asphalt"/>
 
+                    <RadioButton
+                        android:id="@+id/rd_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/right_escolhas"
+                        android:layout_marginEnd="@dimen/right_escolhas"
+                        android:layout_marginTop="@dimen/top_escolhas"
+                        android:button="@drawable/cb_black"/>
+
                 </RadioGroup>
             </HorizontalScrollView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/txt_icon"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_img_picker"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/book_2"/>
 
         </LinearLayout>
     </ScrollView>
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Criar Caderno"
+        android:text="@string/txt_criar_caderno"
         android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
         android:id="@+id/btn_criar_caderno" />

@@ -49,6 +49,12 @@ public class SearchTagActivityFragment extends Fragment {
         getActivity().setTitle("#"+query);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(titulo);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
