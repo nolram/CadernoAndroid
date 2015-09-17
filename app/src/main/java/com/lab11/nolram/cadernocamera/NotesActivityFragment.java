@@ -1,6 +1,7 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
@@ -23,6 +25,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.print.pdf.PrintedPdfDocument;
+import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
@@ -58,6 +61,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -333,9 +337,12 @@ public class NotesActivityFragment extends Fragment {
             paint.setTextSize(18);
 
             for(int i=0; i < folhas.size(); i++){
-                canvas.drawText(String.valueOf(i+3)+DOTS+folhas.get(i).getTitulo(), xSummary,
-                        ySummary, paint);
-                ySummary = ySummary + 35;
+                File imgFile = new File(folhas.get(i).getLocal_folha());
+                if(imgFile.exists()) {
+                    canvas.drawText(String.valueOf(i + 3) + DOTS + folhas.get(i).getTitulo(), xSummary,
+                            ySummary, paint);
+                    ySummary = ySummary + 35;
+                }
             }
         }
 

@@ -32,5 +32,16 @@
     <string name="txt_title">Titulo</string>
     <string name="add_folha">Adicionar Folha</string>
     <string name="txt_criar_caderno">Criar Caderno</string>
+    <string name="txt_export_to_gallery">Exportar para a galeria</string>
+    <string name="txt_gallery">Galeria</string>
+    <string name="txt_camera">Câmera</string>
+
+
+    <string name="no">Não</string>
+    <string name="yes">Sim</string>
+    <string name="alert_title_img">Atenção</string>
+    <string name="alert_mensage_img">Deseja substituir a imagem atual?</string>
+
+    <string name="alert_empty_img">Escolha ou tire uma foto de uma imagem!</string>
 
 </resources>

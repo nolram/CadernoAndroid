@@ -96,13 +96,15 @@ public class FolhaActivityFragment extends Fragment {
             height = display.getHeight();  // deprecated
         }*/
 
-        File imgFile = new  File(localImagem);
+        File imgFile = new File(localImagem);
         //Log.d("local", mCurrentPhotoPath);
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             float scalingFactor = this.getBitmapScalingFactor(myBitmap);
             Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
             imgFoto.setImageBitmap(newBitmap);
+        }else{
+            imgFoto.setImageResource(R.drawable.picture_remove);
         }
 
         return view;

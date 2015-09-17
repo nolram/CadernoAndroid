@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
 
-    private final static int QTD_MENUS = 3;
+    private final static int QTD_MENUS = 2;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -93,7 +93,7 @@ public class MainActivityFragment extends Fragment {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
                         //Toast.makeText(getActivity().getApplicationContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
-                        if (position > 2) {
+                        if (position > 1) {
                             Tag tag = tags.get(position-QTD_MENUS);
                             Intent intent = new Intent(view.getContext(), SearchTagActivity.class);
                             Bundle bundle = new Bundle();

@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -113,9 +114,17 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         @Override
         protected Bitmap doInBackground(String... params) {
             localImagem = params[0];
-            int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
-            return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(localImagem),
-                    screenWidth, (int) DeviceDimensionsHelper.convertDpToPixel(150, mContext), true);
+            File file = new File(localImagem);
+            if(file.exists()){
+                int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
+                //return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(localImagem),
+                //        screenWidth, (int) DeviceDimensionsHelper.convertDpToPixel(150, mContext), true);
+                Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(localImagem), screenWidth,
+                        (int) DeviceDimensionsHelper.convertDpToPixel(150, mContext));
+                return ThumbImage;
+            }
+            return null;
         }
 
         // Once complete, see if ImageView is still around and set bitmap.
@@ -130,6 +139,13 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
                         getBitmapWorkerTask(imageView);
                 if (this == bitmapWorkerTask && imageView != null) {
                     imageView.setImageBitmap(bitmap);
+                }
+            }else if(imageViewReference != null && bitmap == null && !isCancelled()){
+                final ImageView imageView = imageViewReference.get();
+                final BitmapWorkerTask bitmapWorkerTask =
+                        getBitmapWorkerTask(imageView);
+                if (this == bitmapWorkerTask && imageView != null) {
+                    imageView.setImageResource(R.drawable.picture_remove);
                 }
             }
         }

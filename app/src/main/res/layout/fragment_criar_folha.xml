@@ -41,13 +41,35 @@
             android:textColor="@color/preto"
             android:text="Imagem"/>
 
-        <ImageButton
-            android:id="@+id/btn_add_imagem"
+
+
+        <LinearLayout
+            android:id="@+id/LinearLayout02"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_alignParentBottom="true">
+            <Button
+                android:id="@+id/btn_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/txt_camera">
+            </Button>
+            <Button
+                android:id="@+id/btn_galeria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/txt_gallery">
+            </Button>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_thumb"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
             android:background="@null"
-            android:clickable="true"
-            android:src="@drawable/new_img"/>
+            android:clickable="true"/>
 
         <TextView
             android:layout_width="wrap_content"
