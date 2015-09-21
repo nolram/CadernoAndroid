@@ -41,7 +41,8 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<AdapterCards
         holder.mTitleView.setText(caderno.getTitulo());
         holder.mTextView.setText(caderno.getDescricao());
         holder.mDateView.setText(caderno.getUltimaModificacao());
-        holder.mCor.setBackgroundColor(Integer.valueOf(caderno.getCorPrincipal()));
+        holder.mCor.setBackgroundColor(mContext.getResources().getColor(mContext.getResources().getIdentifier(
+                caderno.getCorPrincipal(), "drawable", mContext.getPackageName())));
         holder.mBadge.setImageResource(mContext.getResources().getIdentifier(caderno.getBadge(),
                 "drawable", mContext.getPackageName()));
     }

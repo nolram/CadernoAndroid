@@ -1,6 +1,7 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -11,17 +12,32 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.TouchImageView;
 import com.lab11.nolram.database.Database;
+import com.lab11.nolram.database.model.Tag;
+import com.mikepenz.iconics.typeface.FontAwesome;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.SectionDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import java.io.File;
 
@@ -33,13 +49,18 @@ public class FolhaActivityFragment extends Fragment {
 
     private TouchImageView imgFoto;
     private Toolbar toolbar;
+    private Drawer menu;
 
     private String localImagem;
     private String data;
     private String tags;
     private String titulo;
-    private String cor_principal;
-    private String cor_secundaria;
+    private String caderno_titulo;
+    private int cor_principal;
+    private int id_cor_principal;
+    private int cor_secundaria;
+    private int id_cor_secundaria;
+    private String badge;
 
     public FolhaActivityFragment() {
     }
@@ -47,16 +68,54 @@ public class FolhaActivityFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        IProfile profile;
+        int id_badge = getResources().getIdentifier(badge, "drawable",
+                getActivity().getPackageName());
+
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         getActivity().setTitle(titulo);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setBackgroundColor(Integer.valueOf(cor_principal));
+        toolbar.setBackgroundColor(cor_principal);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            profile = new ProfileDrawerItem().withName(caderno_titulo).withIcon(
+                    getResources().getDrawable(id_badge, getActivity().getTheme()));
+        }else{
+            profile = new ProfileDrawerItem().withName(caderno_titulo).withIcon(
+                    getResources().getDrawable(id_badge));
+        }
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(getActivity())
+                .addProfiles(profile)
+                .withHeaderBackground(id_cor_principal)
+                .withSelectionListEnabledForSingleProfile(false)
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        return false;
+                    }
+                })
+                .build();
+
+        menu = new DrawerBuilder(getActivity())
+                .withToolbar(toolbar)
+                .withActionBarDrawerToggleAnimated(true)
+                .withActivity(getActivity())
+                .addDrawerItems(
+                        new SectionDrawerItem().withName(R.string.txt_info),
+                        new PrimaryDrawerItem().withName(titulo).withIcon(FontAwesome.Icon.faw_font),
+                        new PrimaryDrawerItem().withName(data).withIcon(FontAwesome.Icon.faw_calendar),
+                        new PrimaryDrawerItem().withName(tags).withIcon(FontAwesome.Icon.faw_tags)
+                )
+                .withAccountHeader(headerResult)
+                .withSavedInstance(savedInstanceState)
+                .build();
 
         //toolbar.setTitle(titulo);
 
@@ -76,25 +135,15 @@ public class FolhaActivityFragment extends Fragment {
         data = bundle.getString(Database.FOLHA_DATA);
         tags = bundle.getString(Database.TAG_TAG);
         titulo = bundle.getString(Database.FOLHA_TITULO);
-        cor_principal = bundle.getString(Database.CADERNO_COR_PRINCIPAL);
-        cor_secundaria = bundle.getString(Database.CADERNO_COR_SECUNDARIA);
+        cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
+        id_cor_principal = bundle.getInt(Database.CADERNO_ID_COR_PRINCIPAL);
+        cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
+        id_cor_secundaria = bundle.getInt(Database.CADERNO_ID_COR_SECUNDARIA);
+        badge = bundle.getString(Database.CADERNO_BADGE);
+        caderno_titulo = bundle.getString(Database.CADERNO_TITULO);
 
         imgFoto = (TouchImageView) view.findViewById(R.id.img_foto);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
-        /*WindowManager wm = (WindowManager) getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        int width;
-        int height;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            display.getSize(size);
-            width = size.x;
-            height = size.y;
-        }else {
-            width = display.getWidth();  // deprecated
-            height = display.getHeight();  // deprecated
-        }*/
 
         File imgFile = new File(localImagem);
         //Log.d("local", mCurrentPhotoPath);

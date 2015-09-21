@@ -14,17 +14,19 @@ public class Database extends SQLiteOpenHelper {
 
     public static final String TABLE_CADERNO = "caderno";
     public static final String CADERNO_ID = "_id";
-    public static final String CADERNO_TITULO = "titulo";
+    public static final String CADERNO_TITULO = "caderno_titulo";
     public static final String CADERNO_BADGE = "badge";
     public static final String CADERNO_COR_PRINCIPAL = "cor";
+    public static final String CADERNO_ID_COR_PRINCIPAL = "id_cor";
     public static final String CADERNO_COR_SECUNDARIA = "cor_secundaria";
+    public static final String CADERNO_ID_COR_SECUNDARIA = "id_cor_secundaria";
     public static final String CADERNO_DESCRICAO = "descricao";
     public static final String CADERNO_DATA = "data_adicionado";
     public static final String CADERNO_ULTIMA_MODIFICACAO = "ultima_modificacao";
 
     public static final String TABLE_FOLHA = "folha";
     public static final String FOLHA_ID = "_id";
-    public static final String FOLHA_TITULO = "titulo";
+    public static final String FOLHA_TITULO = "folha_titulo";
     public static final String FOLHA_LOCAL_IMAGEM = "local_folha";
     public static final String FOLHA_DATA = "data_adicionado";
     public static final String FOLHA_FK_CADERNO = "fk_caderno";

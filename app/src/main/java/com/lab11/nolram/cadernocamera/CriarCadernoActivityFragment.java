@@ -84,44 +84,48 @@ public class CriarCadernoActivityFragment extends Fragment{
         String[] escolhas = new String[2];
         switch (id){
             case R.id.rd_alizarin:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_alizarin));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_pomegranate));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_alizarin);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_pomegranate);
                 break;
             case R.id.rd_amethyst:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_amethyst));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_wisteria));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_amethyst);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_wisteria);
                 break;
             case R.id.rd_carrot:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_carrot));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_pumpkin));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_carrot);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_pumpkin);
                 break;
             case R.id.rd_pink:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_pink_weak));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_pink_strong));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_pink_weak);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_pink_strong);
                 break;
             case R.id.rd_concrete:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_concrete));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_asbestos));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_concrete);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_asbestos);
                 break;
             case R.id.rd_emerald:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_emerald));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_nephritis));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_emerald);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_nephritis);
                 break;
             case R.id.rd_peter_river:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_peter_river));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_belize_hole));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_peter_river);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_belize_hole);
                 break;
             case R.id.rd_sun_flower:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_sun_flower));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_orange));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_sun_flower);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_orange);
+                break;
+            case R.id.rd_turquoise:
+                escolhas[0] = getResources().getResourceName(R.color.flatui_turquoise);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_green_sea);
                 break;
             case R.id.rd_black:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.cinza));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.cinza_escuro));
+                escolhas[0] = getResources().getResourceName(R.color.cinza);
+                escolhas[1] = getResources().getResourceName(R.color.cinza_escuro);
                 break;
             default:
-                escolhas[0] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_wet_asphalt));
-                escolhas[1] = String.valueOf(getActivity().getResources().getColor(R.color.flatui_midnight_blue));
+                escolhas[0] = getResources().getResourceName(R.color.flatui_wet_asphalt);
+                escolhas[1] = getResources().getResourceName(R.color.flatui_midnight_blue);
                 break;
 
         }
@@ -152,8 +156,8 @@ public class CriarCadernoActivityFragment extends Fragment{
                 int selectedId = radioGroupCor.getCheckedRadioButtonId();
                 String[] cor = escolher_cor(selectedId);
                 if (!titulo.isEmpty() && selectedId != -1) {
-                    String nome = getResources().getResourceName(icon);
-                    cadernoDataSource.criarCaderno(titulo, descricao, cor, nome);
+                    String badge = getResources().getResourceName(icon);
+                    cadernoDataSource.criarCaderno(titulo, descricao, cor, badge);
                     getActivity().finish();
                 } else if (selectedId == -1) {
                     Toast.makeText(v.getContext(), "Escolha uma cor",

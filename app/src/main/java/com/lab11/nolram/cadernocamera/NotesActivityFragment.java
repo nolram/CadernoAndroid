@@ -76,9 +76,12 @@ import java.util.List;
 public class NotesActivityFragment extends Fragment {
 
     private long fk_caderno;
-    private String cor_principal;
-    private String cor_secundaria;
+    private int cor_principal;
+    private int id_cor_principal;
+    private int cor_secundaria;
+    private int id_cor_secundaria;
     private String titulo;
+    private String badge;
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton btnAddFolha;
@@ -115,7 +118,7 @@ public class NotesActivityFragment extends Fragment {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         getActivity().setTitle(titulo);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setBackgroundColor(Integer.valueOf(cor_principal));
+        toolbar.setBackgroundColor(cor_principal);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +131,7 @@ public class NotesActivityFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Integer.valueOf(cor_secundaria));
+            window.setStatusBarColor(cor_secundaria);
         }
     }
 
@@ -167,9 +170,18 @@ public class NotesActivityFragment extends Fragment {
 
         Bundle bundle = getActivity().getIntent().getExtras();
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
-        cor_principal = bundle.getString(Database.CADERNO_COR_PRINCIPAL);
-        cor_secundaria = bundle.getString(Database.CADERNO_COR_SECUNDARIA);
+        id_cor_principal = getResources().getIdentifier(
+                bundle.getString(Database.CADERNO_COR_PRINCIPAL), "drawable",
+                getActivity().getPackageName());
+        id_cor_secundaria = getResources().getIdentifier(
+                bundle.getString(Database.CADERNO_COR_SECUNDARIA), "drawable",
+                getActivity().getPackageName());
+
+        cor_principal = getResources().getColor(id_cor_principal);
+        cor_secundaria = getResources().getColor(id_cor_secundaria);
+
         titulo = bundle.getString(Database.CADERNO_TITULO);
+        badge = bundle.getString(Database.CADERNO_BADGE);
 
         folhaDataSource = new FolhaDataSource(view.getContext());
         folhaDataSource.open();
@@ -188,23 +200,15 @@ public class NotesActivityFragment extends Fragment {
                         Folha folha = folhas.get(position);
                         bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
                         bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
+                        bundle.putString(Database.CADERNO_TITULO, titulo);
+                        bundle.putString(Database.CADERNO_BADGE, badge);
                         bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
                         bundle.putString(Database.TAG_TAG, folha.getTags().toString());
-                        bundle.putString(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
-                        bundle.putString(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+                        bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
+                        bundle.putInt(Database.CADERNO_ID_COR_SECUNDARIA, id_cor_secundaria);
+                        bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+                        bundle.putInt(Database.CADERNO_ID_COR_PRINCIPAL, id_cor_principal);
                         intent.putExtras(bundle);
-                        /*
-                        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                // the context of the activity
-                                getActivity(),
-                                // For each shared element, add to this method a new Pair item,
-                                // which contains the reference of the view we are transitioning *from*,
-                                // and the value of the transitionName attribute
-                                new Pair<View, String>(view.findViewById(R.id.img_thumb_folha),
-                                        getString(R.string.transition_image))
-                        );
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
-                        */
                         startActivity(intent);
                     }
                 })
@@ -306,7 +310,7 @@ public class NotesActivityFragment extends Fragment {
             paint.setTextSize(20);
 
             Paint paintRect = new Paint();
-            paintRect.setColor(Integer.valueOf(cor_principal));
+            paintRect.setColor(cor_principal);
             Rect rect = new Rect(pageInfo.getPageWidth()-50, 0, pageInfo.getPageWidth()-100, 150);
             canvas.drawRect(rect, paintRect);
 

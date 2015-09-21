@@ -1,5 +1,9 @@
 package com.lab11.nolram.database.model;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.List;
 
 /**
@@ -58,7 +62,9 @@ public class Folha {
     }
 
     public void setData_adicionado(String data_adicionado) {
-        this.data_adicionado = data_adicionado;
+        DateTime dt = new DateTime(data_adicionado);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss MM/dd/yyyy");
+        this.data_adicionado = dtf.print(dt);
     }
 
     public String toString(){

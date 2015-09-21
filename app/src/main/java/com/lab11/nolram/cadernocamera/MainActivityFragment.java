@@ -54,14 +54,17 @@ public class MainActivityFragment extends Fragment {
 
     private List<Tag> tags;
 
+    private List<Caderno> cadernos;
+
     public MainActivityFragment() {
     }
 
     @Override
     public void onResume() {
         cadernoDataSource.open();
+        cadernos = cadernoDataSource.getAllCadernos();
 
-        mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos(),
+        mAdapter = new AdapterCardsCaderno(cadernos,
                 getActivity().getApplicationContext());
         mRecyclerView.swapAdapter(mAdapter, true);
         mAdapter.notifyDataSetChanged();
@@ -132,7 +135,9 @@ public class MainActivityFragment extends Fragment {
         cadernoDataSource = new CadernoDataSource(view.getContext());
         cadernoDataSource.open();
 
-        mAdapter = new AdapterCardsCaderno(cadernoDataSource.getAllCadernos(), view.getContext());
+        cadernos = cadernoDataSource.getAllCadernos();
+
+        mAdapter = new AdapterCardsCaderno(cadernos, view.getContext());
         mRecyclerView.swapAdapter(mAdapter, true);
 
         mRecyclerView.addOnItemTouchListener(
@@ -141,11 +146,12 @@ public class MainActivityFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(view.getContext(), NotesActivity.class);
                         Bundle bundle = new Bundle();
-                        Caderno caderno = cadernoDataSource.getAllCadernos().get(position);
+                        Caderno caderno = cadernos.get(position);
                         bundle.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
                         bundle.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
                         bundle.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
+                        bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
                         intent.putExtras(bundle);
 
                         /*ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(

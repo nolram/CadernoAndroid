@@ -43,5 +43,9 @@
     <string name="alert_mensage_img">Deseja substituir a imagem atual?</string>
 
     <string name="alert_empty_img">Escolha ou tire uma foto de uma imagem!</string>
+    <string name="txt_edit">Editar</string>
+    <string name="txt_delete_paper">Deletar Folha</string>
+
+    <string name="txt_info">Informações</string>
 
 </resources>
