@@ -203,7 +203,10 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
             imageView.setImageDrawable(asyncDrawable);
             task.execute(locaImagem);
         }
+    }
 
+    public void updateAll(List<Folha> folhas){
+        mDataset = folhas;
     }
 
 }

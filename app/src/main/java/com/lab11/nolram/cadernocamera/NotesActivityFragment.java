@@ -1,8 +1,10 @@
 package com.lab11.nolram.cadernocamera;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -75,6 +77,8 @@ import java.util.List;
  */
 public class NotesActivityFragment extends Fragment {
 
+    public static final int UPDATE = 11;
+
     private long fk_caderno;
     private int cor_principal;
     private int id_cor_principal;
@@ -82,6 +86,8 @@ public class NotesActivityFragment extends Fragment {
     private int id_cor_secundaria;
     private String titulo;
     private String badge;
+
+    private Intent intentUpdate;
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton btnAddFolha;
@@ -99,16 +105,49 @@ public class NotesActivityFragment extends Fragment {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_generate_pdf) {
-            if(folhas.size() > 0 ) {
+        if (id == R.id.action_generate_pdf){
+            if (folhas.size() > 0) {
                 printDocument();
-            }else {
+            } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         "Esse caderno não possui folhas!", Toast.LENGTH_SHORT).show();
             }
             return true;
-        }
+        }else if(id == R.id.action_add_folha) {
+            addFolha(getActivity().getApplicationContext());
+            return true;
+        }else if(id == R.id.action_delete_caderno){
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.alert_attention)
+                        .setMessage(R.string.alert_delete_paper_warning)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                for(Folha f: folhas) {
+                                    File img = new File(f.getLocal_folha());
+                                    if (img.exists()) {
+                                        img.delete();
+                                    }
+                                }
+                                folhaDataSource.deleteCaderno(fk_caderno);
+                                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
+                                        R.string.alert_caderno_deletado), Toast.LENGTH_LONG).show();
+                                getActivity().finish();
+                            }
 
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                return true;
+        }else if(id == R.id.action_edit_caderno){
+            intentUpdate = new Intent(getActivity().getApplicationContext(), EditarCadernoActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong(Database.CADERNO_ID, fk_caderno);
+            intentUpdate.putExtras(bundle);
+            startActivityForResult(intentUpdate, UPDATE);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -126,8 +165,6 @@ public class NotesActivityFragment extends Fragment {
             }
         });
 
-        //toolbar.setTitle(titulo);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -136,13 +173,40 @@ public class NotesActivityFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case UPDATE:
+                if(resultCode == getActivity().RESULT_OK) {
+                    id_cor_principal = getResources().getIdentifier(
+                            data.getStringExtra(Database.CADERNO_COR_PRINCIPAL), "drawable",
+                            getActivity().getPackageName());
+
+                    id_cor_secundaria = getResources().getIdentifier(
+                            data.getStringExtra(Database.CADERNO_COR_SECUNDARIA), "drawable",
+                            getActivity().getPackageName());
+
+                    cor_principal = getResources().getColor(id_cor_principal);
+                    cor_secundaria = getResources().getColor(id_cor_secundaria);
+
+                    titulo = data.getStringExtra(Database.CADERNO_TITULO);
+                    getActivity().setTitle(titulo);
+                    toolbar.setBackgroundColor(cor_principal);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getActivity().getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(cor_secundaria);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
     public void onResume() {
         folhaDataSource.open();
-
-        /*mAdapter = new AdapterCardsFolha(folhaDataSource.getAllFolhas(fk_caderno));
-        mRecyclerView.swapAdapter(mAdapter, true);
-        mAdapter.notifyDataSetChanged();*/
-
+        mAdapter.updateAll(folhaDataSource.getAllFolhas(fk_caderno));
+        mAdapter.notifyDataSetChanged();
         super.onResume();
     }
 
@@ -200,6 +264,7 @@ public class NotesActivityFragment extends Fragment {
                         Folha folha = folhas.get(position);
                         bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
                         bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
+                        bundle.putLong(Database.FOLHA_ID, folha.getId());
                         bundle.putString(Database.CADERNO_TITULO, titulo);
                         bundle.putString(Database.CADERNO_BADGE, badge);
                         bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
@@ -219,17 +284,20 @@ public class NotesActivityFragment extends Fragment {
         btnAddFolha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent a = new Intent(view.getContext(), CriarFolhaActivity.class);
-                Bundle b = new Bundle();
-                b.putLong(Database.FOLHA_FK_CADERNO, fk_caderno);
-                b.putString(Database.CADERNO_TITULO, titulo);
-                a.putExtras(b);
-                startActivity(a);
+                addFolha(view.getContext());
             }
         });
         return view;
     }
 
+    private void addFolha(Context context) {
+        Intent a = new Intent(context, CriarFolhaActivity.class);
+        Bundle b = new Bundle();
+        b.putLong(Database.FOLHA_FK_CADERNO, fk_caderno);
+        b.putString(Database.CADERNO_TITULO, titulo);
+        a.putExtras(b);
+        startActivity(a);
+    }
 
 
     public class MyPrintDocumentAdapter extends PrintDocumentAdapter

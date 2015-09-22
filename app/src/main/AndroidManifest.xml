@@ -98,6 +98,22 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lab11.nolram.cadernocamera.CriarCadernoActivity" />
         </activity>
+        <activity
+            android:name=".EditarFolhaActivity"
+            android:label="@string/title_activity_editar_folha"
+            android:parentActivityName=".CriarFolhaActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lab11.nolram.cadernocamera.FolhaActivity" />
+        </activity>
+        <activity
+            android:name=".EditarCadernoActivity"
+            android:label="@string/title_activity_editar_caderno"
+            android:parentActivityName=".NotesActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lab11.nolram.cadernocamera.NotesActivity" />
+        </activity>
     </application>
 
 </manifest>

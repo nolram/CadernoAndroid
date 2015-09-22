@@ -69,6 +69,21 @@ public class CadernoDataSource {
         long dbInsert = database.insert(Database.TABLE_CADERNO, null, values);
     }
 
+    public void updateCaderno(String titulo, String descricao, String[] cor, String badge, long id){
+        DateTime now = new DateTime();
+        ContentValues values = new ContentValues();
+        values.put(Database.CADERNO_TITULO, titulo);
+        values.put(Database.CADERNO_DESCRICAO, descricao);
+        values.put(Database.CADERNO_DATA, now.toString());
+        values.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
+        values.put(Database.CADERNO_COR_PRINCIPAL, cor[0]);
+        values.put(Database.CADERNO_COR_SECUNDARIA, cor[1]);
+        values.put(Database.CADERNO_BADGE, badge);
+
+        long dbInsert = database.update(Database.TABLE_CADERNO, values,
+                Database.CADERNO_ID+" = "+ id, null);
+    }
+
     public void deleteCaderno(Caderno caderno) {
         long id = caderno.getId();
         System.out.println("Comment deleted with id: " + id);
@@ -90,6 +105,15 @@ public class CadernoDataSource {
         }
         cursor.close();
         return cadernos;
+    }
+
+    public Caderno getCaderno(long fk_caderno) {
+        Caderno caderno;
+        Cursor cursor = database.query(Database.TABLE_CADERNO,
+                allColumns, Database.CADERNO_ID+" = "+fk_caderno, null, null, null, null);
+        cursor.moveToFirst();
+        caderno = cursorToCaderno(cursor);
+        return caderno;
     }
 
 

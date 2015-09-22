@@ -222,8 +222,17 @@ public class FolhaDataSource {
 
     public void deleteFolha(Folha folha) {
         long id = folha.getId();
-        System.out.println("Comment deleted with id: " + id);
+        //for(Tag t: folha.getTags()){
+        //    database.delete(Database.TABLE_TAG_DA_FOLHA,
+        //            Database.TAG_DA_FOLHA_ID_TAG + " = "+ t.getId(), null);
+        //}
+        //System.out.println("Comment deleted with id: " + id);
         database.delete(Database.TABLE_FOLHA, Database.FOLHA_ID + " = " + id, null);
+    }
+
+    public void deleteCaderno(long fk_caderno) {
+        //System.out.println("Comment deleted with id: " + id);
+        database.delete(Database.TABLE_CADERNO, Database.CADERNO_ID + " = " + fk_caderno, null);
     }
 
     public void log(){

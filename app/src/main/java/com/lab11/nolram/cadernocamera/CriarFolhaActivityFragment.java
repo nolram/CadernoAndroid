@@ -23,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
@@ -41,7 +40,7 @@ import java.util.Date;
  */
 public class CriarFolhaActivityFragment extends Fragment {
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMAGE = 2;
 
     private long fk_caderno;
@@ -281,7 +280,7 @@ public class CriarFolhaActivityFragment extends Fragment {
                     //Log.d("local", mCurrentPhotoPath);
                     new AlertDialog.Builder(getActivity())
                             .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle(R.string.alert_title_img)
+                            .setTitle(R.string.alert_attention)
                             .setMessage(R.string.alert_mensage_img)
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -306,7 +305,7 @@ public class CriarFolhaActivityFragment extends Fragment {
                 }else{
                     new AlertDialog.Builder(getActivity())
                             .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setTitle(R.string.alert_title_img)
+                            .setTitle(R.string.alert_attention)
                             .setMessage(R.string.alert_mensage_img)
                             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 

@@ -36,10 +36,12 @@
     <string name="txt_gallery">Galeria</string>
     <string name="txt_camera">Câmera</string>
 
+    <string name="action_edit_caderno">Editar Caderno</string>
+    <string name="action_delete_caderno">Deletar Caderno</string>
 
     <string name="no">Não</string>
     <string name="yes">Sim</string>
-    <string name="alert_title_img">Atenção</string>
+    <string name="alert_attention">Atenção</string>
     <string name="alert_mensage_img">Deseja substituir a imagem atual?</string>
 
     <string name="alert_empty_img">Escolha ou tire uma foto de uma imagem!</string>
@@ -47,5 +49,14 @@
     <string name="txt_delete_paper">Deletar Folha</string>
 
     <string name="txt_info">Informações</string>
+
+    <string name="alert_delete_paper_warning">Deseja deletar a folha? (A imagem também será deletada)</string>
+    <string name="alert_folha_deletada">Folha deletada com sucesso!</string>
+    <string name="alert_caderno_deletado">Caderno deletado com sucesso!</string>
+    <string name="title_activity_editar_folha">EditarFolhaActivity</string>
+    <string name="title_activity_editar_caderno">EditarCadernoActivity</string>
+
+
+    <string name="txt_editar_caderno">Atualizar</string>
 
 </resources>

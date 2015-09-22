@@ -69,4 +69,19 @@ public class AdapterCardsCaderno extends RecyclerView.Adapter<AdapterCardsCadern
     public int getItemCount() {
         return mDataset.size();
     }
+
+
+    public void addItem(Caderno caderno){
+        mDataset.add(caderno);
+    }
+
+
+    public void addItem(List<Caderno> caderno){
+        mDataset.addAll(caderno);
+    }
+
+    public void updateAll(List<Caderno> caderno){
+        mDataset = caderno;
+    }
+
 }

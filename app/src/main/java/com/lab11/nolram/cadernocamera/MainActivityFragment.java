@@ -63,12 +63,8 @@ public class MainActivityFragment extends Fragment {
     public void onResume() {
         cadernoDataSource.open();
         cadernos = cadernoDataSource.getAllCadernos();
-
-        mAdapter = new AdapterCardsCaderno(cadernos,
-                getActivity().getApplicationContext());
-        mRecyclerView.swapAdapter(mAdapter, true);
+        mAdapter.updateAll(cadernos);
         mAdapter.notifyDataSetChanged();
-
         super.onResume();
     }
 

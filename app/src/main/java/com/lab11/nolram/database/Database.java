@@ -49,21 +49,29 @@ public class Database extends SQLiteOpenHelper {
     private static final String CREATE_FOLHA = "CREATE TABLE "+TABLE_FOLHA+"("+FOLHA_ID+" INTEGER PRIMARY KEY, " +
             FOLHA_LOCAL_IMAGEM+" TEXT, "+FOLHA_DATA+" DATE, "+FOLHA_FK_CADERNO+" INTEGER, " +
             FOLHA_TITULO+" TEXT NULL, "+
-            "FOREIGN KEY ("+FOLHA_FK_CADERNO+") REFERENCES "+TABLE_CADERNO+"("+CADERNO_ID+"));";
+            "FOREIGN KEY ("+FOLHA_FK_CADERNO+") REFERENCES "+TABLE_CADERNO+"("+CADERNO_ID+") ON DELETE CASCADE);";
 
     private static final String CREATE_TAG = "CREATE TABLE "+TABLE_TAG+"("+TAG_ID+" INTEGER PRIMARY KEY, "+
             TAG_TAG+" TEXT, "+TAG_MIN_TAG+" TEXT);";
 
     private static final String CREATE_TAG_DA_FOLHA = "CREATE TABLE "+TABLE_TAG_DA_FOLHA+
             "("+TAG_DA_FOLHA_ID+" INTEGER PRIMARY KEY, "+TAG_DA_FOLHA_ID_TAG+" INTEGER, "+TAG_DA_FOLHA_ID_FOLHA+" INTEGER, " +
-            "FOREIGN KEY ("+TAG_DA_FOLHA_ID_FOLHA+") REFERENCES "+TABLE_FOLHA+"("+FOLHA_ID+")," +
+            "FOREIGN KEY ("+TAG_DA_FOLHA_ID_FOLHA+") REFERENCES "+TABLE_FOLHA+"("+FOLHA_ID+") ON DELETE CASCADE," +
             "FOREIGN KEY ("+TAG_DA_FOLHA_ID_TAG+") REFERENCES "+TABLE_TAG+"("+TAG_ID+
-            "));";//, PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
+            ") ON DELETE CASCADE);";//, PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
 
 
     public Database(Context context) {
         super(context, BANCO_DADOS, null, VERSAO);
         // TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        if (!db.isReadOnly()) {
+            db.execSQL("PRAGMA foreign_keys=ON;");
+        }
     }
 
     @Override

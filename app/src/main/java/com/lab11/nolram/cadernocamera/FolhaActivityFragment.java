@@ -1,7 +1,8 @@
 package com.lab11.nolram.cadernocamera;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -10,23 +11,21 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.TouchImageView;
 import com.lab11.nolram.database.Database;
-import com.lab11.nolram.database.model.Tag;
+import com.lab11.nolram.database.controller.FolhaDataSource;
+import com.lab11.nolram.database.model.Folha;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -35,9 +34,7 @@ import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import java.io.File;
 
@@ -46,6 +43,8 @@ import java.io.File;
  * A placeholder fragment containing a simple view.
  */
 public class FolhaActivityFragment extends Fragment {
+
+    private FolhaDataSource folhaDataSource;
 
     private TouchImageView imgFoto;
     private Toolbar toolbar;
@@ -60,9 +59,54 @@ public class FolhaActivityFragment extends Fragment {
     private int id_cor_principal;
     private int cor_secundaria;
     private int id_cor_secundaria;
+    private long id_folha;
     private String badge;
 
+    @Override
+    public void onResume() {
+        folhaDataSource.open();
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        folhaDataSource.close();
+        super.onPause();
+    }
+
     public FolhaActivityFragment() {
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id == R.id.action_delete_folha){
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.alert_attention)
+                        .setMessage(R.string.alert_delete_paper_warning)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Folha folha = folhaDataSource.getFolha(id_folha);
+                                File img = new File(folha.getLocal_folha());
+                                if (img.exists()) {
+                                    img.delete();
+                                }
+                                folhaDataSource.deleteFolha(folha);
+                                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
+                                        R.string.alert_folha_deletada), Toast.LENGTH_LONG).show();
+                                getActivity().finish();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                return true;
+        }else if(id == R.id.action_edit_folha){
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -141,6 +185,12 @@ public class FolhaActivityFragment extends Fragment {
         id_cor_secundaria = bundle.getInt(Database.CADERNO_ID_COR_SECUNDARIA);
         badge = bundle.getString(Database.CADERNO_BADGE);
         caderno_titulo = bundle.getString(Database.CADERNO_TITULO);
+        id_folha = bundle.getLong(Database.FOLHA_ID);
+
+        folhaDataSource = new FolhaDataSource(view.getContext());
+        folhaDataSource.open();
+
+        setHasOptionsMenu(true);
 
         imgFoto = (TouchImageView) view.findViewById(R.id.img_foto);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
