@@ -8,10 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,6 +29,7 @@ import com.lab11.nolram.database.controller.FolhaDataSource;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -44,7 +45,6 @@ public class CriarFolhaActivityFragment extends Fragment {
     private static final int RESULT_LOAD_IMAGE = 2;
 
     private long fk_caderno;
-
     private String nomeCaderno;
 
     private EditText edtTitulo;
@@ -122,10 +122,17 @@ public class CriarFolhaActivityFragment extends Fragment {
                         Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                                 bitmap, screenWidth, 500);
                         imgThumb.setImageBitmap(ThumbImage);
+                        mCurrentPhotoPath = getStringFromUri(selectedImage);
+                    } catch (FileNotFoundException f){
+                        mCurrentPhotoPath = "";
+                        Toast.makeText(getActivity().getApplicationContext(), getString(
+                                        R.string.txt_error_file_not_found),
+                                Toast.LENGTH_SHORT).show();
+                        f.printStackTrace();
                     } catch (IOException e) {
+                        mCurrentPhotoPath = "";
                         e.printStackTrace();
                     }
-                    mCurrentPhotoPath = getStringFromUri(selectedImage);
                     //File imgFile = new  File(mCurrentPhotoPath);
                     //Log.d("local", mCurrentPhotoPath);
                     //if(imgFile.exists()){

@@ -76,6 +76,38 @@ public class FolhaDataSource {
         insertTags(tags, dbInsertFolha);
     }
 
+
+    public void editarFolha(String local_imagem, long id_folha, long fk_caderno, String titulo,
+                            String[] novas_tags, String[] velhas_tags){
+        DateTime now = new DateTime();
+        ContentValues values = new ContentValues();
+        values.put(Database.FOLHA_LOCAL_IMAGEM, local_imagem);
+        values.put(Database.FOLHA_FK_CADERNO, fk_caderno);
+        values.put(Database.FOLHA_DATA, now.toString());
+        values.put(Database.FOLHA_TITULO, titulo);
+        long dbUpdateFolha = database.update(Database.TABLE_FOLHA, values,
+                Database.FOLHA_ID + "=" + id_folha, null);
+        ContentValues cv = new ContentValues();
+        cv.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
+        database.update(Database.TABLE_CADERNO, cv, Database.CADERNO_ID + "=" + fk_caderno, null);
+        updateTags(novas_tags, velhas_tags, id_folha);
+    }
+
+    private void updateTags(String[] novas_tags, String[] velhas_tags,
+                            long fk_folha){
+        Tag tag;
+        for(String t: velhas_tags){
+            tag = getTag(t.toLowerCase());
+            if(tag != null) {
+                database.delete(Database.TABLE_TAG_DA_FOLHA,
+                        Database.TAG_DA_FOLHA_ID_FOLHA + "=" + fk_folha + " and " +
+                                Database.TAG_DA_FOLHA_ID_TAG + " = " + tag.getId(), null);
+            }
+        }
+        insertTags(novas_tags, fk_folha);
+
+    }
+
     private void insertTags(String[] tags, long dbInsertFolha) {
         ContentValues values, values1, values2;
         Tag tag;

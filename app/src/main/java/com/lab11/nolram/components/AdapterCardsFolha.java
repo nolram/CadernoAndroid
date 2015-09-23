@@ -63,21 +63,8 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
             //holder.mThumbFolhaView.setImageBitmap(myBitmap);
             loadBitmap(file.getAbsolutePath(), holder.mThumbFolhaView);
         }
-
         //holder.mThumbFolhaView
         holder.mTitleView.setText(folha.getTitulo());
-
-    }
-    public static Bitmap scaleToFitWidth(Bitmap b, int width){
-        float factor = width / (float) b.getWidth();
-
-        return Bitmap.createScaledBitmap(b, width, (int) (b.getHeight() * factor), true);
-
-    }
-
-    private int dpToPx(int dp){
-        float density = mContext.getResources().getDisplayMetrics().density;
-        return Math.round((float)dp * density);
     }
 
     @Override
@@ -117,8 +104,6 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
             File file = new File(localImagem);
             if(file.exists()){
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
-                //return Bitmap.createScaledBitmap(BitmapFactory.decodeFile(localImagem),
-                //        screenWidth, (int) DeviceDimensionsHelper.convertDpToPixel(150, mContext), true);
                 Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(localImagem), screenWidth,
                         (int) DeviceDimensionsHelper.convertDpToPixel(150, mContext));

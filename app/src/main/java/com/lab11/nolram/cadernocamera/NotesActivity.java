@@ -1,23 +1,10 @@
 package com.lab11.nolram.cadernocamera;
 
-import android.graphics.pdf.PdfDocument;
-import android.os.AsyncTask;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
 
 public class NotesActivity extends AppCompatActivity {

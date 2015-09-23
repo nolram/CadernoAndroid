@@ -9,7 +9,6 @@ import android.view.Display;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 /**
  * Created by nolram on 26/08/15.

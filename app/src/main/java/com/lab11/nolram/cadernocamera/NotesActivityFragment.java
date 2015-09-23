@@ -1,13 +1,10 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -15,11 +12,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.pdf.PdfDocument;
-import android.media.Image;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CancellationSignal;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
@@ -27,18 +22,11 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.print.pdf.PrintedPdfDocument;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
-import android.os.Bundle;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,13 +35,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.lab11.nolram.components.AdapterCardsCaderno;
 import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
-import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
 import com.melnykov.fab.FloatingActionButton;
 
@@ -61,14 +47,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -205,7 +186,8 @@ public class NotesActivityFragment extends Fragment {
     @Override
     public void onResume() {
         folhaDataSource.open();
-        mAdapter.updateAll(folhaDataSource.getAllFolhas(fk_caderno));
+        folhas = folhaDataSource.getAllFolhas(fk_caderno);
+        mAdapter.updateAll(folhas);
         mAdapter.notifyDataSetChanged();
         super.onResume();
     }
@@ -265,10 +247,13 @@ public class NotesActivityFragment extends Fragment {
                         bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
                         bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
                         bundle.putLong(Database.FOLHA_ID, folha.getId());
+                        bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
                         bundle.putString(Database.CADERNO_TITULO, titulo);
                         bundle.putString(Database.CADERNO_BADGE, badge);
                         bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
                         bundle.putString(Database.TAG_TAG, folha.getTags().toString());
+                        //bundle.putStringArray(Database.TAG_TAG, folha.getTags().toArray(new
+                        //        String[folha.getTags().size()]));
                         bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
                         bundle.putInt(Database.CADERNO_ID_COR_SECUNDARIA, id_cor_secundaria);
                         bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);

@@ -3,12 +3,13 @@ package com.lab11.nolram.cadernocamera;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Display;
@@ -44,6 +45,8 @@ import java.io.File;
  */
 public class FolhaActivityFragment extends Fragment {
 
+    public static final int UPDATE = 11;
+
     private FolhaDataSource folhaDataSource;
 
     private TouchImageView imgFoto;
@@ -61,6 +64,7 @@ public class FolhaActivityFragment extends Fragment {
     private int id_cor_secundaria;
     private long id_folha;
     private String badge;
+    private long fk_caderno;
 
     @Override
     public void onResume() {
@@ -104,6 +108,17 @@ public class FolhaActivityFragment extends Fragment {
                         .show();
                 return true;
         }else if(id == R.id.action_edit_folha){
+            Intent intentUpdate = new Intent(getActivity().getApplicationContext(),
+                    EditarFolhaActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putLong(Database.FOLHA_FK_CADERNO, fk_caderno);
+            bundle.putString(Database.CADERNO_TITULO, caderno_titulo);
+            bundle.putLong(Database.FOLHA_ID, id_folha);
+            bundle.putString(Database.FOLHA_TITULO, titulo);
+            bundle.putString(Database.FOLHA_LOCAL_IMAGEM, localImagem);
+            bundle.putString(Database.TAG_TAG, tags);
+            intentUpdate.putExtras(bundle);
+            startActivityForResult(intentUpdate, UPDATE);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -184,6 +199,7 @@ public class FolhaActivityFragment extends Fragment {
         cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
         id_cor_secundaria = bundle.getInt(Database.CADERNO_ID_COR_SECUNDARIA);
         badge = bundle.getString(Database.CADERNO_BADGE);
+        fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
         caderno_titulo = bundle.getString(Database.CADERNO_TITULO);
         id_folha = bundle.getLong(Database.FOLHA_ID);
 

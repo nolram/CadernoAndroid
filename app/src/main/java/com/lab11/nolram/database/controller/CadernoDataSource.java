@@ -1,19 +1,19 @@
 package com.lab11.nolram.database.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import org.joda.time.DateTime;
-
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Tag;
+
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nolram on 24/08/15.

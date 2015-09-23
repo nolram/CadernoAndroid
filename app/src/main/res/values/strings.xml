@@ -3,29 +3,29 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_generate_pdf">Gerar PDF</string>
-    <string name="title_activity_notes">NotesActivity</string>
-    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_notes">Folhas</string>
+    <string name="title_activity_camera">Câmera</string>
     <string name="txt_teste_card">Descrição do Card</string>
     <string name="txt_ultima_modificacao">Última Modificação</string>
-    <string name="title_activity_criar_caderno">CriarCadernoActivity</string>
-    <string name="title_activity_folha">FolhaActivity</string>
-    <string name="title_activity_criar_folha">CriarFolhaActivity</string>
+    <string name="title_activity_criar_caderno">Criar Caderno</string>
+    <string name="title_activity_folha">Folha</string>
+    <string name="title_activity_criar_folha">Adicionar Folha</string>
     <string name="menu_home">Home</string>
     <string name="menu_categorias">Categorias</string>
     <string name="menu_favoritos">Favoritos</string>
     <string name="menu_configuracoes">Configurações</string>
     <string name="tags">Tags</string>
     <string name="action_search">Pesquisa</string>
-    <string name="action_search_hint_caderno">Procure o seu caderno ou tag</string>
-    <string name="title_activity_search">SearchActivity</string>
-    <string name="title_activity_search_tag">SearchTagActivity</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="action_search_hint_caderno">Procure o seu caderno</string>
+    <string name="title_activity_search">Pesquisar</string>
+    <string name="title_activity_search_tag">Pesquisar Tag</string>
+    <string name="title_activity_settings">Configurações</string>
 
     <string name="transition_name_name">transition:NAME</string>
     <string name="transition_color">transition:COLOR</string>
     <string name="transition_image">transition:IMAGE</string>
     <string name="criar_caderno">Criar Caderno</string>
-    <string name="title_activity_icon_picker">IconPickerActivity</string>
+    <string name="title_activity_icon_picker">Escolher Badge</string>
     <string name="txt_icon">Icone</string>
     <string name="txt_cor">Cor</string>
     <string name="txt_description">Descrição (Opcional)</string>
@@ -53,10 +53,11 @@
     <string name="alert_delete_paper_warning">Deseja deletar a folha? (A imagem também será deletada)</string>
     <string name="alert_folha_deletada">Folha deletada com sucesso!</string>
     <string name="alert_caderno_deletado">Caderno deletado com sucesso!</string>
-    <string name="title_activity_editar_folha">EditarFolhaActivity</string>
-    <string name="title_activity_editar_caderno">EditarCadernoActivity</string>
+    <string name="title_activity_editar_folha">Editar Folha</string>
+    <string name="title_activity_editar_caderno">Editar Caderno</string>
 
 
     <string name="txt_editar_caderno">Atualizar</string>
+    <string name="txt_error_file_not_found">Essa imagem está com problema, por favor selecione outra imagem.</string>
 
 </resources>
