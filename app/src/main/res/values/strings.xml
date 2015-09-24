@@ -57,7 +57,8 @@
     <string name="title_activity_editar_caderno">Editar Caderno</string>
 
 
-    <string name="txt_editar_caderno">Atualizar</string>
+    <string name="txt_editar_caderno">Editar</string>
     <string name="txt_error_file_not_found">Essa imagem está com problema, por favor selecione outra imagem.</string>
+    <string name="txt_mensage_remove_image">A imagem foi removida ou foi movida de lugar, por favor escolha uma nova imagem.</string>
 
 </resources>

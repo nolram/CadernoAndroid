@@ -106,7 +106,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
                 Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(localImagem), screenWidth,
-                        (int) DeviceDimensionsHelper.convertDpToPixel(150, mContext));
+                        (int) DeviceDimensionsHelper.convertDpToPixel(170, mContext));
                 return ThumbImage;
             }
             return null;

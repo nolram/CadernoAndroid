@@ -94,9 +94,6 @@ public class NotesActivityFragment extends Fragment {
                         "Esse caderno não possui folhas!", Toast.LENGTH_SHORT).show();
             }
             return true;
-        }else if(id == R.id.action_add_folha) {
-            addFolha(getActivity().getApplicationContext());
-            return true;
         }else if(id == R.id.action_delete_caderno){
                 new AlertDialog.Builder(getActivity())
                         .setIcon(android.R.drawable.ic_dialog_alert)
@@ -125,6 +122,8 @@ public class NotesActivityFragment extends Fragment {
             intentUpdate = new Intent(getActivity().getApplicationContext(), EditarCadernoActivity.class);
             Bundle bundle = new Bundle();
             bundle.putLong(Database.CADERNO_ID, fk_caderno);
+            bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+            bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
             intentUpdate.putExtras(bundle);
             startActivityForResult(intentUpdate, UPDATE);
             return true;
@@ -280,6 +279,8 @@ public class NotesActivityFragment extends Fragment {
         Bundle b = new Bundle();
         b.putLong(Database.FOLHA_FK_CADERNO, fk_caderno);
         b.putString(Database.CADERNO_TITULO, titulo);
+        b.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+        b.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
         a.putExtras(b);
         startActivity(a);
     }

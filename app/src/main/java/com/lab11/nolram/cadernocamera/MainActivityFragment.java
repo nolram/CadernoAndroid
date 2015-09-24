@@ -75,7 +75,7 @@ public class MainActivityFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        tags = cadernoDataSource.getAllTagsGroupBy();
+        tags = cadernoDataSource.getAllTagsGroupByLimited();
         menu = new DrawerBuilder(getActivity())
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggleAnimated(true)

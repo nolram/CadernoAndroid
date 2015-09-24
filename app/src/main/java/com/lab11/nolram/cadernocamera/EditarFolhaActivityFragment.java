@@ -1,5 +1,6 @@
 package com.lab11.nolram.cadernocamera;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -19,6 +21,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,6 +52,9 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
     private String nomeCaderno;
     private String[] velhas_tags;
 
+    private int cor_principal;
+    private int cor_secundaria;
+
     private EditText edtTitulo;
     private EditText edtTags;
     private ImageView imgThumb;
@@ -68,12 +75,18 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setBackgroundColor(cor_principal);
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Integer.valueOf(cor_secundaria));
+        }
     }
 
     @Override
@@ -200,7 +213,6 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
@@ -226,6 +238,8 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
         nomeCaderno = bundle.getString(Database.CADERNO_TITULO);
         id_folha = bundle.getLong(Database.FOLHA_ID);
+        cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
+        cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
         String titulo = bundle.getString(Database.FOLHA_TITULO);
         mCurrentPhotoPath = bundle.getString(Database.FOLHA_LOCAL_IMAGEM);
         String tags = bundle.getString(Database.TAG_TAG);
@@ -268,6 +282,14 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
             if(!mCurrentPhotoPath.isEmpty()) {
                 folhaDataSource.editarFolha(mCurrentPhotoPath, id_folha, fk_caderno, titulo, res_tags,
                         velhas_tags);
+                Bundle b = new Bundle();
+                b.putString(Database.FOLHA_TITULO, titulo);
+                tags = "["+tags+"]";
+                b.putString(Database.TAG_TAG, tags);
+                b.putString(Database.FOLHA_LOCAL_IMAGEM, mCurrentPhotoPath);
+                Intent i = getActivity().getIntent();
+                i.putExtras(b);
+                getActivity().setResult(Activity.RESULT_OK, i);
                 getActivity().finish();
             }else {
                 Toast.makeText(getActivity().getApplicationContext(),

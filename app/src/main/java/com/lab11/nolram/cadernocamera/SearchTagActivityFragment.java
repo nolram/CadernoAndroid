@@ -15,6 +15,7 @@ import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
+import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
 
 import java.util.List;
@@ -96,15 +97,33 @@ public class SearchTagActivityFragment extends Fragment {
                     public void onItemClick(View view, int position) {
                         Intent intent = new Intent(view.getContext(), FolhaActivity.class);
                         Bundle bundle = new Bundle();
-                        String[] cores;
                         Folha folha = folhas.get(position);
+                        Caderno caderno = folhaDataSource.getCaderno(folha.getFk_caderno());
+
                         bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
                         bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
+                        bundle.putLong(Database.FOLHA_ID, folha.getId());
+                        bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
+                        bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
+                        bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
                         bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
                         bundle.putString(Database.TAG_TAG, folha.getTags().toString());
-                        cores = folhaDataSource.getColor(folha.getFk_caderno());
-                        bundle.putString(Database.CADERNO_COR_SECUNDARIA, cores[0]);
-                        bundle.putString(Database.CADERNO_COR_PRINCIPAL, cores[1]);
+                        //bundle.putStringArray(Database.TAG_TAG, folha.getTags().toArray(new
+                        //        String[folha.getTags().size()]));
+                        int id_cor_principal = getResources().getIdentifier(
+                                caderno.getCorPrincipal(), "drawable",
+                                getActivity().getPackageName());
+                        int id_cor_secundaria = getResources().getIdentifier(
+                                caderno.getCorSecundaria(), "drawable",
+                                getActivity().getPackageName());
+
+                        int cor_principal = getResources().getColor(id_cor_principal);
+                        int cor_secundaria = getResources().getColor(id_cor_secundaria);
+
+                        bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
+                        bundle.putInt(Database.CADERNO_ID_COR_SECUNDARIA, id_cor_secundaria);
+                        bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+                        bundle.putInt(Database.CADERNO_ID_COR_PRINCIPAL, id_cor_principal);
                         intent.putExtras(bundle);
                         startActivity(intent);
                     }

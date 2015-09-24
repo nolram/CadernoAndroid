@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.lab11.nolram.database.Database;
+import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
 import com.lab11.nolram.database.model.Tag;
 
@@ -179,6 +180,17 @@ public class FolhaDataSource {
         }
         cursor.close();
         return folha;
+    }
+
+    public Caderno getCaderno(long fk_caderno) {
+        Caderno caderno = null;
+        //log();
+        Cursor cursor = database.query(Database.TABLE_CADERNO, CadernoDataSource.allColumnsCaderno,
+                Database.CADERNO_ID + " = " + fk_caderno, null, null, null, null);
+        cursor.moveToFirst();
+        caderno = CadernoDataSource.cursorToCaderno(cursor);
+        cursor.close();
+        return caderno;
     }
 
     public String[] getColor(long fk_caderno){

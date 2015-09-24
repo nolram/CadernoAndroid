@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -18,6 +19,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -44,6 +47,9 @@ public class CriarFolhaActivityFragment extends Fragment {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMAGE = 2;
 
+    private int cor_principal;
+    private int cor_secundaria;
+
     private long fk_caderno;
     private String nomeCaderno;
 
@@ -67,12 +73,18 @@ public class CriarFolhaActivityFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setBackgroundColor(cor_principal);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(cor_secundaria);
+        }
     }
 
     @Override
@@ -146,20 +158,6 @@ public class CriarFolhaActivityFragment extends Fragment {
     }
 
 
-    private Bitmap getThumbnailBitmap(String path, int thumbnailSize) {
-        BitmapFactory.Options bounds = new BitmapFactory.Options();
-        bounds.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, bounds);
-        if ((bounds.outWidth == -1) || (bounds.outHeight == -1)) {
-            return null;
-        }
-        int originalSize = (bounds.outHeight > bounds.outWidth) ? bounds.outHeight
-                : bounds.outWidth;
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inSampleSize = originalSize / thumbnailSize;
-        return BitmapFactory.decodeFile(path, opts);
-    }
-
     private String getStringFromUri(Uri contentUri) {
         String path = null;
         String[] projection = { MediaStore.Images.Media.DATA };
@@ -194,36 +192,6 @@ public class CriarFolhaActivityFragment extends Fragment {
         }
     }
 
-
-    public void saveBitmap(Bitmap photo) {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = nomeCaderno.toUpperCase()+"_" + timeStamp +".png";
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                getString(R.string.app_name));
-
-        if(!storageDir.isDirectory()){
-            storageDir.mkdirs();
-        }
-
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        photo.compress(Bitmap.CompressFormat.PNG, 100, bytes);
-
-        // you can create a new file name "test.jpg" in sdcard folder.
-        File f = new File(storageDir, imageFileName);
-        try {
-            f.createNewFile();
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-
-            // remember close de FileOutput
-            fo.close();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        // write the bytes in file
-
-    }
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -276,7 +244,8 @@ public class CriarFolhaActivityFragment extends Fragment {
         Bundle bundle = getActivity().getIntent().getExtras();
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
         nomeCaderno = bundle.getString(Database.CADERNO_TITULO);
-
+        cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
+        cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
 
         btnGetCamera.setOnClickListener(new View.OnClickListener() {
             @Override

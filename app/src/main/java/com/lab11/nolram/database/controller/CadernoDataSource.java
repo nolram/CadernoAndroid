@@ -21,7 +21,7 @@ import java.util.List;
 public class CadernoDataSource {
     private SQLiteDatabase database;
     private Database dbHelper;
-    private String[] allColumns = { Database.CADERNO_ID,
+    public static final String[] allColumnsCaderno = { Database.CADERNO_ID,
             Database.CADERNO_TITULO, Database.CADERNO_BADGE,
             Database.CADERNO_DESCRICAO, Database.CADERNO_DATA, Database.CADERNO_ULTIMA_MODIFICACAO,
             Database.CADERNO_COR_PRINCIPAL, Database.CADERNO_COR_SECUNDARIA};
@@ -47,7 +47,7 @@ public class CadernoDataSource {
         values.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
 
         long dbInsert = database.insert(Database.TABLE_CADERNO, null, values);
-        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumns, Database.CADERNO_ID + " = " + dbInsert,
+        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno, Database.CADERNO_ID + " = " + dbInsert,
                 null, null, null, null);
         cursor.moveToFirst();
         Caderno caderno = cursorToCaderno(cursor);
@@ -81,7 +81,7 @@ public class CadernoDataSource {
         values.put(Database.CADERNO_BADGE, badge);
 
         long dbInsert = database.update(Database.TABLE_CADERNO, values,
-                Database.CADERNO_ID+" = "+ id, null);
+                Database.CADERNO_ID + " = " + id, null);
     }
 
     public void deleteCaderno(Caderno caderno) {
@@ -95,7 +95,7 @@ public class CadernoDataSource {
         List<Caderno> cadernos = new ArrayList<Caderno>();
 
         Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumns, null, null, null, null, null);
+                allColumnsCaderno, null, null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -110,7 +110,7 @@ public class CadernoDataSource {
     public Caderno getCaderno(long fk_caderno) {
         Caderno caderno;
         Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumns, Database.CADERNO_ID+" = "+fk_caderno, null, null, null, null);
+                allColumnsCaderno, Database.CADERNO_ID+" = "+fk_caderno, null, null, null, null);
         cursor.moveToFirst();
         caderno = cursorToCaderno(cursor);
         return caderno;
@@ -121,7 +121,7 @@ public class CadernoDataSource {
         List<Caderno> cadernos = new ArrayList<Caderno>();
 
         Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumns, Database.CADERNO_TITULO+" LIKE '%"+query+"%'", null, null, null, null);
+                allColumnsCaderno, Database.CADERNO_TITULO+" LIKE '%"+query+"%'", null, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -139,7 +139,25 @@ public class CadernoDataSource {
         final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
                 ", t."+Database.TAG_MIN_TAG+", t."+Database.TAG_ID+" FROM "+Database.TABLE_TAG+" t INNER JOIN "+
                 Database.TABLE_TAG_DA_FOLHA+" tt ON tt."+Database.TAG_DA_FOLHA_ID_TAG+"=t."+Database.TAG_ID+
-                " GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG;
+                " GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG+" ORDER BY COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+") DESC";
+        Cursor cursor = database.rawQuery(QUERY, null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Tag tag = cursorToTagGroupBy(cursor);
+            tags.add(tag);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return tags;
+    }
+
+    public List<Tag> getAllTagsGroupByLimited(){
+        List<Tag> tags = new ArrayList<>();
+        final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
+                ", t."+Database.TAG_MIN_TAG+", t."+Database.TAG_ID+" FROM "+Database.TABLE_TAG+" t INNER JOIN "+
+                Database.TABLE_TAG_DA_FOLHA+" tt ON tt."+Database.TAG_DA_FOLHA_ID_TAG+"=t."+Database.TAG_ID+
+                " GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG+" ORDER BY COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+") DESC" +
+                " LIMIT 10" ;
         Cursor cursor = database.rawQuery(QUERY, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
@@ -161,7 +179,7 @@ public class CadernoDataSource {
     }
 
 
-    private Caderno cursorToCaderno(Cursor cursor) {
+    public static Caderno cursorToCaderno(Cursor cursor) {
         Caderno caderno = new Caderno();
         caderno.setId(cursor.getLong(0));
         caderno.setTitulo(cursor.getString(1));

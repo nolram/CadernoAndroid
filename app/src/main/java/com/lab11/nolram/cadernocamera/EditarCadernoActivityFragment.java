@@ -2,6 +2,7 @@ package com.lab11.nolram.cadernocamera;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -25,6 +28,8 @@ import com.lab11.nolram.database.model.Caderno;
  */
 public class EditarCadernoActivityFragment extends Fragment {
 
+    private int cor_principal;
+    private int cor_secundaria;
 
     private Button btnEditar;
     private ImageButton btnImgPicker;
@@ -50,12 +55,19 @@ public class EditarCadernoActivityFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setBackgroundColor(cor_principal);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(cor_secundaria);
+        }
     }
 
     @Override
@@ -197,6 +209,8 @@ public class EditarCadernoActivityFragment extends Fragment {
         Bundle bundle = getActivity().getIntent().getExtras();
 
         id_caderno = bundle.getLong(Database.CADERNO_ID);
+        cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
+        cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
 
         Caderno caderno = cadernoDataSource.getCaderno(id_caderno);
 

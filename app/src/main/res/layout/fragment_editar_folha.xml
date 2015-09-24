@@ -87,7 +87,7 @@
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Adicionar Folha"
+            android:text="Editar"
             android:id="@+id/btn_adicionar_folha" />
     </LinearLayout>
 

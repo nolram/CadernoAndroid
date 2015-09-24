@@ -45,7 +45,7 @@ import java.io.File;
  */
 public class FolhaActivityFragment extends Fragment {
 
-    public static final int UPDATE = 11;
+    public static final int UPDATE = 12;
 
     private FolhaDataSource folhaDataSource;
 
@@ -117,6 +117,8 @@ public class FolhaActivityFragment extends Fragment {
             bundle.putString(Database.FOLHA_TITULO, titulo);
             bundle.putString(Database.FOLHA_LOCAL_IMAGEM, localImagem);
             bundle.putString(Database.TAG_TAG, tags);
+            bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
+            bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
             intentUpdate.putExtras(bundle);
             startActivityForResult(intentUpdate, UPDATE);
             return true;
@@ -186,6 +188,49 @@ public class FolhaActivityFragment extends Fragment {
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case UPDATE:
+                if(resultCode == getActivity().RESULT_OK) {
+                    menu.removeAllItems();
+                    tags = data.getStringExtra(Database.TAG_TAG);
+                    titulo = data.getStringExtra(Database.FOLHA_TITULO);
+                    localImagem = data.getStringExtra(Database.FOLHA_LOCAL_IMAGEM);
+
+                    File imgFile = new File(localImagem);
+                    //Log.d("local", mCurrentPhotoPath);
+                    if(imgFile.exists()){
+                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                        float scalingFactor = this.getBitmapScalingFactor(myBitmap);
+                        Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
+                        imgFoto.setImageBitmap(newBitmap);
+                    }else{
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                getString(R.string.txt_mensage_remove_image), Toast.LENGTH_LONG).show();
+                        imgFoto.setImageResource(R.drawable.picture_remove);
+                    }
+
+                    menu.addItems(
+                            new SectionDrawerItem().withName(R.string.txt_info),
+                            new PrimaryDrawerItem().withName(titulo).withIcon(FontAwesome.Icon.faw_font),
+                            new PrimaryDrawerItem().withName(this.data).withIcon(FontAwesome.Icon.faw_calendar),
+                            new PrimaryDrawerItem().withName(tags).withIcon(FontAwesome.Icon.faw_tags)
+                    );
+
+                    getActivity().setTitle(titulo);
+                    toolbar.setBackgroundColor(cor_principal);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getActivity().getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(cor_secundaria);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_folha, container, false);
@@ -219,6 +264,8 @@ public class FolhaActivityFragment extends Fragment {
             Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
             imgFoto.setImageBitmap(newBitmap);
         }else{
+            Toast.makeText(getActivity().getApplicationContext(),
+                    getString(R.string.txt_mensage_remove_image), Toast.LENGTH_LONG).show();
             imgFoto.setImageResource(R.drawable.picture_remove);
         }
 
