@@ -2,6 +2,7 @@ package com.lab11.nolram.cadernocamera;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +20,7 @@ import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.CadernoDataSource;
 import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Tag;
-import com.melnykov.fab.FloatingActionButton;
+//import com.melnykov.fab.FloatingActionButton;
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -87,18 +88,21 @@ public class MainActivityFragment extends Fragment {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-                        //Toast.makeText(getActivity().getApplicationContext(), String.valueOf(position), Toast.LENGTH_SHORT).show();
-                        if (position > 1) {
-                            Tag tag = tags.get(position-QTD_MENUS);
+                        // FIXME Arrumar os indices dos itens do menu
+                        if (position > 1 && position < tags.size() + 2) {
+                            Tag tag = tags.get(position - QTD_MENUS);
                             Intent intent = new Intent(view.getContext(), SearchTagActivity.class);
                             Bundle bundle = new Bundle();
                             bundle.putString(Database.TAG_TAG, tag.getTag());
                             bundle.putLong(Database.TAG_ID, tag.getId());
                             intent.putExtras(bundle);
                             startActivity(intent);
+                        } else if (tags.size() + 1 > position) {
+                            Toast.makeText(getActivity().getApplicationContext(),
+                                    String.valueOf(position), Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity().getApplicationContext(),
-                                    getString(((Nameable) drawerItem).getNameRes()), Toast.LENGTH_SHORT).show();
+                                    String.valueOf(position), Toast.LENGTH_SHORT).show();
                         }
                         return false;
                     }
@@ -109,6 +113,10 @@ public class MainActivityFragment extends Fragment {
             Tag tmp_tag = tags.get(i);
             menu.addItem(new SecondaryDrawerItem().withIcon(FontAwesome.Icon.faw_tag).withName(tmp_tag.getTag()).withBadge(
                     String.valueOf(tmp_tag.getContador())));
+        }
+        if(tags.size() > 0){
+            menu.addItem(new SecondaryDrawerItem().withIcon(FontAwesome.Icon.faw_tag).withName(getString(R.string.txt_plus)).withIcon(
+                    FontAwesome.Icon.faw_plus));
         }
     }
 
@@ -161,8 +169,6 @@ public class MainActivityFragment extends Fragment {
                     }
                 })
         );
-
-        btnCaderno.attachToRecyclerView(mRecyclerView);
 
         btnCaderno.setOnClickListener(new View.OnClickListener() {
             @Override

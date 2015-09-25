@@ -22,6 +22,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.print.pdf.PrintedPdfDocument;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +42,7 @@ import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 import com.lab11.nolram.database.model.Folha;
-import com.melnykov.fab.FloatingActionButton;
+//import com.melnykov.fab.FloatingActionButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -205,7 +206,7 @@ public class NotesActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_notes, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_folhas);
-        btnAddFolha = (FloatingActionButton) view.findViewById(R.id.fab_imagem);
+        btnAddFolha = (FloatingActionButton) view.findViewById(R.id.fab);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         setHasOptionsMenu(true);
@@ -262,8 +263,6 @@ public class NotesActivityFragment extends Fragment {
                     }
                 })
         );
-
-        btnAddFolha.attachToRecyclerView(mRecyclerView);
 
         btnAddFolha.setOnClickListener(new View.OnClickListener() {
             @Override

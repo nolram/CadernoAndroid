@@ -60,5 +60,6 @@
     <string name="txt_editar_caderno">Editar</string>
     <string name="txt_error_file_not_found">Essa imagem está com problema, por favor selecione outra imagem.</string>
     <string name="txt_mensage_remove_image">A imagem foi removida ou foi movida de lugar, por favor escolha uma nova imagem.</string>
+    <string name="txt_plus">Mais</string>
 
 </resources>
