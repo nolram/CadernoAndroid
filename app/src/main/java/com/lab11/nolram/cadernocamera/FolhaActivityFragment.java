@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -45,91 +48,18 @@ import java.io.File;
  */
 public class FolhaActivityFragment extends Fragment {
 
-    public static final int UPDATE = 12;
-
-    private FolhaDataSource folhaDataSource;
-
-    private TouchImageView imgFoto;
-    private Toolbar toolbar;
-    private Drawer menu;
-
     private String localImagem;
-    private String data;
-    private String tags;
-    private String titulo;
-    private String caderno_titulo;
-    private int cor_principal;
-    private int id_cor_principal;
-    private int cor_secundaria;
-    private int id_cor_secundaria;
-    private long id_folha;
-    private String badge;
-    private long fk_caderno;
+    private TouchImageView imgFoto;
 
-    @Override
-    public void onResume() {
-        folhaDataSource.open();
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        folhaDataSource.close();
-        super.onPause();
-    }
 
     public FolhaActivityFragment() {
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.action_delete_folha){
-                new AlertDialog.Builder(getActivity())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(R.string.alert_attention)
-                        .setMessage(R.string.alert_delete_paper_warning)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Folha folha = folhaDataSource.getFolha(id_folha);
-                                File img = new File(folha.getLocal_folha());
-                                if (img.exists()) {
-                                    img.delete();
-                                }
-                                folhaDataSource.deleteFolha(folha);
-                                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
-                                        R.string.alert_folha_deletada), Toast.LENGTH_LONG).show();
-                                getActivity().finish();
-                            }
-
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-                return true;
-        }else if(id == R.id.action_edit_folha){
-            Intent intentUpdate = new Intent(getActivity().getApplicationContext(),
-                    EditarFolhaActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putLong(Database.FOLHA_FK_CADERNO, fk_caderno);
-            bundle.putString(Database.CADERNO_TITULO, caderno_titulo);
-            bundle.putLong(Database.FOLHA_ID, id_folha);
-            bundle.putString(Database.FOLHA_TITULO, titulo);
-            bundle.putString(Database.FOLHA_LOCAL_IMAGEM, localImagem);
-            bundle.putString(Database.TAG_TAG, tags);
-            bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
-            bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
-            intentUpdate.putExtras(bundle);
-            startActivityForResult(intentUpdate, UPDATE);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        IProfile profile;
+        /*IProfile profile;
         int id_badge = getResources().getIdentifier(badge, "drawable",
                 getActivity().getPackageName());
 
@@ -184,49 +114,42 @@ public class FolhaActivityFragment extends Fragment {
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Integer.valueOf(cor_secundaria));
-        }
+        }*/
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case UPDATE:
-                if(resultCode == getActivity().RESULT_OK) {
-                    menu.removeAllItems();
-                    tags = data.getStringExtra(Database.TAG_TAG);
-                    titulo = data.getStringExtra(Database.FOLHA_TITULO);
-                    localImagem = data.getStringExtra(Database.FOLHA_LOCAL_IMAGEM);
+    class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private String data = "";
 
-                    File imgFile = new File(localImagem);
-                    //Log.d("local", mCurrentPhotoPath);
-                    if(imgFile.exists()){
-                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        float scalingFactor = this.getBitmapScalingFactor(myBitmap);
-                        Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
-                        imgFoto.setImageBitmap(newBitmap);
-                    }else{
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                getString(R.string.txt_mensage_remove_image), Toast.LENGTH_LONG).show();
-                        imgFoto.setImageResource(R.drawable.picture_remove);
-                    }
+        public BitmapWorkerTask(ImageView imageView) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
 
-                    menu.addItems(
-                            new SectionDrawerItem().withName(R.string.txt_info),
-                            new PrimaryDrawerItem().withName(titulo).withIcon(FontAwesome.Icon.faw_font),
-                            new PrimaryDrawerItem().withName(this.data).withIcon(FontAwesome.Icon.faw_calendar),
-                            new PrimaryDrawerItem().withName(tags).withIcon(FontAwesome.Icon.faw_tags)
-                    );
+        // Decode image in background.
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            data = params[0];
+            Bitmap newBitmap;
+            try {
+                Bitmap myBitmap = BitmapFactory.decodeFile(data);
+                float scalingFactor = getBitmapScalingFactor(myBitmap);
+                newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
+            }catch (NullPointerException e){
+                newBitmap = null;
+            }
+            return newBitmap;
+        }
 
-                    getActivity().setTitle(titulo);
-                    toolbar.setBackgroundColor(cor_principal);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Window window = getActivity().getWindow();
-                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                        window.setStatusBarColor(cor_secundaria);
-                    }
+        // Once complete, see if ImageView is still around and set bitmap.
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (imageViewReference != null && bitmap != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
                 }
-                break;
+            }
         }
     }
 
@@ -234,42 +157,28 @@ public class FolhaActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_folha, container, false);
-        Bundle bundle = getActivity().getIntent().getExtras();
-        localImagem = bundle.getString(Database.FOLHA_LOCAL_IMAGEM);
-        data = bundle.getString(Database.FOLHA_DATA);
-        tags = bundle.getString(Database.TAG_TAG);
-        titulo = bundle.getString(Database.FOLHA_TITULO);
-        cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
-        id_cor_principal = bundle.getInt(Database.CADERNO_ID_COR_PRINCIPAL);
-        cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
-        id_cor_secundaria = bundle.getInt(Database.CADERNO_ID_COR_SECUNDARIA);
-        badge = bundle.getString(Database.CADERNO_BADGE);
-        fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
-        caderno_titulo = bundle.getString(Database.CADERNO_TITULO);
-        id_folha = bundle.getLong(Database.FOLHA_ID);
-
-        folhaDataSource = new FolhaDataSource(view.getContext());
-        folhaDataSource.open();
-
-        setHasOptionsMenu(true);
-
         imgFoto = (TouchImageView) view.findViewById(R.id.img_foto);
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-
+        Bundle bundle = getArguments();
+        localImagem = bundle.getString(Database.FOLHA_LOCAL_IMAGEM);
         File imgFile = new File(localImagem);
         //Log.d("local", mCurrentPhotoPath);
         if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            loadBitmap(localImagem, imgFoto);
+            /*Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             float scalingFactor = this.getBitmapScalingFactor(myBitmap);
             Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
-            imgFoto.setImageBitmap(newBitmap);
+            imgFoto.setImageBitmap(newBitmap);*/
         }else{
             Toast.makeText(getActivity().getApplicationContext(),
                     getString(R.string.txt_mensage_remove_image), Toast.LENGTH_LONG).show();
             imgFoto.setImageResource(R.drawable.picture_remove);
         }
-
         return view;
+    }
+
+    public void loadBitmap(String localImagem, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(localImagem);
     }
 
     private float getBitmapScalingFactor(Bitmap bm) {

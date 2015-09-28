@@ -244,14 +244,10 @@ public class NotesActivityFragment extends Fragment {
                         Intent intent = new Intent(view.getContext(), FolhaActivity.class);
                         Bundle bundle = new Bundle();
                         Folha folha = folhas.get(position);
-                        bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
-                        bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
-                        bundle.putLong(Database.FOLHA_ID, folha.getId());
+                        bundle.putInt(FolhaActivity.INDICE, position);
                         bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
                         bundle.putString(Database.CADERNO_TITULO, titulo);
                         bundle.putString(Database.CADERNO_BADGE, badge);
-                        bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
-                        bundle.putString(Database.TAG_TAG, folha.getTags().toString());
                         //bundle.putStringArray(Database.TAG_TAG, folha.getTags().toArray(new
                         //        String[folha.getTags().size()]));
                         bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);

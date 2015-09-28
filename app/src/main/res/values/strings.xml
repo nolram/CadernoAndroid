@@ -62,4 +62,10 @@
     <string name="txt_mensage_remove_image">A imagem foi removida ou foi movida de lugar, por favor escolha uma nova imagem.</string>
     <string name="txt_plus">Mais</string>
 
+    <string name="open_drawer">Abrir Navegação</string>
+    <string name="close_drawer">Fechar Navegação</string>
+    <string name="sobre">Informações</string>
+    <string name="author">Por Marlon Baptista de Quadros</string>
+    <string name="title_activity_tags">TagsActivity</string>
+
 </resources>
