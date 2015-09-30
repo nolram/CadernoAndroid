@@ -26,7 +26,7 @@ public class FolhaDataSource {
 
     private final static String[] ALL_COLUMNS_FOLHA = { Database.FOLHA_ID,
             Database.FOLHA_LOCAL_IMAGEM, Database.FOLHA_FK_CADERNO, Database.FOLHA_DATA,
-            Database.FOLHA_TITULO};
+            Database.FOLHA_TITULO, Database.FOLHA_CONTADOR};
     private final static String[] ALL_COLUMNS_TAG = { Database.TAG_ID, Database.TAG_TAG,
             Database.TAG_MIN_TAG };
     private final static String[] ALL_TAGS_FOLHAS = {Database.TAG_DA_FOLHA_ID,
@@ -54,6 +54,7 @@ public class FolhaDataSource {
         values.put(Database.FOLHA_FK_CADERNO, fk_caderno);
         values.put(Database.FOLHA_DATA, now.toString());
         values.put(Database.FOLHA_TITULO, titulo);
+        values.put(Database.FOLHA_CONTADOR, getLastCont(fk_caderno)+1);
         long dbInsert = database.insert(Database.TABLE_FOLHA, null, values);
         Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA, Database.FOLHA_ID + " = " + dbInsert,
                 null, null, null, null);
@@ -70,11 +71,36 @@ public class FolhaDataSource {
         values.put(Database.FOLHA_FK_CADERNO, fk_caderno);
         values.put(Database.FOLHA_DATA, now.toString());
         values.put(Database.FOLHA_TITULO, titulo);
+        values.put(Database.FOLHA_CONTADOR, getLastCont(fk_caderno)+1);
         long dbInsertFolha = database.insert(Database.TABLE_FOLHA, null, values);
         ContentValues cv = new ContentValues();
         cv.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
         database.update(Database.TABLE_CADERNO, cv, Database.CADERNO_ID + "=" + fk_caderno, null);
         insertTags(tags, dbInsertFolha);
+    }
+
+    public int getLastCont(long fk_caderno){
+        Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA,
+                Database.FOLHA_FK_CADERNO + " = " + fk_caderno,
+                null, null, null, Database.FOLHA_CONTADOR + " DESC", "1");
+        if(cursor != null && cursor.moveToFirst()){
+            Folha folha = cursorToFolha(cursor);
+            return folha.getContador();
+        }
+        return 0;
+    }
+
+    public void moveItem(Folha folhaDe, Folha folhaPara) {
+        ContentValues valuesDe = new ContentValues();
+        ContentValues valuesPara = new ContentValues();
+        valuesDe.put(Database.FOLHA_CONTADOR, folhaPara.getContador());
+        valuesPara.put(Database.FOLHA_CONTADOR, folhaDe.getContador());
+        int log1 = database.update(Database.TABLE_FOLHA, valuesDe, Database.FOLHA_ID + " = " + folhaDe.getId(),
+                null);
+        Log.d("update1", String.valueOf(log1));
+        int log2 = database.update(Database.TABLE_FOLHA, valuesPara, Database.FOLHA_ID + " = " +
+                        folhaPara.getId(), null);
+        Log.d("update2", String.valueOf(log2));
     }
 
 
@@ -157,7 +183,8 @@ public class FolhaDataSource {
         List<Folha> folhas = new ArrayList<Folha>();
         //log();
         Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA,
-                Database.FOLHA_FK_CADERNO + " = " + fk_caderno, null, null, null, null);
+                Database.FOLHA_FK_CADERNO + " = " + fk_caderno, null, null, null,
+                Database.FOLHA_CONTADOR);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Folha folha = cursorToFolha(cursor);
@@ -271,6 +298,11 @@ public class FolhaDataSource {
         //            Database.TAG_DA_FOLHA_ID_TAG + " = "+ t.getId(), null);
         //}
         //System.out.println("Comment deleted with id: " + id);
+        database.execSQL("UPDATE " + Database.TABLE_FOLHA + " SET "+Database.FOLHA_CONTADOR + " = "+
+                        Database.FOLHA_CONTADOR + " - 1 WHERE " + Database.FOLHA_CONTADOR + " > "+
+                        folha.getContador() + " AND " + Database.FOLHA_FK_CADERNO + " = " +
+                        folha.getFk_caderno()
+        );
         database.delete(Database.TABLE_FOLHA, Database.FOLHA_ID + " = " + id, null);
     }
 
@@ -298,6 +330,7 @@ public class FolhaDataSource {
         folha.setData_adicionado(cursor.getString(3));
         folha.setTitulo(cursor.getString(4));
         folha.setTags(getAllTagsByFolha(folha.getId()));
+        folha.setContador(cursor.getInt(5));
         return folha;
     }
 

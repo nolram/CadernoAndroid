@@ -88,7 +88,8 @@ public class SearchTagActivityFragment extends Fragment {
 
         folhas = folhaDataSource.getAllFolhasByTag(id);
 
-        mAdapter = new AdapterCardsFolha(folhas, getActivity().getApplicationContext());
+        mAdapter = new AdapterCardsFolha(folhas, getActivity().getApplicationContext(),
+                folhaDataSource);
         mRecyclerView.swapAdapter(mAdapter, true);
 
         mRecyclerView.addOnItemTouchListener(

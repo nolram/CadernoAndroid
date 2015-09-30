@@ -60,7 +60,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
     private ImageView imgThumb;
     private Button btnAddFolha;
     private Button btnGetCamera;
-    private Button btnGetGallery;
+    //private Button btnGetGallery;
     private Toolbar toolbar;
 
     private FolhaDataSource folhaDataSource;
@@ -227,7 +227,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         imgThumb = (ImageView) view.findViewById(R.id.img_thumb);
         btnAddFolha = (Button) view.findViewById(R.id.btn_adicionar_folha);
         btnGetCamera = (Button) view.findViewById(R.id.btn_camera);
-        btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
+        //btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
@@ -261,7 +261,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         }
 
         btnGetCamera.setOnClickListener(this);
-        btnGetGallery.setOnClickListener(this);
+        //btnGetGallery.setOnClickListener(this);
         btnAddFolha.setOnClickListener(this);
 
         return view;
@@ -296,7 +296,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
                         getResources().getString(R.string.alert_empty_img),
                         Toast.LENGTH_SHORT).show();
             }
-        }else if(id == R.id.btn_galeria){
+        }/*else if(id == R.id.btn_galeria){
             if(mCurrentPhotoPath.isEmpty()){
                 Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(i, RESULT_LOAD_IMAGE);
@@ -319,7 +319,8 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
                         .setNegativeButton(R.string.no, null)
                         .show();
             }
-        }else if(id == R.id.btn_camera){
+        }*/
+        else if(id == R.id.btn_camera){
             if(mCurrentPhotoPath.isEmpty()){
                 dispatchTakePictureIntent();
             }else{

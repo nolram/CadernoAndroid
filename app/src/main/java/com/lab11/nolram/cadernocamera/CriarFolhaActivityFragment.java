@@ -58,7 +58,7 @@ public class CriarFolhaActivityFragment extends Fragment {
     private ImageView imgThumb;
     private Button btnAddFolha;
     private Button btnGetCamera;
-    private Button btnGetGallery;
+    //private Button btnGetGallery;
     private Toolbar toolbar;
 
     private FolhaDataSource folhaDataSource;
@@ -234,7 +234,7 @@ public class CriarFolhaActivityFragment extends Fragment {
         imgThumb = (ImageView) view.findViewById(R.id.img_thumb);
         btnAddFolha = (Button) view.findViewById(R.id.btn_adicionar_folha);
         btnGetCamera = (Button) view.findViewById(R.id.btn_camera);
-        btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
+        //btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
@@ -272,7 +272,7 @@ public class CriarFolhaActivityFragment extends Fragment {
             }
         });
 
-        btnGetGallery.setOnClickListener(new View.OnClickListener() {
+       /* btnGetGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mCurrentPhotoPath.isEmpty()){
@@ -296,7 +296,7 @@ public class CriarFolhaActivityFragment extends Fragment {
                             .show();
                 }
             }
-        });
+        });*/
 
         btnAddFolha.setOnClickListener(new View.OnClickListener() {
             @Override

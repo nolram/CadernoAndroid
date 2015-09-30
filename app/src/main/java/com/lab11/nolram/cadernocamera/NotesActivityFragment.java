@@ -28,6 +28,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,7 @@ import android.widget.Toast;
 import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
+import com.lab11.nolram.components.SimpleItemTouchHelperCallback;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 import com.lab11.nolram.database.model.Folha;
@@ -76,6 +78,8 @@ public class NotesActivityFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsFolha mAdapter;
     private Toolbar toolbar;
+
+    private ItemTouchHelper mItemTouchHelper;
 
     private FolhaDataSource folhaDataSource;
 
@@ -223,8 +227,13 @@ public class NotesActivityFragment extends Fragment {
                 bundle.getString(Database.CADERNO_COR_SECUNDARIA), "drawable",
                 getActivity().getPackageName());
 
-        cor_principal = getResources().getColor(id_cor_principal);
-        cor_secundaria = getResources().getColor(id_cor_secundaria);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            cor_principal = getResources().getColor(id_cor_principal, getActivity().getTheme());
+            cor_secundaria = getResources().getColor(id_cor_secundaria, getActivity().getTheme());
+        }else{
+            cor_principal = getResources().getColor(id_cor_principal);
+            cor_secundaria = getResources().getColor(id_cor_secundaria);
+        }
 
         titulo = bundle.getString(Database.CADERNO_TITULO);
         badge = bundle.getString(Database.CADERNO_BADGE);
@@ -234,8 +243,14 @@ public class NotesActivityFragment extends Fragment {
 
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
 
-        mAdapter = new AdapterCardsFolha(folhas, getActivity().getApplicationContext());
-        mRecyclerView.swapAdapter(mAdapter, true);
+        mAdapter = new AdapterCardsFolha(folhas, getActivity().getApplicationContext(),
+                folhaDataSource);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {

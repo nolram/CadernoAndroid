@@ -30,6 +30,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String FOLHA_LOCAL_IMAGEM = "local_folha";
     public static final String FOLHA_DATA = "data_adicionado";
     public static final String FOLHA_FK_CADERNO = "fk_caderno";
+    public static final String FOLHA_CONTADOR = "contador";
 
     public static final String TABLE_TAG = "tag";
     public static final String TAG_ID = "_id";
@@ -48,7 +49,7 @@ public class Database extends SQLiteOpenHelper {
 
     private static final String CREATE_FOLHA = "CREATE TABLE "+TABLE_FOLHA+"("+FOLHA_ID+" INTEGER PRIMARY KEY, " +
             FOLHA_LOCAL_IMAGEM+" TEXT, "+FOLHA_DATA+" DATE, "+FOLHA_FK_CADERNO+" INTEGER, " +
-            FOLHA_TITULO+" TEXT NULL, "+
+            FOLHA_TITULO+" TEXT NULL, "+FOLHA_CONTADOR+" INTEGER, "+
             "FOREIGN KEY ("+FOLHA_FK_CADERNO+") REFERENCES "+TABLE_CADERNO+"("+CADERNO_ID+") ON DELETE CASCADE);";
 
     private static final String CREATE_TAG = "CREATE TABLE "+TABLE_TAG+"("+TAG_ID+" INTEGER PRIMARY KEY, "+

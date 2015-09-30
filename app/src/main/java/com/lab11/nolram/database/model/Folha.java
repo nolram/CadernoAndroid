@@ -16,6 +16,7 @@ public class Folha {
     private String data_adicionado;
     private long fk_caderno;
     private List<Tag> tags;
+    private int contador;
 
     public List<Tag> getTags() {
         return tags;
@@ -68,6 +69,15 @@ public class Folha {
     }
 
     public String toString(){
-        return local_folha;
+        return titulo;
     }
+
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
+    }
+
 }
