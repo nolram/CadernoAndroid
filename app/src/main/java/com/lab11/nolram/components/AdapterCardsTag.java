@@ -39,7 +39,7 @@ public class AdapterCardsTag extends RecyclerView.Adapter<AdapterCardsTag.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_folha, parent, false);
+        layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_tag, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(layoutView);
         return vh;
@@ -49,7 +49,7 @@ public class AdapterCardsTag extends RecyclerView.Adapter<AdapterCardsTag.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         Tag tag = mDataset.get(position);
         holder.mTagView.setText(tag.getTag());
-        holder.mContadorView.setText(tag.getContador());
+        holder.mContadorView.setText(String.valueOf(tag.getContador()));
     }
 
     @Override

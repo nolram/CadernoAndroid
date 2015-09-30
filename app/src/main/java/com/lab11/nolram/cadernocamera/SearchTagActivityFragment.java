@@ -103,6 +103,8 @@ public class SearchTagActivityFragment extends Fragment {
 
                         bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
                         bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
+                        bundle.putInt(Database.FOLHA_CONTADOR, folha.getContador());
+                        bundle.putBoolean(SearchTagActivity.class.getName(), true);
                         bundle.putLong(Database.FOLHA_ID, folha.getId());
                         bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());

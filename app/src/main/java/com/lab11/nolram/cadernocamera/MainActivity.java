@@ -40,9 +40,10 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.closeDrawers();
                 switch (menuItem.getItemId()){
                     case R.id.menu_tags:
-                        Toast.makeText(getApplicationContext(),"Inbox Selected",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, TagsActivity.class);
+                        startActivity(intent);
                         return true;
-                    case R.id.menu_config:
+                    case R.id.menu_contato:
                         Toast.makeText(getApplicationContext(),"Stared Selected",Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.menu_about:

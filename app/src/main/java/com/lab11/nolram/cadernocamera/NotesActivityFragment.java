@@ -29,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -53,6 +54,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -243,7 +245,7 @@ public class NotesActivityFragment extends Fragment {
 
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
 
-        mAdapter = new AdapterCardsFolha(folhas, getActivity().getApplicationContext(),
+        mAdapter = new AdapterCardsFolha(folhas, view.getContext(),
                 folhaDataSource);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
@@ -302,7 +304,10 @@ public class NotesActivityFragment extends Fragment {
         private int pageHeight;
         private int pageWidth;
         public PdfDocument myPdfDocument;
-        public int totalpages = folhas.size()+2;
+        public int summaryPagesAll = 0;
+        public int contSummaryPages = 0;
+        List<List<Folha>> groupFolhas = new ArrayList<List<Folha>>();
+        public int totalpages = folhas.size() +1; //Folhas + Qtd páginas de sumário + Capa
         private static final String DOTS = " .............................................. ";
 
         public MyPrintDocumentAdapter(Context context)
@@ -321,6 +326,25 @@ public class NotesActivityFragment extends Fragment {
             pageHeight = newAttributes.getMediaSize().getHeightMils()/1000 * 72;
             pageWidth = newAttributes.getMediaSize().getWidthMils()/1000 * 72;
 
+            int inicio = 0;
+            int fim = 0;
+            do{
+                if(fim+15 <= folhas.size())
+                    fim += 15;
+                else
+                    fim = folhas.size();
+                groupFolhas.add(folhas.subList(inicio, fim));
+                inicio = fim;
+                //Log.d("inicio", String.valueOf(inicio));
+                //Log.d("fim", String.valueOf(fim));
+            }while (fim < folhas.size());
+
+            summaryPagesAll = groupFolhas.size();
+            totalpages += summaryPagesAll;
+
+            //Log.d("contListaGroup", String.valueOf(groupFolhas.size()));
+            //Log.d("contLista", String.valueOf(folhas.size()));
+
             if (cancellationSignal.isCanceled() ) {
                 callback.onLayoutCancelled();
                 return;
@@ -328,7 +352,7 @@ public class NotesActivityFragment extends Fragment {
 
             if (totalpages > 0) {
                 PrintDocumentInfo.Builder builder = new PrintDocumentInfo
-                        .Builder("print_output.pdf")
+                        .Builder(titulo+".pdf")
                         .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
                         .setPageCount(totalpages);
 
@@ -400,24 +424,26 @@ public class NotesActivityFragment extends Fragment {
 
             canvas.drawText("Sumário", x, y, paint);
 
-            //ALERTA: Modificar para que possa suportar multiplas páginas de sumário
+            //FIXME: Modificar para que possa suportar multiplas páginas de sumário
             paint.setTextAlign(Paint.Align.LEFT);
             paint.setTextSize(18);
 
-            for(int i=0; i < folhas.size(); i++){
-                File imgFile = new File(folhas.get(i).getLocal_folha());
+
+            for(int i=0; i < groupFolhas.get(contSummaryPages).size(); i++){
+                File imgFile = new File(groupFolhas.get(contSummaryPages).get(i).getLocal_folha());
                 if(imgFile.exists()) {
-                    canvas.drawText(String.valueOf(i + 3) + DOTS + folhas.get(i).getTitulo(), xSummary,
-                            ySummary, paint);
+                    Folha folha = groupFolhas.get(contSummaryPages).get(i);
+                    canvas.drawText(String.valueOf(folha.getContador() + summaryPagesAll + 1) + DOTS +
+                                    folha.getTitulo(), xSummary, ySummary, paint);
                     ySummary = ySummary + 35;
                 }
             }
+            contSummaryPages++;
         }
 
         private void drawPage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
-
-            File imgFile = new File(folhas.get(pagenumber - 2).getLocal_folha());
+            File imgFile = new File(folhas.get(pagenumber - (summaryPagesAll + 1)).getLocal_folha());
 
             if(imgFile.exists()) {
                 pagenumber++; // Make sure page numbers start at 1
@@ -485,9 +511,11 @@ public class NotesActivityFragment extends Fragment {
                         myPdfDocument = null;
                         return;
                     }
+                    //Log.d("summaryPagesAll", String.valueOf(summaryPagesAll));
+                    //Log.d("contSummaryPages", String.valueOf(contSummaryPages));
                     if(i == 0){
                         drawHomePage(page, i);
-                    }else if(i == 1){
+                    }else if(summaryPagesAll != contSummaryPages){
                         drawSummaryPage(page, i);
                     }else {
                         drawPage(page, i);

@@ -1,5 +1,6 @@
 package com.lab11.nolram.components;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
 import android.os.AsyncTask;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,21 +84,45 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
     @Override
     public void onItemMove(int dePosicao, int paraPosicao) {
         //FIXME Quando movimenta mais de uma posição o contador fica bugado pode ser problema de sincronismo
-        Log.d("Elements Before", mDataset.toString());
-        //Folha to = mDataset.get(toPosition > fromPosition ? toPosition - 1 : toPosition);
+        //Log.d("Elements Before", mDataset.toString());
         Folha deFolha = mDataset.remove(dePosicao);
-        //notifyItemRemoved(fromPosition);
-        //int movePosition = paraPosicao > dePosicao ? paraPosicao - 1 : paraPosicao;
         mDataset.add(paraPosicao, deFolha);
-        //notifyItemInserted(toPosition > fromPosition ? toPosition - 1 : toPosition);
         notifyItemMoved(dePosicao, paraPosicao);
         Folha paraFolha = mDataset.get(dePosicao);
-        Log.d("Para", String.valueOf(paraPosicao) + " " + paraFolha.getTitulo());
-        Log.d("De", String.valueOf(dePosicao) + " " + deFolha.getTitulo());
-        //Log.d("Operation", String.valueOf(movePosition));
-        Log.d("Elements After", mDataset.toString());
+        //Log.d("Para", String.valueOf(paraPosicao) + " " + paraFolha.getTitulo());
+        //Log.d("De", String.valueOf(dePosicao) + " " + deFolha.getTitulo());
+        //Log.d("Elements After", mDataset.toString());
+        paraFolha.setContador(paraPosicao + 1);
+        deFolha.setContador(dePosicao + 1);
         folhaDataSource.moveItem(paraFolha, deFolha);
+        //WorkerDatabase workerDatabase = new WorkerDatabase(mContext);
+        //workerDatabase.execute(paraFolha, deFolha);
     }
+
+    class WorkerDatabase extends AsyncTask<Folha, Void, Void>{
+        ProgressDialog progressDialog;
+
+        public WorkerDatabase(Context context){
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setTitle("Mudando de posição...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Folha... params) {
+            Folha paraFolha = params[0];
+            Folha deFolha = params[1];
+            folhaDataSource.moveItem(paraFolha, deFolha);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voidd) {
+            progressDialog.cancel();
+        }
+    }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
@@ -116,12 +142,12 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
 
         @Override
         public void onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY);
+            //((CardView) itemView).setBackgroundColor(Color.LTGRAY);
         }
 
         @Override
         public void onItemClear() {
-            //itemView.setBackgroundColor(0);
+            //((CardView) itemView).setCardBackgroundColor(0);
         }
     }
 
@@ -190,7 +216,6 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
 
     public static boolean cancelPotentialWork(String data, ImageView imageView) {
         final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-
         if (bitmapWorkerTask != null) {
             final String bitmapData = bitmapWorkerTask.localImagem;
             // If bitmapData is not yet set or it differs from the new data

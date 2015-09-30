@@ -7,10 +7,10 @@
             android:icon="@drawable/ic_label_black_24dp"
             android:title="@string/tags" />
         <item
-            android:id="@+id/menu_config"
+            android:id="@+id/menu_contato"
             android:checked="false"
-            android:icon="@drawable/ic_settings_black_24dp"
-            android:title="@string/menu_configuracoes" />
+            android:icon="@drawable/ic_email_black_24dp"
+            android:title="@string/menu_contato" />
         <item
             android:id="@+id/menu_about"
             android:checked="false"

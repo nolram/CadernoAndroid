@@ -97,10 +97,10 @@ public class FolhaDataSource {
         valuesPara.put(Database.FOLHA_CONTADOR, folhaDe.getContador());
         int log1 = database.update(Database.TABLE_FOLHA, valuesDe, Database.FOLHA_ID + " = " + folhaDe.getId(),
                 null);
-        Log.d("update1", String.valueOf(log1));
+        Log.d("folhaDe", folhaDe.getTitulo() + "- Cont: "+folhaDe.getContador());
         int log2 = database.update(Database.TABLE_FOLHA, valuesPara, Database.FOLHA_ID + " = " +
                         folhaPara.getId(), null);
-        Log.d("update2", String.valueOf(log2));
+        Log.d("folhaPara", folhaPara.getTitulo() + "- Cont: "+folhaPara.getContador());
     }
 
 
@@ -238,6 +238,7 @@ public class FolhaDataSource {
         List<Folha> folhas = new ArrayList<>();
         final String QUERY = "SELECT f."+Database.FOLHA_ID+", f."+Database.FOLHA_LOCAL_IMAGEM+
                 ", f."+Database.FOLHA_FK_CADERNO+", f."+Database.FOLHA_DATA+", f."+Database.FOLHA_TITULO+
+                ", f."+Database.FOLHA_CONTADOR+
                 " FROM "+Database.TABLE_FOLHA+" f INNER JOIN "+Database.TABLE_TAG_DA_FOLHA+" tt INNER JOIN "+
                 Database.TABLE_TAG+" t ON t."+Database.TAG_TAG+" LIKE ?"+" WHERE t."+
                 Database.TAG_ID+"=tt."+Database.TAG_DA_FOLHA_ID_TAG+" AND f."+Database.FOLHA_ID+
@@ -257,6 +258,7 @@ public class FolhaDataSource {
         List<Folha> folhas = new ArrayList<>();
         final String QUERY = "SELECT f."+Database.FOLHA_ID+", f."+Database.FOLHA_LOCAL_IMAGEM+
                 ", f."+Database.FOLHA_FK_CADERNO+", f."+Database.FOLHA_DATA+", f."+Database.FOLHA_TITULO+
+                ",f."+Database.FOLHA_CONTADOR+
                 " FROM "+Database.TABLE_FOLHA+" f INNER JOIN "+Database.TABLE_TAG_DA_FOLHA+" tt INNER JOIN "+
                 Database.TABLE_TAG+" t ON t."+Database.TAG_ID+" = ?"+" WHERE t."+
                 Database.TAG_ID+"=tt."+Database.TAG_DA_FOLHA_ID_TAG+" AND f."+Database.FOLHA_ID+

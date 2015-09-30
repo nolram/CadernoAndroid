@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class TagsActivityFragment extends Fragment {
     private AdapterCardsTag mAdapter;
 
     private List<Tag> tags;
+    private LinearLayoutManager linearLayoutManager;
 
     @Override
     public void onResume() {
@@ -66,12 +68,16 @@ public class TagsActivityFragment extends Fragment {
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_tags);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
+        linearLayoutManager = new LinearLayoutManager(view.getContext());
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+
         cadernoDataSource = new CadernoDataSource(view.getContext());
         cadernoDataSource.open();
 
         tags = cadernoDataSource.getAllTagsGroupBy();
-        mAdapter = new AdapterCardsTag(tags, getActivity().getApplicationContext());
-        mRecyclerView.swapAdapter(mAdapter, true);
+        mAdapter = new AdapterCardsTag(tags, view.getContext());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {

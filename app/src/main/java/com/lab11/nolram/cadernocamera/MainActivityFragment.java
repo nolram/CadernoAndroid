@@ -80,7 +80,8 @@ public class MainActivityFragment extends Fragment {
         cadernos = cadernoDataSource.getAllCadernos();
 
         mAdapter = new AdapterCardsCaderno(cadernos, view.getContext());
-        mRecyclerView.swapAdapter(mAdapter, true);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setHasFixedSize(true);
 
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {

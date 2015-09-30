@@ -78,7 +78,11 @@ public class FolhaActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         Bundle bundle = getIntent().getExtras();
-        indice = bundle.getInt(INDICE);
+        if(bundle.containsKey(SearchTagActivity.class.getName())){
+            indice = bundle.getInt(Database.FOLHA_CONTADOR) - 1;
+        }else {
+            indice = bundle.getInt(INDICE);
+        }
         cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
         cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
