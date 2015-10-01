@@ -13,7 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lab11.nolram.components.AdapterCardsSearchCaderno;
+import com.lab11.nolram.components.RecyclerItemClickListener;
+import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.CadernoDataSource;
+import com.lab11.nolram.database.model.Caderno;
+
+import java.util.List;
 
 
 /**
@@ -27,6 +32,7 @@ public class SearchActivityFragment extends Fragment {
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsSearchCaderno mAdapter;
     private Toolbar toolbar;
+    private List<Caderno> cadernos;
 
     public SearchActivityFragment() {
     }
@@ -76,9 +82,43 @@ public class SearchActivityFragment extends Fragment {
             //Toast.makeText(getActivity().getApplicationContext(), query, Toast.LENGTH_SHORT).show();
         }
 
-        mAdapter = new AdapterCardsSearchCaderno(cadernoDataSource.searchCadernos(query),
-                view.getContext());
-        mRecyclerView.swapAdapter(mAdapter, true);
+        cadernos = cadernoDataSource.searchCadernos(query);
+
+        mAdapter = new AdapterCardsSearchCaderno(cadernos, view.getContext());
+        mRecyclerView.setAdapter(mAdapter);
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent intent = new Intent(view.getContext(), NotesActivity.class);
+                        Bundle bundle = new Bundle();
+                        Caderno caderno = cadernos.get(position);
+                        bundle.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
+                        bundle.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
+                        bundle.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
+                        bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
+                        bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
+                        intent.putExtras(bundle);
+
+                        /*ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                                // the context of the activity
+                                getActivity(),
+                                // For each shared element, add to this method a new Pair item,
+                                // which contains the reference of the view we are transitioning *from*,
+                                // and the value of the transitionName attribute
+                                new Pair<View, String>(view.findViewById(R.id.img_cor),
+                                        getString(R.string.transition_color))
+                        );
+                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());*/
+
+                        startActivity(intent);
+                    }
+                })
+        );
+
         return view;
     }
 }

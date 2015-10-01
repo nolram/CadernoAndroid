@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lab11.nolram.cadernocamera.AboutActivityFragment">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:transitionName="@string/transition_color"
+        android:background="@color/cor_forte"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:elevation="4dp" />
+
+    <LinearLayout
+        android:background="@color/cinza"
+        android:layout_width="fill_parent"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/toolbar">
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_app"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/branco"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"/>
+
+        <TextView
+            android:layout_gravity="center"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/branco"
+            android:textSize="15sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/author"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

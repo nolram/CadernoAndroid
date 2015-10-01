@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CadernoCamera</string>
+    <string name="app_name">Flyn Note</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_generate_pdf">Gerar PDF</string>
@@ -48,6 +48,7 @@
     <string name="alert_empty_img">Escolha ou tire uma foto de uma imagem!</string>
     <string name="txt_edit">Editar</string>
     <string name="txt_delete_paper">Deletar Folha</string>
+    <string name="txt_share_paper">Compartilhar Folha</string>
 
     <string name="txt_info">Informações</string>
 
@@ -68,5 +69,6 @@
     <string name="sobre">Informações</string>
     <string name="author">Por Marlon Baptista de Quadros</string>
     <string name="title_activity_tags">Tags</string>
+    <string name="title_activity_about">AboutActivity</string>
 
 </resources>

@@ -38,16 +38,18 @@ public class MainActivity extends AppCompatActivity {
                 if(menuItem.isChecked()) menuItem.setChecked(false);
                 else menuItem.setChecked(true);
                 drawerLayout.closeDrawers();
+                Intent intent;
                 switch (menuItem.getItemId()){
                     case R.id.menu_tags:
-                        Intent intent = new Intent(MainActivity.this, TagsActivity.class);
+                        intent = new Intent(MainActivity.this, TagsActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.menu_contato:
                         Toast.makeText(getApplicationContext(),"Stared Selected",Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.menu_about:
-                        Toast.makeText(getApplicationContext(),"Send Selected",Toast.LENGTH_SHORT).show();
+                        intent = new Intent(MainActivity.this, AboutActivity.class);
+                        startActivity(intent);
                         return true;
                     default:
                         Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();

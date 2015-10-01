@@ -10,4 +10,9 @@
         android:title="@string/txt_delete_paper"
         app:showAsAction="never"/>
 
+    <item android:id="@+id/action_share_folha"
+        android:icon="@drawable/ic_share_white_24dp"
+        android:title="@string/txt_delete_paper"
+        app:showAsAction="ifRoom"/>
+
 </menu>
