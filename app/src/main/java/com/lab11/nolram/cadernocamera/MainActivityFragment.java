@@ -4,22 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.lab11.nolram.components.AdapterCardsCaderno;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.CadernoDataSource;
 import com.lab11.nolram.database.model.Caderno;
-import com.lab11.nolram.database.model.Tag;
 
 import java.util.List;
 

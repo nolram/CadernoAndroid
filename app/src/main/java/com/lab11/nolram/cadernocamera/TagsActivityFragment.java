@@ -1,8 +1,8 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,6 @@ import com.lab11.nolram.components.AdapterCardsTag;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.CadernoDataSource;
-import com.lab11.nolram.database.controller.FolhaDataSource;
 import com.lab11.nolram.database.model.Tag;
 
 import java.util.List;

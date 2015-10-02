@@ -95,12 +95,12 @@ public class FolhaDataSource {
         ContentValues valuesPara = new ContentValues();
         valuesDe.put(Database.FOLHA_CONTADOR, folhaPara.getContador());
         valuesPara.put(Database.FOLHA_CONTADOR, folhaDe.getContador());
-        int log1 = database.update(Database.TABLE_FOLHA, valuesDe, Database.FOLHA_ID + " = " + folhaDe.getId(),
+        database.update(Database.TABLE_FOLHA, valuesDe, Database.FOLHA_ID + " = " + folhaDe.getId(),
                 null);
-        Log.d("folhaDe", folhaDe.getTitulo() + "- Cont: "+folhaDe.getContador());
-        int log2 = database.update(Database.TABLE_FOLHA, valuesPara, Database.FOLHA_ID + " = " +
+        //Log.d("folhaDe", folhaDe.getTitulo() + "- Cont: "+folhaDe.getContador());
+        database.update(Database.TABLE_FOLHA, valuesPara, Database.FOLHA_ID + " = " +
                         folhaPara.getId(), null);
-        Log.d("folhaPara", folhaPara.getTitulo() + "- Cont: "+folhaPara.getContador());
+        //Log.d("folhaPara", folhaPara.getTitulo() + "- Cont: "+folhaPara.getContador());
     }
 
 

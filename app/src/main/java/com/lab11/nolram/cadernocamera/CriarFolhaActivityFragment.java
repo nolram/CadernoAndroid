@@ -30,10 +30,8 @@ import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -306,6 +304,9 @@ public class CriarFolhaActivityFragment extends Fragment {
                 String[] res_tags = null;
                 if(!tags.isEmpty()){
                     res_tags = tags.split("[#.;,]");
+                    for(int i=0; i < res_tags.length; i++){
+                        res_tags[i] = res_tags[i].trim();
+                    }
                 }
                 //Toast.makeText(v.getContext(), Arrays.toString(res_tags), Toast.LENGTH_SHORT).show();
                 if(!mCurrentPhotoPath.isEmpty()) {

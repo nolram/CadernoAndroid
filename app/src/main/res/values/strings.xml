@@ -70,5 +70,12 @@
     <string name="author">Por Marlon Baptista de Quadros</string>
     <string name="title_activity_tags">Tags</string>
     <string name="title_activity_about">AboutActivity</string>
+    <string name="send_to">Compartilhar no...</string>
+
+    <string-array name="list_about">
+        <item>Código Fonte</item>
+        <item>Licenças Open Source</item>
+        <item>Github</item>
+    </string-array>
 
 </resources>

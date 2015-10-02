@@ -274,9 +274,12 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
             String titulo = edtTitulo.getText().toString();
             String tags = edtTags.getText().toString();
             String[] res_tags = null;
-            HashMap<String, String> novas_tags = new HashMap<>();
+            //HashMap<String, String> novas_tags = new HashMap<>();
             if(!tags.isEmpty()){
                 res_tags = tags.split("[#.;,]");
+                for(int i=0; i < res_tags.length; i++){
+                    res_tags[i] = res_tags[i].trim();
+                }
             }
             //Toast.makeText(v.getContext(), Arrays.toString(res_tags), Toast.LENGTH_SHORT).show();
             if(!mCurrentPhotoPath.isEmpty()) {

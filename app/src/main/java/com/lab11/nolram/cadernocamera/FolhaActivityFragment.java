@@ -1,8 +1,6 @@
 package com.lab11.nolram.cadernocamera;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,33 +9,19 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.TouchImageView;
 import com.lab11.nolram.database.Database;
-import com.lab11.nolram.database.controller.FolhaDataSource;
-import com.lab11.nolram.database.model.Folha;
-import com.mikepenz.iconics.typeface.FontAwesome;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
-import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.SectionDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -50,6 +34,7 @@ public class FolhaActivityFragment extends Fragment {
 
     private String localImagem;
     private TouchImageView imgFoto;
+    private ProgressBar progressBar;
 
 
     public FolhaActivityFragment() {
@@ -59,62 +44,6 @@ public class FolhaActivityFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        /*IProfile profile;
-        int id_badge = getResources().getIdentifier(badge, "drawable",
-                getActivity().getPackageName());
-
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        getActivity().setTitle(titulo);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setBackgroundColor(cor_principal);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            profile = new ProfileDrawerItem().withName(caderno_titulo).withIcon(
-                    getResources().getDrawable(id_badge, getActivity().getTheme()));
-        }else{
-            profile = new ProfileDrawerItem().withName(caderno_titulo).withIcon(
-                    getResources().getDrawable(id_badge));
-        }
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(getActivity())
-                .addProfiles(profile)
-                .withHeaderBackground(id_cor_principal)
-                .withSelectionListEnabledForSingleProfile(false)
-                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-                    @Override
-                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-                        return false;
-                    }
-                })
-                .build();
-
-        menu = new DrawerBuilder(getActivity())
-                .withToolbar(toolbar)
-                .withActionBarDrawerToggleAnimated(true)
-                .withActivity(getActivity())
-                .addDrawerItems(
-                        new SectionDrawerItem().withName(R.string.txt_info),
-                        new PrimaryDrawerItem().withName(titulo).withIcon(FontAwesome.Icon.faw_font),
-                        new PrimaryDrawerItem().withName(data).withIcon(FontAwesome.Icon.faw_calendar),
-                        new PrimaryDrawerItem().withName(tags).withIcon(FontAwesome.Icon.faw_tags)
-                )
-                .withAccountHeader(headerResult)
-                .withSavedInstance(savedInstanceState)
-                .build();
-
-        //toolbar.setTitle(titulo);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getActivity().getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Integer.valueOf(cor_secundaria));
-        }*/
     }
 
     class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
@@ -124,6 +53,11 @@ public class FolhaActivityFragment extends Fragment {
         public BitmapWorkerTask(ImageView imageView) {
             // Use a WeakReference to ensure the ImageView can be garbage collected
             imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        @Override
+        protected void onPreExecute(){
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         // Decode image in background.
@@ -144,6 +78,7 @@ public class FolhaActivityFragment extends Fragment {
         // Once complete, see if ImageView is still around and set bitmap.
         @Override
         protected void onPostExecute(Bitmap bitmap) {
+            progressBar.setVisibility(View.GONE);
             if (imageViewReference != null && bitmap != null) {
                 final ImageView imageView = imageViewReference.get();
                 if (imageView != null) {
@@ -157,6 +92,7 @@ public class FolhaActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_folha, container, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         imgFoto = (TouchImageView) view.findViewById(R.id.img_foto);
         Bundle bundle = getArguments();
         localImagem = bundle.getString(Database.FOLHA_LOCAL_IMAGEM);

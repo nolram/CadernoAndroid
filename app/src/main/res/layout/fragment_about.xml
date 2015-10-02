@@ -16,6 +16,7 @@
         android:elevation="4dp" />
 
     <LinearLayout
+        android:id="@+id/ll_view_about"
         android:background="@color/cinza"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
@@ -26,7 +27,7 @@
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_app"
+            android:src="@drawable/ic_launcher"
             android:layout_marginTop="20dp"/>
 
         <TextView
@@ -49,4 +50,11 @@
 
     </LinearLayout>
 
+    <ListView
+        android:layout_below="@+id/ll_view_about"
+        android:id="@+id/list_view_about"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:entries="@array/list_about"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

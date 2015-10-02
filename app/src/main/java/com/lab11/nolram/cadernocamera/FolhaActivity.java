@@ -3,8 +3,7 @@ package com.lab11.nolram.cadernocamera;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,13 +20,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 import com.lab11.nolram.database.model.Folha;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -181,6 +178,14 @@ public class FolhaActivity extends AppCompatActivity {
             intentUpdate.putExtras(bundle);
             startActivityForResult(intentUpdate, UPDATE);
             return true;
+        }else if(id == R.id.action_share_folha){
+            Intent shareIntent = new Intent();
+            Folha folha = folhas.get(mPager.getCurrentItem());
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new
+                    File(folha.getLocal_folha())));
+            shareIntent.setType("image/jpeg");
+            startActivity(Intent.createChooser(shareIntent, getResources().getText(R.string.send_to)));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -190,22 +195,10 @@ public class FolhaActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case UPDATE:
-                /*if(resultCode == RESULT_OK) {
-                    tags = data.getStringExtra(Database.TAG_TAG);
-                    titulo = data.getStringExtra(Database.FOLHA_TITULO);
-                    localImagem = data.getStringExtra(Database.FOLHA_LOCAL_IMAGEM);
-                    File imgFile = new File(localImagem);
-                    if(imgFile.exists()){
-                        Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                        float scalingFactor = this.getBitmapScalingFactor(myBitmap);
-                        Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
-                        imgFoto.setImageBitmap(newBitmap);
-                    }else{
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                getString(R.string.txt_mensage_remove_image), Toast.LENGTH_LONG).show();
-                        imgFoto.setImageResource(R.drawable.picture_remove);
-                    }
-                }*/
+                if(resultCode == RESULT_OK) {
+                    String titulo = data.getStringExtra(Database.FOLHA_TITULO);
+                    setTitle(titulo);
+                }
                 break;
         }
     }
