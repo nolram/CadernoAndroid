@@ -92,7 +92,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         paraFolha.setContador(paraPosicao + 1);
         deFolha.setContador(dePosicao + 1);
         folhaDataSource.moveItem(paraFolha, deFolha);
-        //WorkerDatabase workerDatabase = new WorkerDatabase(mContext);
+        //WorkerUpdate workerDatabase = new WorkerUpdate(mContext);
         //workerDatabase.execute(paraFolha, deFolha);
     }
 

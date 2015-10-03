@@ -29,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -306,6 +307,7 @@ public class NotesActivityFragment extends Fragment {
         public PdfDocument myPdfDocument;
         public int summaryPagesAll = 0;
         public int contSummaryPages = 0;
+        public int contListFolha = 0;
         List<List<Folha>> groupFolhas = new ArrayList<List<Folha>>();
         public int totalpages = folhas.size() +1; //Folhas + Qtd páginas de sumário + Capa
         private static final String DOTS = " .............................................. ";
@@ -321,6 +323,7 @@ public class NotesActivityFragment extends Fragment {
                              CancellationSignal cancellationSignal,
                              LayoutResultCallback callback,
                              Bundle metadata) {
+
             myPdfDocument = new PrintedPdfDocument(context, newAttributes);
 
             pageHeight = newAttributes.getMediaSize().getHeightMils()/1000 * 72;
@@ -353,7 +356,7 @@ public class NotesActivityFragment extends Fragment {
             if (totalpages > 0) {
                 PrintDocumentInfo.Builder builder = new PrintDocumentInfo
                         .Builder(titulo+".pdf")
-                        .setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
+                        .setContentType(PrintDocumentInfo.CONTENT_TYPE_PHOTO)
                         .setPageCount(totalpages);
 
                 PrintDocumentInfo info = builder.build();
@@ -443,50 +446,52 @@ public class NotesActivityFragment extends Fragment {
 
         private void drawPage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
-            File imgFile = new File(folhas.get(pagenumber - (summaryPagesAll + 1)).getLocal_folha());
+            File imgFile;
+            if(contListFolha < folhas.size()) {
+                imgFile = new File(folhas.get(contListFolha).getLocal_folha());
+                contListFolha++;
+                if(imgFile.exists()) {
+                    pagenumber++; // Make sure page numbers start at 1
 
-            if(imgFile.exists()) {
-                pagenumber++; // Make sure page numbers start at 1
+                    PdfDocument.PageInfo pageInfo = page.getInfo();
 
-                PdfDocument.PageInfo pageInfo = page.getInfo();
+                    int titleBaseLine = pageInfo.getPageHeight();
+                    int leftMargin = pageInfo.getPageWidth()-20;
 
-                int titleBaseLine = pageInfo.getPageHeight();
-                int leftMargin = pageInfo.getPageWidth()-20;
+                    Paint paint = new Paint();
+                    paint.setColor(Color.BLACK);
+                    paint.setTextSize(15);
+                    //paint.setTextAlign(Paint.Align.CENTER);
+                    canvas.drawText(Integer.toString(pagenumber), leftMargin, titleBaseLine,
+                            paint);
 
+                    //Log.d("local", mCurrentPhotoPath);
 
-                Paint paint = new Paint();
-                paint.setColor(Color.BLACK);
-                paint.setTextSize(15);
-                //paint.setTextAlign(Paint.Align.CENTER);
-                canvas.drawText(Integer.toString(pagenumber), leftMargin, titleBaseLine,
-                        paint);
+                    //canvas.drawCircle(pageInfo.getPageWidth() / 2, pageInfo.getPageHeight() / 2, 150, paint);
 
-                //Log.d("local", mCurrentPhotoPath);
+                    Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(),
+                            pageInfo.getPageWidth(), pageInfo.getPageHeight());
 
-                //canvas.drawCircle(pageInfo.getPageWidth() / 2, pageInfo.getPageHeight() / 2, 150, paint);
+                    RectF content = new RectF(page.getInfo().getContentRect());
+                    Matrix matrix = new Matrix();
+                    // Compute and apply scale to fill the page.
+                    float scale = content.width() / myBitmap.getWidth();
+                    //if (fittingMode == SCALE_MODE_FILL) {
+                    //    scale = Math.max(scale, content.height() / myBitmap.getHeight());
+                    //} else {
+                    scale = Math.min(scale, content.height() / myBitmap.getHeight());
+                    //}
+                    matrix.postScale(scale, scale);
 
-                Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(),
-                        pageInfo.getPageWidth(), pageInfo.getPageHeight());
+                    // Center the content.
+                    final float translateX = (content.width()
+                            - myBitmap.getWidth() * scale) / 2;
+                    final float translateY = (content.height()
+                            - myBitmap.getHeight() * scale) / 2;
+                    matrix.postTranslate(translateX, translateY);
 
-                RectF content = new RectF(page.getInfo().getContentRect());
-                Matrix matrix = new Matrix();
-                // Compute and apply scale to fill the page.
-                float scale = content.width() / myBitmap.getWidth();
-                //if (fittingMode == SCALE_MODE_FILL) {
-                //    scale = Math.max(scale, content.height() / myBitmap.getHeight());
-                //} else {
-                scale = Math.min(scale, content.height() / myBitmap.getHeight());
-                //}
-                matrix.postScale(scale, scale);
-
-                // Center the content.
-                final float translateX = (content.width()
-                        - myBitmap.getWidth() * scale) / 2;
-                final float translateY = (content.height()
-                        - myBitmap.getHeight() * scale) / 2;
-                matrix.postTranslate(translateX, translateY);
-
-                canvas.drawBitmap(myBitmap, matrix, paint);
+                    canvas.drawBitmap(myBitmap, matrix, paint);
+                }
             }
         }
 
@@ -517,13 +522,15 @@ public class NotesActivityFragment extends Fragment {
                         drawHomePage(page, i);
                     }else if(summaryPagesAll != contSummaryPages){
                         drawSummaryPage(page, i);
-                    }else {
+                    }else{
+                        //Log.d("acessado", "acessado");
                         drawPage(page, i);
                     }
                     myPdfDocument.finishPage(page);
                 }
             }
-
+            contListFolha = 0; // Quando o arquivo é enviado ou gerado pdf esse método é chamado novamente
+            // ou seja
             try {
                 myPdfDocument.writeTo(new FileOutputStream(
                         destination.getFileDescriptor()));

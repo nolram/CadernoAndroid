@@ -2,6 +2,8 @@ package com.lab11.nolram.cadernocamera;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,17 +29,22 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
+import com.lab11.nolram.database.model.Tag;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -50,7 +58,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
     private long fk_caderno;
     private long id_folha;
     private String nomeCaderno;
-    private String[] velhas_tags;
+    private List<String> velhas_tags;
 
     private int cor_principal;
     private int cor_secundaria;
@@ -66,6 +74,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
     private FolhaDataSource folhaDataSource;
 
     String mCurrentPhotoPath = "";
+    private ProgressBar progressBarEditar;
 
     public EditarFolhaActivityFragment() {
     }
@@ -227,6 +236,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         imgThumb = (ImageView) view.findViewById(R.id.img_thumb);
         btnAddFolha = (Button) view.findViewById(R.id.btn_adicionar_folha);
         btnGetCamera = (Button) view.findViewById(R.id.btn_camera);
+        progressBarEditar = (ProgressBar) view.findViewById(R.id.progressBarEditar);
         //btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -243,21 +253,21 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         String titulo = bundle.getString(Database.FOLHA_TITULO);
         mCurrentPhotoPath = bundle.getString(Database.FOLHA_LOCAL_IMAGEM);
         String tags = bundle.getString(Database.TAG_TAG);
+        List<Tag> tags_list = folhaDataSource.getFolha(id_folha).getTags();
+        velhas_tags = new ArrayList<>();
         if (tags != null) {
-            tags = tags.replace("[","").replace("]", "");
-            velhas_tags = tags.split(",");
+            for(int i=0; i < tags_list.size(); i++) {
+                velhas_tags.add(tags_list.get(i).getTagMin());
+            }
         }
 
         edtTitulo.setText(titulo);
-        edtTags.setText(tags);
+        edtTags.setText(tags.replace("[","").replace("]",""));
 
         File imgFile = new  File(mCurrentPhotoPath);
-        int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
+
         if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
-                    myBitmap, screenWidth, 500);
-            imgThumb.setImageBitmap(ThumbImage);
+            loadBitmap(mCurrentPhotoPath, imgThumb);
         }
 
         btnGetCamera.setOnClickListener(this);
@@ -267,6 +277,94 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         return view;
     }
 
+    class WorkerUpdate extends AsyncTask<Void, Void, Void> {
+        ProgressDialog progressDialog;
+        String titulo;
+        String tags;
+        List<String> novasTagsList = new ArrayList<>();
+
+        public WorkerUpdate(Context context, String titulo, String tags, List<String> novasTags){
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setTitle(context.getString(R.string.txt_alterando));
+            progressDialog.show();
+            this.titulo = titulo;
+            this.tags = tags;
+            this.novasTagsList = novasTags;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            folhaDataSource.editarFolha(mCurrentPhotoPath, id_folha, fk_caderno, titulo,
+                    novasTagsList, velhas_tags);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voidd) {
+            Bundle b = new Bundle();
+            b.putString(Database.FOLHA_TITULO, titulo);
+            tags = "["+tags+"]";
+            b.putString(Database.TAG_TAG, tags);
+            b.putString(Database.FOLHA_LOCAL_IMAGEM, mCurrentPhotoPath);
+            Intent i = getActivity().getIntent();
+            i.putExtras(b);
+            getActivity().setResult(Activity.RESULT_OK, i);
+            getActivity().finish();
+            progressDialog.cancel();
+        }
+    }
+
+
+    class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private String data = "";
+
+        public BitmapWorkerTask(ImageView imageView) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        @Override
+        protected void onPreExecute(){
+            progressBarEditar.setVisibility(View.VISIBLE);
+        }
+
+        // Decode image in background.
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            data = params[0];
+            Bitmap newBitmap;
+            Bitmap ThumbImage;
+            try {
+                int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
+                newBitmap = BitmapFactory.decodeFile(data);
+                ThumbImage = ThumbnailUtils.extractThumbnail(newBitmap, screenWidth, 500);
+            }catch (NullPointerException e){
+                ThumbImage = null;
+            }
+            return ThumbImage;
+        }
+
+        // Once complete, see if ImageView is still around and set bitmap.
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            progressBarEditar.setVisibility(View.GONE);
+            if (imageViewReference != null && bitmap != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                    imageView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    public void loadBitmap(String localImagem, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(localImagem);
+    }
+
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -274,26 +372,18 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
             String titulo = edtTitulo.getText().toString();
             String tags = edtTags.getText().toString();
             String[] res_tags = null;
-            //HashMap<String, String> novas_tags = new HashMap<>();
+            List<String> novasTagsList = new ArrayList<>();
             if(!tags.isEmpty()){
                 res_tags = tags.split("[#.;,]");
                 for(int i=0; i < res_tags.length; i++){
-                    res_tags[i] = res_tags[i].trim();
+                    novasTagsList.add(res_tags[i].toLowerCase().trim());
                 }
             }
             //Toast.makeText(v.getContext(), Arrays.toString(res_tags), Toast.LENGTH_SHORT).show();
             if(!mCurrentPhotoPath.isEmpty()) {
-                folhaDataSource.editarFolha(mCurrentPhotoPath, id_folha, fk_caderno, titulo, res_tags,
-                        velhas_tags);
-                Bundle b = new Bundle();
-                b.putString(Database.FOLHA_TITULO, titulo);
-                tags = "["+tags+"]";
-                b.putString(Database.TAG_TAG, tags);
-                b.putString(Database.FOLHA_LOCAL_IMAGEM, mCurrentPhotoPath);
-                Intent i = getActivity().getIntent();
-                i.putExtras(b);
-                getActivity().setResult(Activity.RESULT_OK, i);
-                getActivity().finish();
+                WorkerUpdate workerUpdate = new WorkerUpdate(getContext(), titulo, tags,
+                        novasTagsList);
+                workerUpdate.execute();
             }else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         getResources().getString(R.string.alert_empty_img),

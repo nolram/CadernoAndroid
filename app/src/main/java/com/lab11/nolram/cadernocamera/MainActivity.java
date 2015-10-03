@@ -45,14 +45,24 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         return true;
                     case R.id.menu_contato:
-                        Toast.makeText(getApplicationContext(),"Stared Selected",Toast.LENGTH_SHORT).show();
+                        Intent i = new Intent(Intent.ACTION_SEND);
+                        i.setType("message/rfc822");
+                        i.putExtra(Intent.EXTRA_EMAIL  , new String[]{getString(R.string.my_email)});
+                        i.putExtra(Intent.EXTRA_SUBJECT, "["+getString(R.string.app_name)+"]");
+                        try {
+                            startActivity(Intent.createChooser(i, getString(R.string.title_msg_enviar_email)));
+                        } catch (android.content.ActivityNotFoundException ex) {
+                            Toast.makeText(MainActivity.this,
+                                    R.string.txt_msg_email,
+                                    Toast.LENGTH_SHORT).show();
+                        }
                         return true;
                     case R.id.menu_about:
                         intent = new Intent(MainActivity.this, AboutActivity.class);
                         startActivity(intent);
                         return true;
                     default:
-                        Toast.makeText(getApplicationContext(),"Somethings Wrong",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), R.string.msg_erro_menu,Toast.LENGTH_SHORT).show();
                         return true;
                 }
             }

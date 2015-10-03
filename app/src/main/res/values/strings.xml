@@ -71,6 +71,11 @@
     <string name="title_activity_tags">Tags</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="send_to">Compartilhar no...</string>
+    <string name="txt_alterando">Alterando...</string>
+    <string name="txt_msg_email">Você não tem nenhum aplicativo de email instalado.</string>
+    <string name="title_msg_enviar_email">Enviar email...</string>
+    <string name="my_email">marlonbquadros@gmail.com</string>
+    <string name="msg_erro_menu">Tem algo de errado.</string>
 
     <string-array name="list_about">
         <item>Código Fonte</item>

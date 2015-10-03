@@ -78,13 +78,13 @@
                 android:hint="@string/tags"
                 android:id="@+id/edtxt_tags"/>
         </android.support.design.widget.TextInputLayout>
-
-
-        <Button
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="Adicionar Folha"
-            android:id="@+id/btn_adicionar_folha" />
     </LinearLayout>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Adicionar Folha"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/btn_adicionar_folha" />
 
 </RelativeLayout>

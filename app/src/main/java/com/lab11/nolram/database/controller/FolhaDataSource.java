@@ -15,7 +15,9 @@ import com.lab11.nolram.database.model.Tag;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by nolram on 24/08/15.
@@ -99,13 +101,13 @@ public class FolhaDataSource {
                 null);
         //Log.d("folhaDe", folhaDe.getTitulo() + "- Cont: "+folhaDe.getContador());
         database.update(Database.TABLE_FOLHA, valuesPara, Database.FOLHA_ID + " = " +
-                        folhaPara.getId(), null);
+                folhaPara.getId(), null);
         //Log.d("folhaPara", folhaPara.getTitulo() + "- Cont: "+folhaPara.getContador());
     }
 
 
     public void editarFolha(String local_imagem, long id_folha, long fk_caderno, String titulo,
-                            String[] novas_tags, String[] velhas_tags){
+                            List<String> novas_tags, List<String> velhas_tags){
         DateTime now = new DateTime();
         ContentValues values = new ContentValues();
         values.put(Database.FOLHA_LOCAL_IMAGEM, local_imagem);
@@ -120,19 +122,30 @@ public class FolhaDataSource {
         updateTags(novas_tags, velhas_tags, id_folha);
     }
 
-    private void updateTags(String[] novas_tags, String[] velhas_tags,
+    private void updateTags(List<String> novas_tags, List<String> velhas_tags,
                             long fk_folha){
         Tag tag;
-        for(String t: velhas_tags){
+        Log.d("Velhas Tags: ", velhas_tags.toString());
+        Log.d("Novas Tags: ", novas_tags.toString());
+        final Set<String> novasSet = new HashSet<>(novas_tags);
+        final Set<String> velhasSet = new HashSet<>(velhas_tags);
+        //final Set<String> intersection = intersection(novasSet, velhasSet);
+        final Set<String> diferencaVelhas = diferencaVelhas(velhasSet, novasSet); // O que tem nas
+        // novas e não tem nas velhas é deletado
+
+        for(String t: diferencaVelhas){
             tag = getTag(t.toLowerCase());
             if(tag != null) {
-                database.delete(Database.TABLE_TAG_DA_FOLHA,
-                        Database.TAG_DA_FOLHA_ID_FOLHA + "=" + fk_folha + " and " +
+                Log.d("Tag", tag.getTag());
+                int log = database.delete(Database.TABLE_TAG_DA_FOLHA,
+                        Database.TAG_DA_FOLHA_ID_FOLHA + " = " + fk_folha + " and " +
                                 Database.TAG_DA_FOLHA_ID_TAG + " = " + tag.getId(), null);
+                Log.d("deletado: ", String.valueOf(log));
+            }else {
+                Log.d("Tag not found", t.toLowerCase());
             }
         }
-        insertTags(novas_tags, fk_folha);
-
+        insertTags(novasSet, fk_folha);
     }
 
     private void insertTags(String[] tags, long dbInsertFolha) {
@@ -168,10 +181,59 @@ public class FolhaDataSource {
         }
     }
 
+    private void insertTags(final Set<String> tags, long dbInsertFolha) {
+        ContentValues values, values1, values2;
+        Tag tag;
+        long dbInsertTag;
+        if(tags != null){
+            //Log.d("tamanho", String.valueOf(tags.length));
+            for (String t: tags) {
+                tag = getTag(t.toLowerCase());
+                if(tag == null) {
+
+                    values = new ContentValues();
+                    values.put(Database.TAG_TAG, t);
+                    values.put(Database.TAG_MIN_TAG, t.toLowerCase());
+                    dbInsertTag = database.insert(Database.TABLE_TAG, null, values);
+
+                    values1 = new ContentValues();
+                    values1.put(Database.TAG_DA_FOLHA_ID_FOLHA, dbInsertFolha);
+                    values1.put(Database.TAG_DA_FOLHA_ID_TAG, dbInsertTag);
+                    database.insert(Database.TABLE_TAG_DA_FOLHA, null, values1);
+
+                }else {
+
+                    values2 = new ContentValues();
+                    values2.put(Database.TAG_DA_FOLHA_ID_FOLHA, dbInsertFolha);
+                    values2.put(Database.TAG_DA_FOLHA_ID_TAG, tag.getId());
+                    database.insert(Database.TABLE_TAG_DA_FOLHA, null, values2);
+
+                }
+
+            }
+        }
+    }
+
+    public static Set<String> diferencaVelhas(final Set<String> velhas, final Set<String> novas){
+        Set<String> copy = new HashSet<>();
+        for(String e: velhas){
+            if(!novas.contains(e)){
+                copy.add(e);
+            }
+        }
+        return copy;
+    }
+
+    public static Set<String> intersection(final Set<String> first, final Set<String> second) {
+        final Set<String> copy = new HashSet<>(first);
+        copy.retainAll(second);
+        return copy;
+    }
+
     public Tag getTag(String min_tag){
         Tag tag = null;
         Cursor cursor = database.query(Database.TABLE_TAG,
-                ALL_COLUMNS_TAG, Database.TAG_MIN_TAG + " = '" + min_tag+"'", null, null, null, null);
+                ALL_COLUMNS_TAG, Database.TAG_MIN_TAG + " = ?", new String[]{min_tag}, null, null, null);
         if(cursor != null && cursor.moveToFirst()){
             tag = cursorToTag(cursor);
         }
@@ -195,11 +257,11 @@ public class FolhaDataSource {
         return folhas;
     }
 
-    public Folha getFolha(long fk_folha) {
+    public Folha getFolha(long id_folha) {
         Folha folha = null;
         //log();
         Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA,
-                Database.FOLHA_ID + " = " + fk_folha, null, null, null, null);
+                Database.FOLHA_ID + " = ?", new String[]{String.valueOf(id_folha)}, null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             folha = cursorToFolha(cursor);
@@ -213,7 +275,8 @@ public class FolhaDataSource {
         Caderno caderno = null;
         //log();
         Cursor cursor = database.query(Database.TABLE_CADERNO, CadernoDataSource.allColumnsCaderno,
-                Database.CADERNO_ID + " = " + fk_caderno, null, null, null, null);
+                Database.CADERNO_ID + " = ?", new String[]{String.valueOf(fk_caderno)},
+                null, null, null);
         cursor.moveToFirst();
         caderno = CadernoDataSource.cursorToCaderno(cursor);
         cursor.close();
@@ -223,7 +286,8 @@ public class FolhaDataSource {
     public String[] getColor(long fk_caderno){
         String[] cores = new String[2];
         Cursor cursor = database.query(Database.TABLE_CADERNO, ALL_COLORS,
-                Database.CADERNO_ID + " = " + fk_caderno, null, null, null, null);
+                Database.CADERNO_ID + " = ?", new String[]{String.valueOf(fk_caderno)},
+                null, null, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             cores[0] = cursor.getString(0);
