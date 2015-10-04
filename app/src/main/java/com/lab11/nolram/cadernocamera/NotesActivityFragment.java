@@ -1,6 +1,8 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,6 +14,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.pdf.PdfDocument;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
@@ -24,6 +28,7 @@ import android.print.PrintManager;
 import android.print.pdf.PrintedPdfDocument;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,7 +58,10 @@ import org.joda.time.format.DateTimeFormatter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //import com.melnykov.fab.FloatingActionButton;
@@ -96,13 +104,23 @@ public class NotesActivityFragment extends Fragment {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_generate_pdf){
             if (folhas.size() > 0) {
+                AsyncGeneratePDF gerar = new AsyncGeneratePDF(getActivity());
+                gerar.execute();
+                 //printDocument();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.alert_no_paper), Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        }else if(id == R.id.action_imprimir_caderno){
+            if (folhas.size() > 0) {
                 printDocument();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Esse caderno não possui folhas!", Toast.LENGTH_SHORT).show();
+                        getString(R.string.alert_no_paper), Toast.LENGTH_SHORT).show();
             }
-            return true;
-        }else if(id == R.id.action_delete_caderno){
+        }
+        else if(id == R.id.action_delete_caderno){
                 new AlertDialog.Builder(getActivity())
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle(R.string.alert_attention)
@@ -298,6 +316,276 @@ public class NotesActivityFragment extends Fragment {
         startActivity(a);
     }
 
+    class AsyncGeneratePDF extends AsyncTask<Void, Void, Void> {
+        ProgressDialog progressDialog;
+        GeneratePDF generatePDF;
+        Context mContext;
+
+        public AsyncGeneratePDF(Context context){
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setTitle(context.getString(R.string.txt_title_async_pdf));
+            progressDialog.setMessage(context.getString(R.string.txt_message_async_pdf));
+            progressDialog.show();
+            this.mContext = context;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            generatePDF = new GeneratePDF(getActivity().getApplicationContext());
+            generatePDF.gerarPDF();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voidd) {
+            progressDialog.dismiss();
+        }
+    }
+
+    public class GeneratePDF{
+        private static final String PRINT_SERVICE = "gerar_pdf";
+        Context context;
+        private int pageHeight;
+        private int pageWidth;
+        public PdfDocument myPdfDocument;
+        public int summaryPagesAll = 0;
+        public int contSummaryPages = 0;
+        public int contListFolha = 0;
+        List<List<Folha>> groupFolhas = new ArrayList<List<Folha>>();
+        public int totalpages = folhas.size() +1; //Folhas + Qtd páginas de sumário + Capa
+        private static final String DOTS = " .............................................. ";
+
+        private OutputStream os;
+
+
+        public GeneratePDF(Context context)
+        {
+            this.context = context;
+            onLayout();
+        }
+
+        public void onLayout(){
+            PrintAttributes printAttrs = new PrintAttributes.Builder().
+                    setColorMode(PrintAttributes.COLOR_MODE_COLOR).
+                    setMediaSize(PrintAttributes.MediaSize.ISO_A4).
+                    setResolution(new PrintAttributes.Resolution("zooey", PRINT_SERVICE, 300, 300)).
+                    setMinMargins(PrintAttributes.Margins.NO_MARGINS).
+                    build();
+            myPdfDocument = new PrintedPdfDocument(context, printAttrs);
+
+            pageHeight = printAttrs.getMediaSize().getHeightMils()/1000 * 72;
+            pageWidth = printAttrs.getMediaSize().getWidthMils()/1000 * 72;
+
+            int inicio = 0;
+            int fim = 0;
+            do{
+                if(fim+15 <= folhas.size())
+                    fim += 15;
+                else
+                    fim = folhas.size();
+                groupFolhas.add(folhas.subList(inicio, fim));
+                inicio = fim;
+                //Log.d("inicio", String.valueOf(inicio));
+                //Log.d("fim", String.valueOf(fim));
+            }while (fim < folhas.size());
+
+            summaryPagesAll = groupFolhas.size();
+            totalpages += summaryPagesAll;
+
+        }
+
+        private void drawHomePage(PdfDocument.Page page, int pagenumber){
+            Canvas canvas = page.getCanvas();
+
+            pagenumber++;
+
+            PdfDocument.PageInfo pageInfo = page.getInfo();
+
+            int y = pageInfo.getPageHeight()/2;
+            int x = pageInfo.getPageWidth()/2;
+
+            Paint paint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setTextSize(40);
+            paint.setTextAlign(Paint.Align.CENTER);
+            canvas.drawText(titulo, x, y, paint);
+
+            DateTime now = new DateTime();
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+            //canvas.drawText();
+
+            paint.setTextSize(20);
+
+            Paint paintRect = new Paint();
+            paintRect.setColor(cor_principal);
+            Rect rect = new Rect(pageInfo.getPageWidth()-50, 0, pageInfo.getPageWidth()-100, 150);
+            canvas.drawRect(rect, paintRect);
+
+            canvas.drawText(dtf.print(now), x, y + 50, paint);
+            canvas.drawText("Gerado por: "+getString(R.string.app_name), x, y+200, paint);
+        }
+
+
+        private void drawSummaryPage(PdfDocument.Page page, int pagenumber){
+            Canvas canvas = page.getCanvas();
+            pagenumber++;
+
+            Paint paint = new Paint();
+            paint.setColor(Color.BLACK);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setTextSize(40);
+
+            PdfDocument.PageInfo pageInfo = page.getInfo();
+            int y = 72;
+            int x = canvas.getWidth()/2;
+            int ySummary = y + 35;
+            int xSummary = 54;
+
+            canvas.drawText("Sumário", x, y, paint);
+
+            paint.setTextAlign(Paint.Align.LEFT);
+            paint.setTextSize(18);
+
+
+            for(int i=0; i < groupFolhas.get(contSummaryPages).size(); i++){
+                File imgFile = new File(groupFolhas.get(contSummaryPages).get(i).getLocal_folha());
+                if(imgFile.exists()) {
+                    Folha folha = groupFolhas.get(contSummaryPages).get(i);
+                    canvas.drawText(String.valueOf(folha.getContador() + summaryPagesAll + 1) + DOTS +
+                            folha.getTitulo(), xSummary, ySummary, paint);
+                    ySummary = ySummary + 35;
+                }
+            }
+            contSummaryPages++;
+        }
+
+        private void drawPage(PdfDocument.Page page, int pagenumber) {
+            Canvas canvas = page.getCanvas();
+            File imgFile;
+            if (contListFolha < folhas.size()) {
+                imgFile = new File(folhas.get(contListFolha).getLocal_folha());
+                contListFolha++;
+                if (imgFile.exists()) {
+                    pagenumber++; // Make sure page numbers start at 1
+
+                    PdfDocument.PageInfo pageInfo = page.getInfo();
+
+                    int titleBaseLine = pageInfo.getPageHeight();
+                    int leftMargin = pageInfo.getPageWidth() - 20;
+
+                    Paint paint = new Paint();
+                    paint.setColor(Color.BLACK);
+                    paint.setTextSize(15);
+                    //paint.setTextAlign(Paint.Align.CENTER);
+                    canvas.drawText(Integer.toString(pagenumber), leftMargin, titleBaseLine,
+                            paint);
+
+                    //Log.d("local", mCurrentPhotoPath);
+
+                    //canvas.drawCircle(pageInfo.getPageWidth() / 2, pageInfo.getPageHeight() / 2, 150, paint);
+
+                    Bitmap myBitmap = BitmapHelper.decodeSampledBitmapFromLocal(imgFile.getAbsolutePath(),
+                            pageInfo.getPageWidth(), pageInfo.getPageHeight());
+
+                    RectF content = new RectF(page.getInfo().getContentRect());
+                    Matrix matrix = new Matrix();
+                    // Compute and apply scale to fill the page.
+                    float scale = content.width() / myBitmap.getWidth();
+                    //if (fittingMode == SCALE_MODE_FILL) {
+                    //    scale = Math.max(scale, content.height() / myBitmap.getHeight());
+                    //} else {
+                    scale = Math.min(scale, content.height() / myBitmap.getHeight());
+                    //}
+                    matrix.postScale(scale, scale);
+
+                    // Center the content.
+                    final float translateX = (content.width()
+                            - myBitmap.getWidth() * scale) / 2;
+                    final float translateY = (content.height()
+                            - myBitmap.getHeight() * scale) / 2;
+                    matrix.postTranslate(translateX, translateY);
+
+                    canvas.drawBitmap(myBitmap, matrix, paint);
+                }
+            }
+
+        }
+
+        public void gerarPDF() {
+            for (int i = 0; i < totalpages; i++) {
+                    PdfDocument.PageInfo newPage = new PdfDocument.PageInfo.Builder(pageWidth,
+                            pageHeight, i).create();
+
+                    PdfDocument.Page page =
+                            myPdfDocument.startPage(newPage);
+
+                    /*if (cancellationSignal.isCanceled()) {
+                        callback.onWriteCancelled();
+                        myPdfDocument.close();
+                        myPdfDocument = null;
+                        return;
+                    }*/
+                    //Log.d("summaryPagesAll", String.valueOf(summaryPagesAll));
+                    //Log.d("contSummaryPages", String.valueOf(contSummaryPages));
+                    if(i == 0){
+                        drawHomePage(page, i);
+                    }else if(summaryPagesAll != contSummaryPages){
+                        drawSummaryPage(page, i);
+                    }else{
+                        //Log.d("acessado", "acessado");
+                        drawPage(page, i);
+                    }
+                    myPdfDocument.finishPage(page);
+
+            }
+            contListFolha = 0;
+            try {
+                File tempPDF = File.createTempFile("temp", ".pdf", getActivity().getExternalCacheDir());
+                tempPDF.deleteOnExit();
+                os = new FileOutputStream(tempPDF);
+                myPdfDocument.writeTo(os);
+                myPdfDocument.close();
+                os.close();
+
+                pdfDocument(Uri.fromFile(tempPDF));
+            } catch (IOException e) {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Ocorreu um erro ao gerar o PDF", Toast.LENGTH_LONG).show();
+                //throw new RuntimeException("Error generating file", e);
+            }catch (NullPointerException n){
+                Log.e("error", "Processo de gerar PDF cancelado.");
+            }
+            finally {
+                myPdfDocument.close();
+            }
+        }
+    }
+
+    private void shareDocument(Uri uri) {
+        Intent mShareIntent = new Intent();
+        mShareIntent.setAction(Intent.ACTION_SEND);
+        mShareIntent.setType("application/pdf");
+        // Assuming it may go via eMail:
+        mShareIntent.putExtra(Intent.EXTRA_SUBJECT, titulo);
+        // Attach the PDf as a Uri, since Android can't take it as bytes yet.
+        mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        startActivity(mShareIntent);
+    }
+
+    private void pdfDocument(Uri uri) {
+        Intent target = new Intent(Intent.ACTION_VIEW);
+        target.setDataAndType(uri, "application/pdf");
+        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        Intent intent = Intent.createChooser(target, getString(R.string.txt_open_file));
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity().getApplicationContext(),
+                    getString(R.string.alert_no_pdf_reader),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
 
     public class MyPrintDocumentAdapter extends PrintDocumentAdapter
     {

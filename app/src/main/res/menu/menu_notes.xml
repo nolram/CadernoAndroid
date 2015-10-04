@@ -20,4 +20,8 @@
         android:title="@string/action_delete_caderno"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_imprimir_caderno"
+        android:title="@string/action_imprimir_caderno"
+        app:showAsAction="never" />
+
 </menu>

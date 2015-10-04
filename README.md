@@ -19,6 +19,7 @@ Além de permitir a leitura no aplicativo (Zoom e paginação), ele gera PDF do 
 - Aplicar filtros nas imagens;
 - Melhor gestão das tags;
 - Pesquisa integrada (Folha, Tags e Cadernos);
+- Pesquis
 
 ##Bibliotecas Utilizadas
 - com.android.support:appcompat-v7:23.0.1
