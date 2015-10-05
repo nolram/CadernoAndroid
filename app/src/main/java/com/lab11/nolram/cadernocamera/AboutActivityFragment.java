@@ -58,6 +58,8 @@ public class AboutActivityFragment extends Fragment {
                         break;
 
                     case 1:
+                        i = new Intent(getActivity(), ThirdLicensesActivity.class);
+                        startActivity(i);
                         break;
 
                     case 2:

@@ -70,7 +70,7 @@
     <string name="sobre">Informações</string>
     <string name="author">Por Marlon Baptista de Quadros</string>
     <string name="title_activity_tags">Tags</string>
-    <string name="title_activity_about">AboutActivity</string>
+    <string name="title_activity_about">Sobre</string>
     <string name="send_to">Compartilhar no...</string>
     <string name="txt_alterando">Alterando...</string>
     <string name="txt_msg_email">Você não tem nenhum aplicativo de email instalado.</string>
@@ -82,11 +82,21 @@
     <string name="txt_message_async_pdf">Gerando PDF...</string>
     <string name="alert_no_pdf_reader">Você não possui leitor de PDF instalado</string>
     <string name="txt_open_file">Abrir Arquivo</string>
+    <string name="txt_error_pdf_io">Ocorreu um erro ao gerar o PDF</string>
+    <string name="title_activity_third_licenses">Recursos de Terceiros</string>
 
     <string-array name="list_about">
         <item>Código Fonte</item>
-        <item>Licenças Open Source</item>
+        <item>Recursos de Terceiros</item>
         <item>Github</item>
     </string-array>
+
+    <string-array name="list_recursos">
+        <item>Joda Time</item>
+        <item>Google Icons</item>
+        <item>Circle Image View</item>
+        <item>iconmonstr</item>
+    </string-array>
+
 
 </resources>

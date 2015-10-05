@@ -1,0 +1,17 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lab11.nolram.cadernocamera.ThirdLicensesActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"/>
+
+    <ListView
+        android:id="@+id/list_view_licenses"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:entries="@array/list_recursos"></ListView>
+
+</LinearLayout>

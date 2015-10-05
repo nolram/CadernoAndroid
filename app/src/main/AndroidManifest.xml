@@ -15,7 +15,6 @@
         android:label="@string/app_name"
         android:theme="@style/MyTheme"
         android:windowSoftInputMode="stateHidden" >
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.lab11.nolram.fileprovider"
@@ -25,7 +24,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/my_path" />
         </provider>
-
 
         <activity
             android:name=".MainActivity"
@@ -146,6 +144,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.lab11.nolram.cadernocamera.MainActivity" />
+        </activity>
+        <activity
+            android:name=".ThirdLicensesActivity"
+            android:label="@string/title_activity_third_licenses"
+            android:parentActivityName=".AboutActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.lab11.nolram.cadernocamera.AboutActivity" />
         </activity>
     </application>
 

@@ -519,15 +519,6 @@ public class NotesActivityFragment extends Fragment {
 
                     PdfDocument.Page page =
                             myPdfDocument.startPage(newPage);
-
-                    /*if (cancellationSignal.isCanceled()) {
-                        callback.onWriteCancelled();
-                        myPdfDocument.close();
-                        myPdfDocument = null;
-                        return;
-                    }*/
-                    //Log.d("summaryPagesAll", String.valueOf(summaryPagesAll));
-                    //Log.d("contSummaryPages", String.valueOf(contSummaryPages));
                     if(i == 0){
                         drawHomePage(page, i);
                     }else if(summaryPagesAll != contSummaryPages){
@@ -551,12 +542,11 @@ public class NotesActivityFragment extends Fragment {
                 pdfDocument(Uri.fromFile(tempPDF));
             } catch (IOException e) {
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "Ocorreu um erro ao gerar o PDF", Toast.LENGTH_LONG).show();
+                        R.string.txt_error_pdf_io, Toast.LENGTH_LONG).show();
                 //throw new RuntimeException("Error generating file", e);
             }catch (NullPointerException n){
                 Log.e("error", "Processo de gerar PDF cancelado.");
-            }
-            finally {
+            }finally {
                 myPdfDocument.close();
             }
         }
