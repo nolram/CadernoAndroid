@@ -23,7 +23,6 @@ import com.lab11.nolram.database.model.Tag;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,9 +36,9 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
     public Context mContext;
 
 
-    private static final int FOLHAS_VIEW = 1;
-    private static final int CADERNO_VIEW = 2;
-    private static final int TAGS_VIEW = 3;
+    private static final int FOLHAS = 1;
+    private static final int CADERNO = 2;
+    private static final int TAGS = 3;
 
     public AdapterCardsSearchCaderno(List<CadernoTagFolha> myDataset, Context mContext) {
         this.myDataset = myDataset;
@@ -50,11 +49,11 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(FOLHAS_VIEW == viewType) {
+        if(FOLHAS == viewType) {
             layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_folha, parent, false);
             ViewHolderFolha vhc = new ViewHolderFolha(layoutView);
             return vhc;
-        }else if(CADERNO_VIEW == viewType){
+        }else if(CADERNO == viewType){
             layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_caderno, parent, false);
             ViewHolderCaderno vhc = new ViewHolderCaderno(layoutView);
             return vhc;
@@ -67,7 +66,7 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(getItemViewType(position) == CADERNO_VIEW) {
+        if(getItemViewType(position) == CADERNO) {
             ViewHolderCaderno holderCaderno = (ViewHolderCaderno) holder;
             Caderno caderno = myDataset.get(position).getCaderno();
             holderCaderno.mTitleView.setText(caderno.getTitulo());
@@ -77,7 +76,7 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
                     caderno.getCorPrincipal(), "drawable", mContext.getPackageName())));
             holderCaderno.mBadge.setImageResource(mContext.getResources().getIdentifier(caderno.getBadge(),
                     "drawable", mContext.getPackageName()));
-        }else if(getItemViewType(position) == FOLHAS_VIEW){
+        }else if(getItemViewType(position) == FOLHAS){
             ViewHolderFolha holderFolha = (ViewHolderFolha) holder;
             Folha folha = myDataset.get(position).getFolha();
             File file = new File(folha.getLocal_folha());
@@ -96,11 +95,11 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
     public int getItemViewType (int position) {
         CadernoTagFolha ctf = myDataset.get(position);
         if(ctf.getFolha() == null && ctf.getCaderno() == null){
-            return TAGS_VIEW;
+            return TAGS;
         }else if(ctf.getTag() == null && ctf.getCaderno() == null){
-            return FOLHAS_VIEW;
+            return FOLHAS;
         }else {
-            return CADERNO_VIEW;
+            return CADERNO;
         }
     }
 
