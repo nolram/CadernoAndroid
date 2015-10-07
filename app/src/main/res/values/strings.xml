@@ -17,7 +17,7 @@
     <string name="menu_contato">Contato</string>
     <string name="tags">Tags</string>
     <string name="action_search">Pesquisa</string>
-    <string name="action_search_hint_caderno">Procure o seu caderno</string>
+    <string name="action_search_hint_caderno">Procure caderno, folha ou tag</string>
     <string name="title_activity_search">Pesquisar</string>
     <string name="title_activity_search_tag">Pesquisar Tag</string>
     <string name="title_activity_settings">Configurações</string>
@@ -84,6 +84,8 @@
     <string name="txt_open_file">Abrir Arquivo</string>
     <string name="txt_error_pdf_io">Ocorreu um erro ao gerar o PDF</string>
     <string name="title_activity_third_licenses">Recursos de Terceiros</string>
+
+    <string name="txt_meus_cadernos">Meus Cadernos</string>
 
     <string-array name="list_about">
         <item>Twitter</item>

@@ -96,31 +96,6 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         //workerDatabase.execute(paraFolha, deFolha);
     }
 
-    class WorkerDatabase extends AsyncTask<Folha, Void, Void>{
-        ProgressDialog progressDialog;
-
-        public WorkerDatabase(Context context){
-            progressDialog = new ProgressDialog(context);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setTitle("Mudando de posição...");
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Folha... params) {
-            Folha paraFolha = params[0];
-            Folha deFolha = params[1];
-            folhaDataSource.moveItem(paraFolha, deFolha);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void voidd) {
-            progressDialog.cancel();
-        }
-    }
-
-
     public static class ViewHolder extends RecyclerView.ViewHolder implements
             ItemTouchHelperViewHolder{
         // each localImagem item is just a string in this case

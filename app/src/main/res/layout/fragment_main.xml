@@ -20,7 +20,7 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_add_white_24dp"
+            android:src="@drawable/ic_library_add_white_24dp"
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/fab_margin"
             app:layout_behavior="com.lab11.nolram.components.ScrollAwareFABBehavior"/>
