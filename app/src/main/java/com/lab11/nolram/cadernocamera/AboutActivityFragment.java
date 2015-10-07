@@ -51,10 +51,15 @@ public class AboutActivityFragment extends Fragment {
                 Intent i;
                 switch (position){
                     case 0:
-                        url = "https://github.com/nolram/CadernoAndroid";
-                        i = new Intent(Intent.ACTION_VIEW);
-                        i.setData(Uri.parse(url));
-                        startActivity(i);
+                        Intent intent = null;
+                        try {
+                            getActivity().getPackageManager().getPackageInfo("com.twitter.android", 0);
+                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("twitter://user?user_id=50838540"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        } catch (Exception e) {
+                            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://twitter.com/MarlonBaptista"));
+                        }
+                        startActivity(intent);
                         break;
 
                     case 1:
@@ -63,7 +68,7 @@ public class AboutActivityFragment extends Fragment {
                         break;
 
                     case 2:
-                        url = "https://github.com/nolram/CadernoAndroid";
+                        url = "https://github.com/nolram/";
                         i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);

@@ -67,7 +67,7 @@
 
     <string name="open_drawer">Abrir Navegação</string>
     <string name="close_drawer">Fechar Navegação</string>
-    <string name="sobre">Informações</string>
+    <string name="sobre">Sobre</string>
     <string name="author">Por Marlon Baptista de Quadros</string>
     <string name="title_activity_tags">Tags</string>
     <string name="title_activity_about">Sobre</string>
@@ -86,7 +86,7 @@
     <string name="title_activity_third_licenses">Recursos de Terceiros</string>
 
     <string-array name="list_about">
-        <item>Código Fonte</item>
+        <item>Twitter</item>
         <item>Recursos de Terceiros</item>
         <item>Github</item>
     </string-array>
