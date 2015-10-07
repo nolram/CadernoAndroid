@@ -8,7 +8,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
  * swipe-to-dismiss. Drag events are automatically started by an item long-press.<br/>
  * </br/>
  * Expects the <code>RecyclerView.Adapter</code> to react to {@link
- * ItemTouchHelperAdapter} callbacks and the <code>RecyclerView.ViewHolder</code> to implement
+ * ItemTouchHelperAdapter} callbacks and the <code>RecyclerView.ViewHolderCaderno</code> to implement
  * {@link ItemTouchHelperViewHolder}.
  *
  * @author Paul Burke (ipaulpro)

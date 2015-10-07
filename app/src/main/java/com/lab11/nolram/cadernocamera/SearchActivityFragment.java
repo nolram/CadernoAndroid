@@ -17,7 +17,11 @@ import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.CadernoDataSource;
 import com.lab11.nolram.database.model.Caderno;
+import com.lab11.nolram.database.model.CadernoTagFolha;
+import com.lab11.nolram.database.model.Folha;
+import com.lab11.nolram.database.model.Tag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,11 +32,13 @@ public class SearchActivityFragment extends Fragment {
 
     private CadernoDataSource cadernoDataSource;
 
+
+    private List<CadernoTagFolha> myDataset;
+
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsSearchCaderno mAdapter;
     private Toolbar toolbar;
-    private List<Caderno> cadernos;
 
     public SearchActivityFragment() {
     }
@@ -82,14 +88,19 @@ public class SearchActivityFragment extends Fragment {
             //Toast.makeText(getActivity().getApplicationContext(), query, Toast.LENGTH_SHORT).show();
         }
 
-        cadernos = cadernoDataSource.searchCadernos(query);
+        //FIXME Criar um método assincrono
+        List<Caderno> cadernos = cadernoDataSource.searchCadernos(query);
+        List<Folha> folhas = cadernoDataSource.searchFolhas(query);
+        List<Tag> tags = cadernoDataSource.searchTags(query);
 
-        mAdapter = new AdapterCardsSearchCaderno(cadernos, view.getContext());
+        carregarDataset(cadernos, folhas, tags);
+
+        mAdapter = new AdapterCardsSearchCaderno(myDataset, view.getContext());
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setHasFixedSize(true);
 
-        mRecyclerView.addOnItemTouchListener(
+        /*mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -102,23 +113,24 @@ public class SearchActivityFragment extends Fragment {
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
                         bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
                         intent.putExtras(bundle);
-
-                        /*ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                // the context of the activity
-                                getActivity(),
-                                // For each shared element, add to this method a new Pair item,
-                                // which contains the reference of the view we are transitioning *from*,
-                                // and the value of the transitionName attribute
-                                new Pair<View, String>(view.findViewById(R.id.img_cor),
-                                        getString(R.string.transition_color))
-                        );
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());*/
-
                         startActivity(intent);
                     }
                 })
-        );
+        );*/
 
         return view;
+    }
+
+    public void carregarDataset(List<Caderno> mCadernos, List<Folha> mFolhas, List<Tag> mTags){
+        myDataset = new ArrayList<CadernoTagFolha>();
+        for(Caderno c: mCadernos){
+            myDataset.add(new CadernoTagFolha(c));
+        }
+        for(Folha f: mFolhas){
+            myDataset.add(new CadernoTagFolha(f));
+        }
+        for(Tag t: mTags){
+            myDataset.add(new CadernoTagFolha(t));
+        }
     }
 }

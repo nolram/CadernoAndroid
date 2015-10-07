@@ -72,8 +72,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/preto"
-                android:id="@+id/txt_tags"
-                android:text="Tags"/>
+                android:id="@+id/txt_tags"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -26,15 +26,15 @@ public class FolhaDataSource {
     private SQLiteDatabase database;
     private Database dbHelper;
 
-    private final static String[] ALL_COLUMNS_FOLHA = { Database.FOLHA_ID,
+    public final static String[] ALL_COLUMNS_FOLHA = { Database.FOLHA_ID,
             Database.FOLHA_LOCAL_IMAGEM, Database.FOLHA_FK_CADERNO, Database.FOLHA_DATA,
             Database.FOLHA_TITULO, Database.FOLHA_CONTADOR};
-    private final static String[] ALL_COLUMNS_TAG = { Database.TAG_ID, Database.TAG_TAG,
+    public final static String[] ALL_COLUMNS_TAG = { Database.TAG_ID, Database.TAG_TAG,
             Database.TAG_MIN_TAG };
-    private final static String[] ALL_TAGS_FOLHAS = {Database.TAG_DA_FOLHA_ID,
+    public final static String[] ALL_TAGS_FOLHAS = {Database.TAG_DA_FOLHA_ID,
             Database.TAG_DA_FOLHA_ID_FOLHA, Database.TAG_DA_FOLHA_ID_TAG};
 
-    private final static String[] ALL_COLORS = {Database.CADERNO_COR_PRINCIPAL,
+    public final static String[] ALL_COLORS = {Database.CADERNO_COR_PRINCIPAL,
             Database.CADERNO_COR_SECUNDARIA};
 
     public FolhaDataSource(Context context) {
@@ -364,8 +364,8 @@ public class FolhaDataSource {
         //            Database.TAG_DA_FOLHA_ID_TAG + " = "+ t.getId(), null);
         //}
         //System.out.println("Comment deleted with id: " + id);
-        database.execSQL("UPDATE " + Database.TABLE_FOLHA + " SET "+Database.FOLHA_CONTADOR + " = "+
-                        Database.FOLHA_CONTADOR + " - 1 WHERE " + Database.FOLHA_CONTADOR + " > "+
+        database.execSQL("UPDATE " + Database.TABLE_FOLHA + " SET " + Database.FOLHA_CONTADOR + " = " +
+                        Database.FOLHA_CONTADOR + " - 1 WHERE " + Database.FOLHA_CONTADOR + " > " +
                         folha.getContador() + " AND " + Database.FOLHA_FK_CADERNO + " = " +
                         folha.getFk_caderno()
         );
@@ -388,7 +388,7 @@ public class FolhaDataSource {
         cursor.close();
     }
 
-    private Folha cursorToFolha(Cursor cursor) {
+    public Folha cursorToFolha(Cursor cursor) {
         Folha folha = new Folha();
         folha.setId(cursor.getLong(0));
         folha.setLocal_folha(cursor.getString(1));
@@ -400,7 +400,19 @@ public class FolhaDataSource {
         return folha;
     }
 
-    private Tag cursorToTagGroupBy(Cursor cursor){
+    public static Folha cursorToFolhaSemTags(Cursor cursor) {
+        Folha folha = new Folha();
+        folha.setId(cursor.getLong(0));
+        folha.setLocal_folha(cursor.getString(1));
+        folha.setFk_caderno(cursor.getLong(2));
+        folha.setData_adicionado(cursor.getString(3));
+        folha.setTitulo(cursor.getString(4));
+        //folha.setTags(getAllTagsByFolha(folha.getId()));
+        folha.setContador(cursor.getInt(5));
+        return folha;
+    }
+
+    public static Tag cursorToTagGroupBy(Cursor cursor){
         Tag tag = new Tag();
         tag.setContador(cursor.getInt(0));
         tag.setTag(cursor.getString(1));
@@ -410,7 +422,7 @@ public class FolhaDataSource {
     }
 
 
-    private Tag cursorToTag(Cursor cursor){
+    public static Tag cursorToTag(Cursor cursor){
         Tag tag = new Tag();
         tag.setId(cursor.getLong(0));
         tag.setTag(cursor.getString(1));

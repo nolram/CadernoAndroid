@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.model.Caderno;
+import com.lab11.nolram.database.model.Folha;
 import com.lab11.nolram.database.model.Tag;
 
 import org.joda.time.DateTime;
@@ -121,7 +122,8 @@ public class CadernoDataSource {
         List<Caderno> cadernos = new ArrayList<Caderno>();
 
         Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumnsCaderno, Database.CADERNO_TITULO+" LIKE '%"+query+"%'", null, null, null, null);
+                allColumnsCaderno, Database.CADERNO_TITULO+" LIKE ?",
+                new String[]{"%"+query+"%"}, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -131,6 +133,40 @@ public class CadernoDataSource {
         }
         cursor.close();
         return cadernos;
+    }
+
+    public List<Tag> searchTags(String query) {
+        List<Tag> tags = new ArrayList<Tag>();
+
+        Cursor cursor = database.query(Database.TABLE_TAG,
+                FolhaDataSource.ALL_COLUMNS_TAG, Database.TAG_MIN_TAG+" LIKE ?",
+                new String[]{"%"+query.toLowerCase()+"%"}, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Tag caderno = FolhaDataSource.cursorToTag(cursor);
+            tags.add(caderno);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return tags;
+    }
+
+    public List<Folha> searchFolhas(String query) {
+        List<Folha> folhas = new ArrayList<Folha>();
+
+        Cursor cursor = database.query(Database.TABLE_FOLHA,
+                FolhaDataSource.ALL_COLUMNS_FOLHA, Database.FOLHA_TITULO+" LIKE ?",
+                new String[]{"%"+query+"%"}, null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Folha folha = FolhaDataSource.cursorToFolhaSemTags(cursor);
+            folhas.add(folha);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return folhas;
     }
 
 
