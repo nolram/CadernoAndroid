@@ -6,7 +6,9 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -14,11 +16,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.pdf.PdfDocument;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
+import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.print.PageRange;
 import android.print.PrintAttributes;
@@ -26,6 +30,7 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.print.PrintManager;
 import android.print.pdf.PrintedPdfDocument;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -45,6 +50,7 @@ import android.widget.Toast;
 
 import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.BitmapHelper;
+import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.components.SimpleItemTouchHelperCallback;
 import com.lab11.nolram.database.Database;
@@ -73,6 +79,7 @@ import java.util.List;
 public class NotesActivityFragment extends Fragment {
 
     public static final int UPDATE = 11;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private long fk_caderno;
     private int cor_principal;
@@ -86,6 +93,7 @@ public class NotesActivityFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private FloatingActionButton btnAddFolha;
+    private FloatingActionButton btnCamera;
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsFolha mAdapter;
     private Toolbar toolbar;
@@ -95,6 +103,8 @@ public class NotesActivityFragment extends Fragment {
     private FolhaDataSource folhaDataSource;
 
     private List<Folha> folhas;
+    private String mCurrentPhotoPath;
+    private boolean salvarImagem = false;
 
 
     @Override
@@ -205,6 +215,20 @@ public class NotesActivityFragment extends Fragment {
                     }
                 }
                 break;
+            case REQUEST_IMAGE_CAPTURE:
+                if(resultCode == getActivity().RESULT_OK){
+                    salvarImagem = true;
+                    //Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    //saveBitmap(photo);
+                }else if (resultCode == getActivity().RESULT_CANCELED){
+                    File imgFile = new File(mCurrentPhotoPath);
+                    //Log.d("local", mCurrentPhotoPath);
+                    if(imgFile.exists()){
+                        imgFile.delete();
+                        mCurrentPhotoPath = "";
+                    }
+                }
+                break;
         }
     }
 
@@ -212,8 +236,15 @@ public class NotesActivityFragment extends Fragment {
     public void onResume() {
         folhaDataSource.open();
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
+        if(salvarImagem){
+            Folha folha = folhaDataSource.criarFolhaERetornar(mCurrentPhotoPath, fk_caderno,
+                    "");
+            folhas.add(folha);
+            salvarImagem = false;
+        }
         mAdapter.updateAll(folhas);
         mAdapter.notifyDataSetChanged();
+
         super.onResume();
     }
 
@@ -232,9 +263,12 @@ public class NotesActivityFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_notes, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_folhas);
         btnAddFolha = (FloatingActionButton) view.findViewById(R.id.fab);
+        btnCamera = (FloatingActionButton) view.findViewById(R.id.fab_cam);
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
         setHasOptionsMenu(true);
+
+        mCurrentPhotoPath = "";
 
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -296,6 +330,13 @@ public class NotesActivityFragment extends Fragment {
                 })
         );
 
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dispatchTakePictureIntent();
+            }
+        });
+
         btnAddFolha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,6 +356,75 @@ public class NotesActivityFragment extends Fragment {
         a.putExtras(b);
         startActivity(a);
     }
+
+
+    private String getStringFromUri(Uri contentUri) {
+        String path = null;
+        String[] projection = { MediaStore.Images.Media.DATA };
+        Cursor cursor = getActivity().getContentResolver().query(contentUri, projection, null, null, null);
+        if (cursor.moveToFirst()) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            path = cursor.getString(columnIndex);
+        }
+        cursor.close();
+        return path;
+    }
+
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+                Log.e("criar", "Não foi possível criar o arquivo");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        Uri.fromFile(photoFile));
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+    }
+
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = titulo.toUpperCase()+"_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                getString(R.string.app_name));
+
+        if(!storageDir.isDirectory()){
+            storageDir.mkdirs();
+        }
+
+        if(!mCurrentPhotoPath.isEmpty()){
+            File mExistente = new File(mCurrentPhotoPath);
+            if(mExistente.exists()){
+                boolean temp = mExistente.delete();
+                if(temp){
+                    Log.d("img_deletado", "Imagem deletada");
+                }
+            }
+        }
+
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
 
     class AsyncGeneratePDF extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDialog;
@@ -552,17 +662,6 @@ public class NotesActivityFragment extends Fragment {
         }
     }
 
-    private void shareDocument(Uri uri) {
-        Intent mShareIntent = new Intent();
-        mShareIntent.setAction(Intent.ACTION_SEND);
-        mShareIntent.setType("application/pdf");
-        // Assuming it may go via eMail:
-        mShareIntent.putExtra(Intent.EXTRA_SUBJECT, titulo);
-        // Attach the PDf as a Uri, since Android can't take it as bytes yet.
-        mShareIntent.putExtra(Intent.EXTRA_STREAM, uri);
-        startActivity(mShareIntent);
-    }
-
     private void pdfDocument(Uri uri) {
         Intent target = new Intent(Intent.ACTION_VIEW);
         target.setDataAndType(uri, "application/pdf");
@@ -577,8 +676,7 @@ public class NotesActivityFragment extends Fragment {
         }
     }
 
-    public class MyPrintDocumentAdapter extends PrintDocumentAdapter
-    {
+    public class MyPrintDocumentAdapter extends PrintDocumentAdapter{
         Context context;
         private int pageHeight;
         private int pageWidth;

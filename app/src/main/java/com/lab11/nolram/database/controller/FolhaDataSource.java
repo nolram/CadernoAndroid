@@ -58,8 +58,8 @@ public class FolhaDataSource {
         values.put(Database.FOLHA_TITULO, titulo);
         values.put(Database.FOLHA_CONTADOR, getLastCont(fk_caderno)+1);
         long dbInsert = database.insert(Database.TABLE_FOLHA, null, values);
-        Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA, Database.FOLHA_ID + " = " + dbInsert,
-                null, null, null, null);
+        Cursor cursor = database.query(Database.TABLE_FOLHA, ALL_COLUMNS_FOLHA,
+                Database.FOLHA_ID + " = ?",new String[]{Long.toString(dbInsert)}, null, null, null);
         cursor.moveToFirst();
         Folha folha = cursorToFolha(cursor);
         cursor.close();
