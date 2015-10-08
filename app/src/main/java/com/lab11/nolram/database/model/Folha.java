@@ -64,7 +64,7 @@ public class Folha {
 
     public void setData(String data) {
         DateTime dt = new DateTime(data);
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss MM/dd/yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss dd/MM/yyyy");
         this.data = dtf.print(dt);
     }
 

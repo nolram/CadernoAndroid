@@ -94,7 +94,7 @@ public class Caderno {
                 .toFormatter();
         String tmp = daysHoursMinutes.print(period);*/
         //if(tmp.isEmpty()){
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss MM/dd/yyyy");
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss dd/MM/yyyy");
             this.ultimaModificacao = dtf.print(dt);
         //}else {
         //    this.ultimaModificacao = "Atualizado há: " + tmp;
