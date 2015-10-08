@@ -61,6 +61,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         }
         holder.mTagView.setText(tags_st);
 
+        holder.mDate.setText(folha.getData());
         File file = new File(folha.getLocal_folha());
         if(file.exists()){
             //int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
@@ -103,6 +104,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         public TextView mTagView;
         public TextView mNumPageView;
         public ImageView mThumbFolhaView;
+        public TextView mDate;
 
         public ViewHolder(View v) {
             super(v);
@@ -110,6 +112,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
             mTitleView = (TextView) v.findViewById(R.id.txt_title);
             mNumPageView = (TextView) v.findViewById(R.id.txt_num_pagina);
             mThumbFolhaView = (ImageView) v.findViewById(R.id.img_thumb_folha);
+            mDate = (TextView) v.findViewById(R.id.txt_data);
         }
 
         @Override
@@ -141,7 +144,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
                 Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(localImagem), screenWidth,
-                        (int) DeviceDimensionsHelper.convertDpToPixel(170, mContext));
+                        (int) DeviceDimensionsHelper.convertDpToPixel(310, mContext));
                 return ThumbImage;
             }
             return null;

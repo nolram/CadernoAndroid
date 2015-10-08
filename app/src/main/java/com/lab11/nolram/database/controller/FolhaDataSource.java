@@ -393,7 +393,7 @@ public class FolhaDataSource {
         folha.setId(cursor.getLong(0));
         folha.setLocal_folha(cursor.getString(1));
         folha.setFk_caderno(cursor.getLong(2));
-        folha.setData_adicionado(cursor.getString(3));
+        folha.setData(cursor.getString(3));
         folha.setTitulo(cursor.getString(4));
         folha.setTags(getAllTagsByFolha(folha.getId()));
         folha.setContador(cursor.getInt(5));
@@ -405,7 +405,7 @@ public class FolhaDataSource {
         folha.setId(cursor.getLong(0));
         folha.setLocal_folha(cursor.getString(1));
         folha.setFk_caderno(cursor.getLong(2));
-        folha.setData_adicionado(cursor.getString(3));
+        folha.setData(cursor.getString(3));
         folha.setTitulo(cursor.getString(4));
         //folha.setTags(getAllTagsByFolha(folha.getId()));
         folha.setContador(cursor.getInt(5));

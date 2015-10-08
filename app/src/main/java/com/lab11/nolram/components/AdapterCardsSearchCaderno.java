@@ -84,6 +84,7 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
                 loadBitmap(file.getAbsolutePath(), holderFolha.mThumbFolhaView);
             }
             holderFolha.mTitleView.setText(folha.getTitulo());
+            holderFolha.mDate.setText(folha.getData());
         }else {
             ViewHolderTag holderTag = (ViewHolderTag) holder;
             Tag tag = myDataset.get(position).getTag();
@@ -125,6 +126,7 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
         public TextView mTitleView;
         public TextView mTagView;
         public TextView mNumPageView;
+        public TextView mDate;
         public ImageView mThumbFolhaView;
 
         public ViewHolderFolha(View v) {
@@ -133,6 +135,7 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
             mTitleView = (TextView) v.findViewById(R.id.txt_title);
             mNumPageView = (TextView) v.findViewById(R.id.txt_num_pagina);
             mThumbFolhaView = (ImageView) v.findViewById(R.id.img_thumb_folha);
+            mDate = (TextView) v.findViewById(R.id.txt_data);
         }
     }
 
@@ -172,7 +175,7 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
                 Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(localImagem), screenWidth,
-                        (int) DeviceDimensionsHelper.convertDpToPixel(170, mContext));
+                        (int) DeviceDimensionsHelper.convertDpToPixel(310, mContext));
                 return ThumbImage;
             }
             return null;

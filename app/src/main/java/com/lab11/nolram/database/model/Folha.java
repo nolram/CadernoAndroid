@@ -13,7 +13,7 @@ public class Folha {
     private long id;
     private String local_folha;
     private String titulo;
-    private String data_adicionado;
+    private String data;
     private long fk_caderno;
     private List<Tag> tags;
     private int contador;
@@ -58,14 +58,14 @@ public class Folha {
         this.local_folha = local_folha;
     }
 
-    public String getData_adicionado() {
-        return data_adicionado;
+    public String getData() {
+        return data;
     }
 
-    public void setData_adicionado(String data_adicionado) {
-        DateTime dt = new DateTime(data_adicionado);
+    public void setData(String data) {
+        DateTime dt = new DateTime(data);
         DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss MM/dd/yyyy");
-        this.data_adicionado = dtf.print(dt);
+        this.data = dtf.print(dt);
     }
 
     public String toString(){

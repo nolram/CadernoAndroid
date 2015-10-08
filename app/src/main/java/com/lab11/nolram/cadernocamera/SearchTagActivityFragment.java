@@ -109,7 +109,7 @@ public class SearchTagActivityFragment extends Fragment {
                         bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
                         bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
-                        bundle.putString(Database.FOLHA_DATA, folha.getData_adicionado());
+                        bundle.putString(Database.FOLHA_DATA, folha.getData());
                         bundle.putString(Database.TAG_TAG, folha.getTags().toString());
                         //bundle.putStringArray(Database.TAG_TAG, folha.getTags().toArray(new
                         //        String[folha.getTags().size()]));
