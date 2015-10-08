@@ -218,11 +218,8 @@ public class NotesActivityFragment extends Fragment {
             case REQUEST_IMAGE_CAPTURE:
                 if(resultCode == getActivity().RESULT_OK){
                     salvarImagem = true;
-                    //Bitmap photo = (Bitmap) data.getExtras().get("data");
-                    //saveBitmap(photo);
                 }else if (resultCode == getActivity().RESULT_CANCELED){
                     File imgFile = new File(mCurrentPhotoPath);
-                    //Log.d("local", mCurrentPhotoPath);
                     if(imgFile.exists()){
                         imgFile.delete();
                         mCurrentPhotoPath = "";
@@ -241,6 +238,7 @@ public class NotesActivityFragment extends Fragment {
                     "");
             folhas.add(folha);
             salvarImagem = false;
+            mCurrentPhotoPath = "";
         }
         mAdapter.updateAll(folhas);
         mAdapter.notifyDataSetChanged();
