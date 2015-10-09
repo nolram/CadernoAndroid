@@ -5,6 +5,7 @@ package com.lab11.nolram.components;
  * Get from: https://github.com/chiuki/android-recyclerview
  * http://blog.sqisland.com/2014/12/recyclerview-grid-with-header.html
  */
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

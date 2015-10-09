@@ -20,10 +20,10 @@ import com.lab11.nolram.components.RecyclerItemClickListener;
  */
 public class IconPickerActivityFragment extends Fragment {
 
+    public static final String ICONE_ESCOLHIDO = "icone_escolhido";
     private RecyclerView mRecyclerView;
     private Toolbar toolbar;
     private AdapterCardsIconPicker mAdapter;
-    public static final String ICONE_ESCOLHIDO = "icone_escolhido";
 
     public IconPickerActivityFragment() {
     }
@@ -41,14 +41,14 @@ public class IconPickerActivityFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(view.getContext(),
                 new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(ICONE_ESCOLHIDO, mAdapter.getItem(position));
-                getActivity().setResult(Activity.RESULT_OK, resultIntent);
-                getActivity().finish();
-            }
-        }));
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Intent resultIntent = new Intent();
+                        resultIntent.putExtra(ICONE_ESCOLHIDO, mAdapter.getItem(position));
+                        getActivity().setResult(Activity.RESULT_OK, resultIntent);
+                        getActivity().finish();
+                    }
+                }));
         return view;
     }
 }

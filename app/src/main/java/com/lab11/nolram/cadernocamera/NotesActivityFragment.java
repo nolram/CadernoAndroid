@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -16,7 +15,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.pdf.PdfDocument;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -33,7 +31,6 @@ import android.print.pdf.PrintedPdfDocument;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +47,6 @@ import android.widget.Toast;
 
 import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.BitmapHelper;
-import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.components.SimpleItemTouchHelperCallback;
 import com.lab11.nolram.database.Database;
@@ -107,54 +103,56 @@ public class NotesActivityFragment extends Fragment {
     private boolean salvarImagem = false;
 
 
+    public NotesActivityFragment() {
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_generate_pdf){
+        if (id == R.id.action_generate_pdf) {
             if (folhas.size() > 0) {
                 AsyncGeneratePDF gerar = new AsyncGeneratePDF(getActivity());
                 gerar.execute();
-                 //printDocument();
+                //printDocument();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         getString(R.string.alert_no_paper), Toast.LENGTH_SHORT).show();
             }
             return true;
-        }else if(id == R.id.action_imprimir_caderno){
+        } else if (id == R.id.action_imprimir_caderno) {
             if (folhas.size() > 0) {
                 printDocument();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
                         getString(R.string.alert_no_paper), Toast.LENGTH_SHORT).show();
             }
-        }
-        else if(id == R.id.action_delete_caderno){
-                new AlertDialog.Builder(getActivity())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(R.string.alert_attention)
-                        .setMessage(R.string.alert_delete_paper_warning)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                for(Folha f: folhas) {
-                                    File img = new File(f.getLocal_folha());
-                                    if (img.exists()) {
-                                        img.delete();
-                                    }
+        } else if (id == R.id.action_delete_caderno) {
+            new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.alert_attention)
+                    .setMessage(R.string.alert_delete_paper_warning)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            for (Folha f : folhas) {
+                                File img = new File(f.getLocal_folha());
+                                if (img.exists()) {
+                                    img.delete();
                                 }
-                                folhaDataSource.deleteCaderno(fk_caderno);
-                                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
-                                        R.string.alert_caderno_deletado), Toast.LENGTH_LONG).show();
-                                getActivity().finish();
                             }
+                            folhaDataSource.deleteCaderno(fk_caderno);
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
+                                    R.string.alert_caderno_deletado), Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                        }
 
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-                return true;
-        }else if(id == R.id.action_edit_caderno){
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+            return true;
+        } else if (id == R.id.action_edit_caderno) {
             intentUpdate = new Intent(getActivity().getApplicationContext(), EditarCadernoActivity.class);
             Bundle bundle = new Bundle();
             bundle.putLong(Database.CADERNO_ID, fk_caderno);
@@ -193,7 +191,7 @@ public class NotesActivityFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case UPDATE:
-                if(resultCode == getActivity().RESULT_OK) {
+                if (resultCode == getActivity().RESULT_OK) {
                     id_cor_principal = getResources().getIdentifier(
                             data.getStringExtra(Database.CADERNO_COR_PRINCIPAL), "drawable",
                             getActivity().getPackageName());
@@ -216,11 +214,11 @@ public class NotesActivityFragment extends Fragment {
                 }
                 break;
             case REQUEST_IMAGE_CAPTURE:
-                if(resultCode == getActivity().RESULT_OK){
+                if (resultCode == getActivity().RESULT_OK) {
                     salvarImagem = true;
-                }else if (resultCode == getActivity().RESULT_CANCELED){
+                } else if (resultCode == getActivity().RESULT_CANCELED) {
                     File imgFile = new File(mCurrentPhotoPath);
-                    if(imgFile.exists()){
+                    if (imgFile.exists()) {
                         imgFile.delete();
                         mCurrentPhotoPath = "";
                     }
@@ -233,7 +231,7 @@ public class NotesActivityFragment extends Fragment {
     public void onResume() {
         folhaDataSource.open();
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
-        if(salvarImagem){
+        if (salvarImagem) {
             Folha folha = folhaDataSource.criarFolhaERetornar(mCurrentPhotoPath, fk_caderno,
                     "");
             folhas.add(folha);
@@ -250,9 +248,6 @@ public class NotesActivityFragment extends Fragment {
     public void onPause() {
         folhaDataSource.close();
         super.onPause();
-    }
-
-    public NotesActivityFragment() {
     }
 
     @Override
@@ -283,7 +278,7 @@ public class NotesActivityFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             cor_principal = getResources().getColor(id_cor_principal, getActivity().getTheme());
             cor_secundaria = getResources().getColor(id_cor_secundaria, getActivity().getTheme());
-        }else{
+        } else {
             cor_principal = getResources().getColor(id_cor_principal);
             cor_secundaria = getResources().getColor(id_cor_secundaria);
         }
@@ -316,6 +311,7 @@ public class NotesActivityFragment extends Fragment {
                         bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
                         bundle.putString(Database.CADERNO_TITULO, titulo);
                         bundle.putString(Database.CADERNO_BADGE, badge);
+                        bundle.putString(Database.FOLHA_DATA, folha.getData());
                         //bundle.putStringArray(Database.TAG_TAG, folha.getTags().toArray(new
                         //        String[folha.getTags().size()]));
                         bundle.putInt(Database.CADERNO_COR_SECUNDARIA, cor_secundaria);
@@ -358,7 +354,7 @@ public class NotesActivityFragment extends Fragment {
 
     private String getStringFromUri(Uri contentUri) {
         String path = null;
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getActivity().getContentResolver().query(contentUri, projection, null, null, null);
         if (cursor.moveToFirst()) {
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -394,19 +390,19 @@ public class NotesActivityFragment extends Fragment {
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = titulo.toUpperCase()+"_" + timeStamp + "_";
+        String imageFileName = titulo.toUpperCase() + "_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));
 
-        if(!storageDir.isDirectory()){
+        if (!storageDir.isDirectory()) {
             storageDir.mkdirs();
         }
 
-        if(!mCurrentPhotoPath.isEmpty()){
+        if (!mCurrentPhotoPath.isEmpty()) {
             File mExistente = new File(mCurrentPhotoPath);
-            if(mExistente.exists()){
+            if (mExistente.exists()) {
                 boolean temp = mExistente.delete();
-                if(temp){
+                if (temp) {
                     Log.d("img_deletado", "Imagem deletada");
                 }
             }
@@ -423,13 +419,36 @@ public class NotesActivityFragment extends Fragment {
         return image;
     }
 
+    private void pdfDocument(Uri uri) {
+        Intent target = new Intent(Intent.ACTION_VIEW);
+        target.setDataAndType(uri, "application/pdf");
+        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        Intent intent = Intent.createChooser(target, getString(R.string.txt_open_file));
+        try {
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getActivity().getApplicationContext(),
+                    getString(R.string.alert_no_pdf_reader),
+                    Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void printDocument() {
+        PrintManager printManager = (PrintManager) getActivity()
+                .getSystemService(Context.PRINT_SERVICE);
+
+        String jobName = this.getString(R.string.app_name) + " Documento";
+
+        printManager.print(jobName, new MyPrintDocumentAdapter(getActivity()),
+                null);
+    }
 
     class AsyncGeneratePDF extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDialog;
         GeneratePDF generatePDF;
         Context mContext;
 
-        public AsyncGeneratePDF(Context context){
+        public AsyncGeneratePDF(Context context) {
             progressDialog = new ProgressDialog(context);
             progressDialog.setIndeterminate(true);
             progressDialog.setTitle(context.getString(R.string.txt_title_async_pdf));
@@ -451,29 +470,27 @@ public class NotesActivityFragment extends Fragment {
         }
     }
 
-    public class GeneratePDF{
+    public class GeneratePDF {
         private static final String PRINT_SERVICE = "gerar_pdf";
-        Context context;
-        private int pageHeight;
-        private int pageWidth;
+        private static final String DOTS = " .............................................. ";
         public PdfDocument myPdfDocument;
         public int summaryPagesAll = 0;
         public int contSummaryPages = 0;
         public int contListFolha = 0;
+        public int totalpages = folhas.size() + 1; //Folhas + Qtd páginas de sumário + Capa
+        Context context;
         List<List<Folha>> groupFolhas = new ArrayList<List<Folha>>();
-        public int totalpages = folhas.size() +1; //Folhas + Qtd páginas de sumário + Capa
-        private static final String DOTS = " .............................................. ";
-
+        private int pageHeight;
+        private int pageWidth;
         private OutputStream os;
 
 
-        public GeneratePDF(Context context)
-        {
+        public GeneratePDF(Context context) {
             this.context = context;
             onLayout();
         }
 
-        public void onLayout(){
+        public void onLayout() {
             PrintAttributes printAttrs = new PrintAttributes.Builder().
                     setColorMode(PrintAttributes.COLOR_MODE_COLOR).
                     setMediaSize(PrintAttributes.MediaSize.ISO_A4).
@@ -482,13 +499,13 @@ public class NotesActivityFragment extends Fragment {
                     build();
             myPdfDocument = new PrintedPdfDocument(context, printAttrs);
 
-            pageHeight = printAttrs.getMediaSize().getHeightMils()/1000 * 72;
-            pageWidth = printAttrs.getMediaSize().getWidthMils()/1000 * 72;
+            pageHeight = printAttrs.getMediaSize().getHeightMils() / 1000 * 72;
+            pageWidth = printAttrs.getMediaSize().getWidthMils() / 1000 * 72;
 
             int inicio = 0;
             int fim = 0;
-            do{
-                if(fim+15 <= folhas.size())
+            do {
+                if (fim + 15 <= folhas.size())
                     fim += 15;
                 else
                     fim = folhas.size();
@@ -496,22 +513,22 @@ public class NotesActivityFragment extends Fragment {
                 inicio = fim;
                 //Log.d("inicio", String.valueOf(inicio));
                 //Log.d("fim", String.valueOf(fim));
-            }while (fim < folhas.size());
+            } while (fim < folhas.size());
 
             summaryPagesAll = groupFolhas.size();
             totalpages += summaryPagesAll;
 
         }
 
-        private void drawHomePage(PdfDocument.Page page, int pagenumber){
+        private void drawHomePage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
 
             pagenumber++;
 
             PdfDocument.PageInfo pageInfo = page.getInfo();
 
-            int y = pageInfo.getPageHeight()/2;
-            int x = pageInfo.getPageWidth()/2;
+            int y = pageInfo.getPageHeight() / 2;
+            int x = pageInfo.getPageWidth() / 2;
 
             Paint paint = new Paint();
             paint.setColor(Color.BLACK);
@@ -527,15 +544,15 @@ public class NotesActivityFragment extends Fragment {
 
             Paint paintRect = new Paint();
             paintRect.setColor(cor_principal);
-            Rect rect = new Rect(pageInfo.getPageWidth()-50, 0, pageInfo.getPageWidth()-100, 150);
+            Rect rect = new Rect(pageInfo.getPageWidth() - 50, 0, pageInfo.getPageWidth() - 100, 150);
             canvas.drawRect(rect, paintRect);
 
             canvas.drawText(dtf.print(now), x, y + 50, paint);
-            canvas.drawText("Gerado por: "+getString(R.string.app_name), x, y+200, paint);
+            canvas.drawText("Gerado por: " + getString(R.string.app_name), x, y + 200, paint);
         }
 
 
-        private void drawSummaryPage(PdfDocument.Page page, int pagenumber){
+        private void drawSummaryPage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
             pagenumber++;
 
@@ -546,7 +563,7 @@ public class NotesActivityFragment extends Fragment {
 
             PdfDocument.PageInfo pageInfo = page.getInfo();
             int y = 72;
-            int x = canvas.getWidth()/2;
+            int x = canvas.getWidth() / 2;
             int ySummary = y + 35;
             int xSummary = 54;
 
@@ -556,9 +573,9 @@ public class NotesActivityFragment extends Fragment {
             paint.setTextSize(18);
 
 
-            for(int i=0; i < groupFolhas.get(contSummaryPages).size(); i++){
+            for (int i = 0; i < groupFolhas.get(contSummaryPages).size(); i++) {
                 File imgFile = new File(groupFolhas.get(contSummaryPages).get(i).getLocal_folha());
-                if(imgFile.exists()) {
+                if (imgFile.exists()) {
                     Folha folha = groupFolhas.get(contSummaryPages).get(i);
                     canvas.drawText(String.valueOf(folha.getContador() + summaryPagesAll + 1) + DOTS +
                             folha.getTitulo(), xSummary, ySummary, paint);
@@ -622,20 +639,20 @@ public class NotesActivityFragment extends Fragment {
 
         public void gerarPDF() {
             for (int i = 0; i < totalpages; i++) {
-                    PdfDocument.PageInfo newPage = new PdfDocument.PageInfo.Builder(pageWidth,
-                            pageHeight, i).create();
+                PdfDocument.PageInfo newPage = new PdfDocument.PageInfo.Builder(pageWidth,
+                        pageHeight, i).create();
 
-                    PdfDocument.Page page =
-                            myPdfDocument.startPage(newPage);
-                    if(i == 0){
-                        drawHomePage(page, i);
-                    }else if(summaryPagesAll != contSummaryPages){
-                        drawSummaryPage(page, i);
-                    }else{
-                        //Log.d("acessado", "acessado");
-                        drawPage(page, i);
-                    }
-                    myPdfDocument.finishPage(page);
+                PdfDocument.Page page =
+                        myPdfDocument.startPage(newPage);
+                if (i == 0) {
+                    drawHomePage(page, i);
+                } else if (summaryPagesAll != contSummaryPages) {
+                    drawSummaryPage(page, i);
+                } else {
+                    //Log.d("acessado", "acessado");
+                    drawPage(page, i);
+                }
+                myPdfDocument.finishPage(page);
 
             }
             contListFolha = 0;
@@ -652,42 +669,27 @@ public class NotesActivityFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(),
                         R.string.txt_error_pdf_io, Toast.LENGTH_LONG).show();
                 //throw new RuntimeException("Error generating file", e);
-            }catch (NullPointerException n){
+            } catch (NullPointerException n) {
                 Log.e("error", "Processo de gerar PDF cancelado.");
-            }finally {
+            } finally {
                 myPdfDocument.close();
             }
         }
     }
 
-    private void pdfDocument(Uri uri) {
-        Intent target = new Intent(Intent.ACTION_VIEW);
-        target.setDataAndType(uri, "application/pdf");
-        target.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-        Intent intent = Intent.createChooser(target, getString(R.string.txt_open_file));
-        try {
-            startActivity(intent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getActivity().getApplicationContext(),
-                    getString(R.string.alert_no_pdf_reader),
-                    Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public class MyPrintDocumentAdapter extends PrintDocumentAdapter{
-        Context context;
-        private int pageHeight;
-        private int pageWidth;
+    public class MyPrintDocumentAdapter extends PrintDocumentAdapter {
+        private static final String DOTS = " .............................................. ";
         public PdfDocument myPdfDocument;
         public int summaryPagesAll = 0;
         public int contSummaryPages = 0;
         public int contListFolha = 0;
+        public int totalpages = folhas.size() + 1; //Folhas + Qtd páginas de sumário + Capa
+        Context context;
         List<List<Folha>> groupFolhas = new ArrayList<List<Folha>>();
-        public int totalpages = folhas.size() +1; //Folhas + Qtd páginas de sumário + Capa
-        private static final String DOTS = " .............................................. ";
+        private int pageHeight;
+        private int pageWidth;
 
-        public MyPrintDocumentAdapter(Context context)
-        {
+        public MyPrintDocumentAdapter(Context context) {
             this.context = context;
         }
 
@@ -700,13 +702,13 @@ public class NotesActivityFragment extends Fragment {
 
             myPdfDocument = new PrintedPdfDocument(context, newAttributes);
 
-            pageHeight = newAttributes.getMediaSize().getHeightMils()/1000 * 72;
-            pageWidth = newAttributes.getMediaSize().getWidthMils()/1000 * 72;
+            pageHeight = newAttributes.getMediaSize().getHeightMils() / 1000 * 72;
+            pageWidth = newAttributes.getMediaSize().getWidthMils() / 1000 * 72;
 
             int inicio = 0;
             int fim = 0;
-            do{
-                if(fim+15 <= folhas.size())
+            do {
+                if (fim + 15 <= folhas.size())
                     fim += 15;
                 else
                     fim = folhas.size();
@@ -714,7 +716,7 @@ public class NotesActivityFragment extends Fragment {
                 inicio = fim;
                 //Log.d("inicio", String.valueOf(inicio));
                 //Log.d("fim", String.valueOf(fim));
-            }while (fim < folhas.size());
+            } while (fim < folhas.size());
 
             summaryPagesAll = groupFolhas.size();
             totalpages += summaryPagesAll;
@@ -722,14 +724,14 @@ public class NotesActivityFragment extends Fragment {
             //Log.d("contListaGroup", String.valueOf(groupFolhas.size()));
             //Log.d("contLista", String.valueOf(folhas.size()));
 
-            if (cancellationSignal.isCanceled() ) {
+            if (cancellationSignal.isCanceled()) {
                 callback.onLayoutCancelled();
                 return;
             }
 
             if (totalpages > 0) {
                 PrintDocumentInfo.Builder builder = new PrintDocumentInfo
-                        .Builder(titulo+".pdf")
+                        .Builder(titulo + ".pdf")
                         .setContentType(PrintDocumentInfo.CONTENT_TYPE_PHOTO)
                         .setPageCount(totalpages);
 
@@ -740,10 +742,8 @@ public class NotesActivityFragment extends Fragment {
             }
         }
 
-        private boolean pageInRange(PageRange[] pageRanges, int page)
-        {
-            for (int i = 0; i<pageRanges.length; i++)
-            {
+        private boolean pageInRange(PageRange[] pageRanges, int page) {
+            for (int i = 0; i < pageRanges.length; i++) {
                 if ((page >= pageRanges[i].getStart()) &&
                         (page <= pageRanges[i].getEnd()))
                     return true;
@@ -752,15 +752,15 @@ public class NotesActivityFragment extends Fragment {
         }
 
 
-        private void drawHomePage(PdfDocument.Page page, int pagenumber){
+        private void drawHomePage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
 
             pagenumber++;
 
             PdfDocument.PageInfo pageInfo = page.getInfo();
 
-            int y = pageInfo.getPageHeight()/2;
-            int x = pageInfo.getPageWidth()/2;
+            int y = pageInfo.getPageHeight() / 2;
+            int x = pageInfo.getPageWidth() / 2;
 
             Paint paint = new Paint();
             paint.setColor(Color.BLACK);
@@ -776,15 +776,15 @@ public class NotesActivityFragment extends Fragment {
 
             Paint paintRect = new Paint();
             paintRect.setColor(cor_principal);
-            Rect rect = new Rect(pageInfo.getPageWidth()-50, 0, pageInfo.getPageWidth()-100, 150);
+            Rect rect = new Rect(pageInfo.getPageWidth() - 50, 0, pageInfo.getPageWidth() - 100, 150);
             canvas.drawRect(rect, paintRect);
 
             canvas.drawText(dtf.print(now), x, y + 50, paint);
-            canvas.drawText("Gerado por: "+getString(R.string.app_name), x, y+200, paint);
+            canvas.drawText("Gerado por: " + getString(R.string.app_name), x, y + 200, paint);
         }
 
 
-        private void drawSummaryPage(PdfDocument.Page page, int pagenumber){
+        private void drawSummaryPage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
             pagenumber++;
 
@@ -795,7 +795,7 @@ public class NotesActivityFragment extends Fragment {
 
             PdfDocument.PageInfo pageInfo = page.getInfo();
             int y = 72;
-            int x = canvas.getWidth()/2;
+            int x = canvas.getWidth() / 2;
             int ySummary = y + 35;
             int xSummary = 54;
 
@@ -806,12 +806,12 @@ public class NotesActivityFragment extends Fragment {
             paint.setTextSize(18);
 
 
-            for(int i=0; i < groupFolhas.get(contSummaryPages).size(); i++){
+            for (int i = 0; i < groupFolhas.get(contSummaryPages).size(); i++) {
                 File imgFile = new File(groupFolhas.get(contSummaryPages).get(i).getLocal_folha());
-                if(imgFile.exists()) {
+                if (imgFile.exists()) {
                     Folha folha = groupFolhas.get(contSummaryPages).get(i);
                     canvas.drawText(String.valueOf(folha.getContador() + summaryPagesAll + 1) + DOTS +
-                                    folha.getTitulo(), xSummary, ySummary, paint);
+                            folha.getTitulo(), xSummary, ySummary, paint);
                     ySummary = ySummary + 35;
                 }
             }
@@ -821,16 +821,16 @@ public class NotesActivityFragment extends Fragment {
         private void drawPage(PdfDocument.Page page, int pagenumber) {
             Canvas canvas = page.getCanvas();
             File imgFile;
-            if(contListFolha < folhas.size()) {
+            if (contListFolha < folhas.size()) {
                 imgFile = new File(folhas.get(contListFolha).getLocal_folha());
                 contListFolha++;
-                if(imgFile.exists()) {
+                if (imgFile.exists()) {
                     pagenumber++; // Make sure page numbers start at 1
 
                     PdfDocument.PageInfo pageInfo = page.getInfo();
 
                     int titleBaseLine = pageInfo.getPageHeight();
-                    int leftMargin = pageInfo.getPageWidth()-20;
+                    int leftMargin = pageInfo.getPageWidth() - 20;
 
                     Paint paint = new Paint();
                     paint.setColor(Color.BLACK);
@@ -876,8 +876,7 @@ public class NotesActivityFragment extends Fragment {
                             final WriteResultCallback callback) {
 
             for (int i = 0; i < totalpages; i++) {
-                if (pageInRange(pageRanges, i))
-                {
+                if (pageInRange(pageRanges, i)) {
                     PdfDocument.PageInfo newPage = new PdfDocument.PageInfo.Builder(pageWidth,
                             pageHeight, i).create();
 
@@ -892,11 +891,11 @@ public class NotesActivityFragment extends Fragment {
                     }
                     //Log.d("summaryPagesAll", String.valueOf(summaryPagesAll));
                     //Log.d("contSummaryPages", String.valueOf(contSummaryPages));
-                    if(i == 0){
+                    if (i == 0) {
                         drawHomePage(page, i);
-                    }else if(summaryPagesAll != contSummaryPages){
+                    } else if (summaryPagesAll != contSummaryPages) {
                         drawSummaryPage(page, i);
-                    }else{
+                    } else {
                         //Log.d("acessado", "acessado");
                         drawPage(page, i);
                     }
@@ -919,17 +918,6 @@ public class NotesActivityFragment extends Fragment {
             callback.onWriteFinished(pageRanges);
         }
 
-    }
-
-    public void printDocument()
-    {
-        PrintManager printManager = (PrintManager) getActivity()
-                .getSystemService(Context.PRINT_SERVICE);
-
-        String jobName = this.getString(R.string.app_name) +" Documento";
-
-        printManager.print(jobName, new MyPrintDocumentAdapter(getActivity()),
-                null);
     }
 
 }

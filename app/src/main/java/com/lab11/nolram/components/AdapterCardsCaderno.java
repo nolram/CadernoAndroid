@@ -47,6 +47,23 @@ public class AdapterCardsCaderno extends RecyclerView.Adapter<AdapterCardsCadern
                 "drawable", mContext.getPackageName()));
     }
 
+    @Override
+    public int getItemCount() {
+        return mDataset.size();
+    }
+
+    public void addItem(Caderno caderno) {
+        mDataset.add(caderno);
+    }
+
+    public void addItem(List<Caderno> caderno) {
+        mDataset.addAll(caderno);
+    }
+
+    public void updateAll(List<Caderno> caderno) {
+        mDataset = caderno;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView mTitleView;
@@ -63,25 +80,6 @@ public class AdapterCardsCaderno extends RecyclerView.Adapter<AdapterCardsCadern
             mCor = (ImageView) v.findViewById(R.id.img_cor);
             mBadge = (ImageView) v.findViewById(R.id.img_badge);
         }
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataset.size();
-    }
-
-
-    public void addItem(Caderno caderno){
-        mDataset.add(caderno);
-    }
-
-
-    public void addItem(List<Caderno> caderno){
-        mDataset.addAll(caderno);
-    }
-
-    public void updateAll(List<Caderno> caderno){
-        mDataset = caderno;
     }
 
 }

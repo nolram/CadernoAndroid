@@ -49,7 +49,7 @@ public class AboutActivityFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String url;
                 Intent i;
-                switch (position){
+                switch (position) {
                     case 0:
                         Intent intent = null;
                         try {

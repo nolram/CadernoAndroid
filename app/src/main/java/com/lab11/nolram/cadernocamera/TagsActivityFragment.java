@@ -32,6 +32,9 @@ public class TagsActivityFragment extends Fragment {
     private List<Tag> tags;
     private LinearLayoutManager linearLayoutManager;
 
+    public TagsActivityFragment() {
+    }
+
     @Override
     public void onResume() {
         cadernoDataSource.open();
@@ -42,9 +45,6 @@ public class TagsActivityFragment extends Fragment {
     public void onPause() {
         cadernoDataSource.close();
         super.onPause();
-    }
-
-    public TagsActivityFragment() {
     }
 
     @Override

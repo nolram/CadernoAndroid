@@ -12,7 +12,7 @@ import com.lab11.nolram.cadernocamera.R;
  * Created by nolram on 16/09/15.
  */
 public class AdapterCardsIconPicker extends RecyclerView.Adapter<AdapterCardsIconPicker.ViewHolder> {
-    private final Integer[] mDataset= {R.drawable.book_2, R.drawable.book_4, R.drawable.book_5,
+    private final Integer[] mDataset = {R.drawable.book_2, R.drawable.book_4, R.drawable.book_5,
             R.drawable.book_6, R.drawable.bookmark_18, R.drawable.calculator_2,
             R.drawable.calculator_4, R.drawable.calculator_6, R.drawable.calendar_4,
             R.drawable.certificate_4, R.drawable.checkout_2, R.drawable.code_fork_7,
@@ -64,7 +64,17 @@ public class AdapterCardsIconPicker extends RecyclerView.Adapter<AdapterCardsIco
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         int img = mDataset[position];
-        holder.mImgPicker.setImageResource(img);;
+        holder.mImgPicker.setImageResource(img);
+        ;
+    }
+
+    public int getItem(int position) {
+        return mDataset[position];
+    }
+
+    @Override
+    public int getItemCount() {
+        return mDataset.length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -75,14 +85,5 @@ public class AdapterCardsIconPicker extends RecyclerView.Adapter<AdapterCardsIco
             super(v);
             mImgPicker = (ImageView) v.findViewById(R.id.img_picker);
         }
-    }
-
-    public int getItem(int position){
-        return mDataset[position];
-    }
-
-    @Override
-    public int getItemCount() {
-        return mDataset.length;
     }
 }

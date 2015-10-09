@@ -12,6 +12,8 @@
     <color name="azul_letra">#0085fd</color>
     <color name="verde_barra">#49E20E</color>
     <color name="cinza_fundo">#232323</color>
+    <color name="button_color_blue">#2196f3</color>
+    <color name="button_color_cancel">#d32f2f</color>
 
     <color name="preto">#000000</color>
     <color name="preto_transp_40">#40000000</color>
@@ -66,5 +68,10 @@
     <color name="color_preloader_start">#FFFFFF</color>
     <color name="color_preloader_center">#FFFFFF</color>
     <color name="color_preloader_end">#bdbdbd</color>
+
+
+    <color name="flat_pressed">#66999999</color>
+    <color name="flat_disabled_text">#40000000</color>
+    <color name="flat_normal_text">#000000</color>
 
 </resources>

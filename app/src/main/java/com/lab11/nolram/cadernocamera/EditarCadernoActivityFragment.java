@@ -28,9 +28,9 @@ import com.lab11.nolram.database.model.Caderno;
  */
 public class EditarCadernoActivityFragment extends Fragment {
 
+    public static final int IDENTIFY_INTEGER = 11;
     private int cor_principal;
     private int cor_secundaria;
-
     private Button btnEditar;
     private ImageButton btnImgPicker;
     private EditText edtDescricao;
@@ -38,11 +38,7 @@ public class EditarCadernoActivityFragment extends Fragment {
     private RadioGroup radioGroupCor;
     private RadioButton radioCor;
     private Toolbar toolbar;
-
     private Caderno caderno;
-
-    public static final int IDENTIFY_INTEGER = 11;
-
     private CadernoDataSource cadernoDataSource;
     private int icon;
     private long id_caderno;
@@ -73,8 +69,8 @@ public class EditarCadernoActivityFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (IDENTIFY_INTEGER) : {
+        switch (requestCode) {
+            case (IDENTIFY_INTEGER): {
                 if (resultCode == Activity.RESULT_OK) {
                     icon = data.getIntExtra(IconPickerActivityFragment.ICONE_ESCOLHIDO,
                             R.drawable.book_2);
@@ -97,9 +93,9 @@ public class EditarCadernoActivityFragment extends Fragment {
         super.onPause();
     }
 
-    public String[] escolher_cor(int id){
+    public String[] escolher_cor(int id) {
         String[] escolhas = new String[2];
-        switch (id){
+        switch (id) {
             case R.id.rd_alizarin:
                 escolhas[0] = getResources().getResourceName(R.color.flatui_alizarin);
                 escolhas[1] = getResources().getResourceName(R.color.flatui_pomegranate);
@@ -149,9 +145,9 @@ public class EditarCadernoActivityFragment extends Fragment {
         return escolhas;
     }
 
-    public int getOptionButton(int id){
+    public int getOptionButton(int id) {
         int idElement;
-        switch (id){
+        switch (id) {
             case R.color.flatui_alizarin:
                 idElement = R.id.rd_alizarin;
                 break;

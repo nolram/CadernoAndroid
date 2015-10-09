@@ -20,17 +20,6 @@ public class AdapterCardsTag extends RecyclerView.Adapter<AdapterCardsTag.ViewHo
     private List<Tag> mDataset;
     private View layoutView;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTagView;
-        public TextView mContadorView;
-
-        public ViewHolder(View v) {
-            super(v);
-            mTagView = (TextView) v.findViewById(R.id.txt_label);
-            mContadorView = (TextView) v.findViewById(R.id.txt_contador);
-        }
-    }
-
     public AdapterCardsTag(List<Tag> myDataset, Context context) {
         mDataset = myDataset;
         mContext = context;
@@ -54,5 +43,16 @@ public class AdapterCardsTag extends RecyclerView.Adapter<AdapterCardsTag.ViewHo
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        public TextView mTagView;
+        public TextView mContadorView;
+
+        public ViewHolder(View v) {
+            super(v);
+            mTagView = (TextView) v.findViewById(R.id.txt_label);
+            mContadorView = (TextView) v.findViewById(R.id.txt_contador);
+        }
     }
 }

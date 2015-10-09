@@ -1,7 +1,6 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
@@ -46,48 +45,6 @@ public class FolhaActivityFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private String data = "";
-
-        public BitmapWorkerTask(ImageView imageView) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<ImageView>(imageView);
-        }
-
-        @Override
-        protected void onPreExecute(){
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            data = params[0];
-            Bitmap newBitmap;
-            try {
-                Bitmap myBitmap = BitmapFactory.decodeFile(data);
-                float scalingFactor = getBitmapScalingFactor(myBitmap);
-                newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
-            }catch (NullPointerException e){
-                newBitmap = null;
-            }
-            return newBitmap;
-        }
-
-        // Once complete, see if ImageView is still around and set bitmap.
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            progressBar.setVisibility(View.GONE);
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -98,13 +55,13 @@ public class FolhaActivityFragment extends Fragment {
         localImagem = bundle.getString(Database.FOLHA_LOCAL_IMAGEM);
         File imgFile = new File(localImagem);
         //Log.d("local", mCurrentPhotoPath);
-        if(imgFile.exists()){
+        if (imgFile.exists()) {
             loadBitmap(localImagem, imgFoto);
             /*Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             float scalingFactor = this.getBitmapScalingFactor(myBitmap);
             Bitmap newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
             imgFoto.setImageBitmap(newBitmap);*/
-        }else{
+        } else {
             Toast.makeText(getActivity().getApplicationContext(),
                     getString(R.string.txt_mensage_remove_image), Toast.LENGTH_LONG).show();
             imgFoto.setImageResource(R.drawable.picture_remove);
@@ -127,7 +84,7 @@ public class FolhaActivityFragment extends Fragment {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             display.getSize(size);
             displayWidth = size.x;
-        }else {
+        } else {
             displayWidth = display.getWidth();  // deprecated
         }
         // Get margin to use it for calculating to max width of the ImageView
@@ -140,6 +97,48 @@ public class FolhaActivityFragment extends Fragment {
         int imageViewWidth = displayWidth - (leftMargin + rightMargin);
 
         // Calculate scaling factor and return it
-        return ( (float) imageViewWidth / (float) bm.getWidth() );
+        return ((float) imageViewWidth / (float) bm.getWidth());
+    }
+
+    class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+        private final WeakReference<ImageView> imageViewReference;
+        private String data = "";
+
+        public BitmapWorkerTask(ImageView imageView) {
+            // Use a WeakReference to ensure the ImageView can be garbage collected
+            imageViewReference = new WeakReference<ImageView>(imageView);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        // Decode image in background.
+        @Override
+        protected Bitmap doInBackground(String... params) {
+            data = params[0];
+            Bitmap newBitmap;
+            try {
+                Bitmap myBitmap = BitmapFactory.decodeFile(data);
+                float scalingFactor = getBitmapScalingFactor(myBitmap);
+                newBitmap = BitmapHelper.ScaleBitmap(myBitmap, scalingFactor);
+            } catch (NullPointerException e) {
+                newBitmap = null;
+            }
+            return newBitmap;
+        }
+
+        // Once complete, see if ImageView is still around and set bitmap.
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            progressBar.setVisibility(View.GONE);
+            if (imageViewReference != null && bitmap != null) {
+                final ImageView imageView = imageViewReference.get();
+                if (imageView != null) {
+                    imageView.setImageBitmap(bitmap);
+                }
+            }
+        }
     }
 }

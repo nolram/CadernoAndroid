@@ -1,6 +1,5 @@
 package com.lab11.nolram.components;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -30,7 +29,7 @@ import java.util.List;
  * Created by nolram on 25/08/15.
  */
 public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.ViewHolder>
-        implements ItemTouchHelperAdapter{
+        implements ItemTouchHelperAdapter {
     private Context mContext;
     private List<Folha> mDataset = new ArrayList<>();
     private View layoutView;
@@ -40,6 +39,34 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         mDataset.addAll(myDataset);
         mContext = context;
         this.folhaDataSource = folhaDataSource;
+    }
+
+    public static boolean cancelPotentialWork(String data, ImageView imageView) {
+        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
+        if (bitmapWorkerTask != null) {
+            final String bitmapData = bitmapWorkerTask.localImagem;
+            // If bitmapData is not yet set or it differs from the new data
+            if (bitmapData.isEmpty() || !bitmapData.equalsIgnoreCase(data)) {
+                // Cancel previous task
+                bitmapWorkerTask.cancel(true);
+            } else {
+                // The same work is already in progress
+                return false;
+            }
+        }
+        // No task associated with the ImageView, or an existing task was cancelled
+        return true;
+    }
+
+    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
+        if (imageView != null) {
+            final Drawable drawable = imageView.getDrawable();
+            if (drawable instanceof AsyncDrawable) {
+                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
+                return asyncDrawable.getBitmapWorkerTask();
+            }
+        }
+        return null;
     }
 
     @Override
@@ -56,14 +83,14 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         List<Tag> tags = folha.getTags();
         String tags_st = "";
         holder.mNumPageView.setText(String.valueOf(folha.getContador()));
-        for(int i=0; i < tags.size(); i++){
+        for (int i = 0; i < tags.size(); i++) {
             tags_st += tags.get(i) + "; ";
         }
         holder.mTagView.setText(tags_st);
 
         holder.mDate.setText(folha.getData());
         File file = new File(folha.getLocal_folha());
-        if(file.exists()){
+        if (file.exists()) {
             //int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
             //Bitmap myBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()),
             //        screenWidth, (int) DeviceDimensionsHelper.convertDpToPixel(150 ,mContext), true);
@@ -97,8 +124,22 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         //workerDatabase.execute(paraFolha, deFolha);
     }
 
+    public void loadBitmap(String locaImagem, ImageView imageView) {
+        if (cancelPotentialWork(locaImagem, imageView)) {
+            final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+            final AsyncDrawable asyncDrawable =
+                    new AsyncDrawable(mContext.getResources(), task);
+            imageView.setImageDrawable(asyncDrawable);
+            task.execute(locaImagem);
+        }
+    }
+
+    public void updateAll(List<Folha> folhas) {
+        mDataset = folhas;
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder implements
-            ItemTouchHelperViewHolder{
+            ItemTouchHelperViewHolder {
         // each localImagem item is just a string in this case
         public TextView mTitleView;
         public TextView mTagView;
@@ -126,6 +167,21 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         }
     }
 
+    static class AsyncDrawable extends BitmapDrawable {
+        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
+
+        public AsyncDrawable(Resources res,
+                             BitmapWorkerTask bitmapWorkerTask) {
+            super(res);
+            bitmapWorkerTaskReference =
+                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
+        }
+
+        public BitmapWorkerTask getBitmapWorkerTask() {
+            return bitmapWorkerTaskReference.get();
+        }
+    }
+
     class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private String localImagem = "";
@@ -140,7 +196,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         protected Bitmap doInBackground(String... params) {
             localImagem = params[0];
             File file = new File(localImagem);
-            if(file.exists()){
+            if (file.exists()) {
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
                 Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                         BitmapFactory.decodeFile(localImagem), screenWidth,
@@ -163,7 +219,7 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
                 if (this == bitmapWorkerTask && imageView != null) {
                     imageView.setImageBitmap(bitmap);
                 }
-            }else if(imageViewReference != null && bitmap == null && !isCancelled()){
+            } else if (imageViewReference != null && bitmap == null && !isCancelled()) {
                 final ImageView imageView = imageViewReference.get();
                 final BitmapWorkerTask bitmapWorkerTask =
                         getBitmapWorkerTask(imageView);
@@ -172,63 +228,6 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
                 }
             }
         }
-    }
-
-    static class AsyncDrawable extends BitmapDrawable {
-        private final WeakReference<BitmapWorkerTask> bitmapWorkerTaskReference;
-
-        public AsyncDrawable(Resources res,
-                             BitmapWorkerTask bitmapWorkerTask) {
-            super(res);
-            bitmapWorkerTaskReference =
-                    new WeakReference<BitmapWorkerTask>(bitmapWorkerTask);
-        }
-
-        public BitmapWorkerTask getBitmapWorkerTask() {
-            return bitmapWorkerTaskReference.get();
-        }
-    }
-
-    public static boolean cancelPotentialWork(String data, ImageView imageView) {
-        final BitmapWorkerTask bitmapWorkerTask = getBitmapWorkerTask(imageView);
-        if (bitmapWorkerTask != null) {
-            final String bitmapData = bitmapWorkerTask.localImagem;
-            // If bitmapData is not yet set or it differs from the new data
-            if (bitmapData.isEmpty() || !bitmapData.equalsIgnoreCase(data)) {
-                // Cancel previous task
-                bitmapWorkerTask.cancel(true);
-            } else {
-                // The same work is already in progress
-                return false;
-            }
-        }
-        // No task associated with the ImageView, or an existing task was cancelled
-        return true;
-    }
-
-    private static BitmapWorkerTask getBitmapWorkerTask(ImageView imageView) {
-        if (imageView != null) {
-            final Drawable drawable = imageView.getDrawable();
-            if (drawable instanceof AsyncDrawable) {
-                final AsyncDrawable asyncDrawable = (AsyncDrawable) drawable;
-                return asyncDrawable.getBitmapWorkerTask();
-            }
-        }
-        return null;
-    }
-
-    public void loadBitmap(String locaImagem, ImageView imageView) {
-        if (cancelPotentialWork(locaImagem, imageView)) {
-            final BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-            final AsyncDrawable asyncDrawable =
-                    new AsyncDrawable(mContext.getResources(), task);
-            imageView.setImageDrawable(asyncDrawable);
-            task.execute(locaImagem);
-        }
-    }
-
-    public void updateAll(List<Folha> folhas){
-        mDataset = folhas;
     }
 
 }

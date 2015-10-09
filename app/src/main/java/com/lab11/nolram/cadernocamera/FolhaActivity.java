@@ -30,14 +30,11 @@ import java.util.List;
 
 public class FolhaActivity extends AppCompatActivity {
 
-    private PagerAdapter mPagerAdapter;
-    private ViewPager mPager;
-
-    private Toolbar toolbar;
-
     public static final String INDICE = "indice_list_folha";
     public static final int UPDATE = 12;
-
+    private PagerAdapter mPagerAdapter;
+    private ViewPager mPager;
+    private Toolbar toolbar;
     private FolhaDataSource folhaDataSource;
 
     //private String localImagem;
@@ -75,9 +72,9 @@ public class FolhaActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         Bundle bundle = getIntent().getExtras();
-        if(bundle.containsKey(SearchTagActivity.class.getName())){
+        if (bundle.containsKey(SearchTagActivity.class.getName())) {
             indice = bundle.getInt(Database.FOLHA_CONTADOR) - 1;
-        }else {
+        } else {
             indice = bundle.getInt(INDICE);
         }
         cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
@@ -139,7 +136,7 @@ public class FolhaActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.action_delete_folha){
+        if (id == R.id.action_delete_folha) {
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(R.string.alert_attention)
@@ -162,7 +159,7 @@ public class FolhaActivity extends AppCompatActivity {
                     .setNegativeButton(R.string.no, null)
                     .show();
             return true;
-        }else if(id == R.id.action_edit_folha){
+        } else if (id == R.id.action_edit_folha) {
             Intent intentUpdate = new Intent(getApplicationContext(),
                     EditarFolhaActivity.class);
             Bundle bundle = new Bundle();
@@ -171,6 +168,7 @@ public class FolhaActivity extends AppCompatActivity {
             bundle.putString(Database.CADERNO_TITULO, caderno_titulo);
             bundle.putLong(Database.FOLHA_ID, folha.getId());
             bundle.putString(Database.FOLHA_TITULO, folha.getTitulo());
+            bundle.putString(Database.FOLHA_DATA, folha.getDataBanco());
             bundle.putString(Database.FOLHA_LOCAL_IMAGEM, folha.getLocal_folha());
             bundle.putString(Database.TAG_TAG, folha.getTags().toString());
             bundle.putInt(Database.CADERNO_COR_PRINCIPAL, cor_principal);
@@ -178,7 +176,7 @@ public class FolhaActivity extends AppCompatActivity {
             intentUpdate.putExtras(bundle);
             startActivityForResult(intentUpdate, UPDATE);
             return true;
-        }else if(id == R.id.action_share_folha){
+        } else if (id == R.id.action_share_folha) {
             Intent shareIntent = new Intent();
             Folha folha = folhas.get(mPager.getCurrentItem());
             shareIntent.setAction(Intent.ACTION_SEND);
@@ -195,7 +193,7 @@ public class FolhaActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case UPDATE:
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     String titulo = data.getStringExtra(Database.FOLHA_TITULO);
                     setTitle(titulo);
                 }

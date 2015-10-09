@@ -9,17 +9,19 @@ public class CadernoTagFolha {
     private Folha folha;
     private Tag tag;
 
-    public CadernoTagFolha(Caderno caderno){
+    public CadernoTagFolha(Caderno caderno) {
         this.caderno = caderno;
         this.folha = null;
         this.tag = null;
     }
-    public CadernoTagFolha(Folha folha){
+
+    public CadernoTagFolha(Folha folha) {
         this.folha = folha;
         this.caderno = null;
         this.tag = null;
     }
-    public CadernoTagFolha(Tag tag){
+
+    public CadernoTagFolha(Tag tag) {
         this.tag = tag;
         this.folha = null;
         this.caderno = null;

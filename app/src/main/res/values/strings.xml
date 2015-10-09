@@ -16,6 +16,7 @@
     <string name="menu_configuracoes">Configurações</string>
     <string name="menu_contato">Contato</string>
     <string name="tags">Tags</string>
+    <string name="txt_tags">Tags - utlize , ; . # para separar as tags</string>
     <string name="action_search">Pesquisa</string>
     <string name="action_search_hint_caderno">Procure caderno, folha ou tag</string>
     <string name="title_activity_search">Pesquisar</string>
@@ -86,6 +87,8 @@
     <string name="title_activity_third_licenses">Recursos de Terceiros</string>
 
     <string name="txt_meus_cadernos">Meus Cadernos</string>
+    <string name="txt_cancelar">Cancelar</string>
+    <string name="txt_add_folha">Adicionar</string>
 
     <string-array name="list_about">
         <item>Twitter</item>

@@ -5,6 +5,19 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="SpinnerButtonStyle" parent="android:Widget.Holo.Spinner">
+        <item name="android:textColor">@color/preto</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+    </style>
+
+    <style name="ButtonConfirm" parent="Base.Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@color/button_color_blue</item>
+    </style>
+
+    <style name="ButtonCancel" parent="Base.Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@color/button_color_cancel</item>
+    </style>
+
     <style name="MyTheme" parent="MyTheme.Base">
     </style>
     <!-- Base theme applied no matter what API -->

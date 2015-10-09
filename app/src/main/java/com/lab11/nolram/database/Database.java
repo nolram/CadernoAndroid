@@ -9,9 +9,6 @@ import android.util.Log;
  * Created by nolram on 21/08/15.
  */
 public class Database extends SQLiteOpenHelper {
-    private static final String BANCO_DADOS = "CadernoDatabase.db";
-    private static int VERSAO = 1;
-
     public static final String TABLE_CADERNO = "caderno";
     public static final String CADERNO_ID = "_id";
     public static final String CADERNO_TITULO = "caderno_titulo";
@@ -23,7 +20,6 @@ public class Database extends SQLiteOpenHelper {
     public static final String CADERNO_DESCRICAO = "descricao";
     public static final String CADERNO_DATA = "data_adicionado";
     public static final String CADERNO_ULTIMA_MODIFICACAO = "ultima_modificacao";
-
     public static final String TABLE_FOLHA = "folha";
     public static final String FOLHA_ID = "_id";
     public static final String FOLHA_TITULO = "folha_titulo";
@@ -31,36 +27,32 @@ public class Database extends SQLiteOpenHelper {
     public static final String FOLHA_DATA = "data_adicionado";
     public static final String FOLHA_FK_CADERNO = "fk_caderno";
     public static final String FOLHA_CONTADOR = "contador";
-
     public static final String TABLE_TAG = "tag";
     public static final String TAG_ID = "_id";
     public static final String TAG_TAG = "tag";
     public static final String TAG_MIN_TAG = "min_tag";
-
     public static final String TABLE_TAG_DA_FOLHA = "tag_da_folha";
     public static final String TAG_DA_FOLHA_ID = "_id";
     public static final String TAG_DA_FOLHA_ID_TAG = "fk_tag";
     public static final String TAG_DA_FOLHA_ID_FOLHA = "fk_folha";
-
-    private static final String CREATE_CADERNO = "CREATE TABLE "+TABLE_CADERNO+"("+CADERNO_ID+" INTEGER PRIMARY KEY," +
-            CADERNO_TITULO+" TEXT,"+CADERNO_BADGE+" TEXT NULL,"+CADERNO_DESCRICAO+" TEXT NULL,"+
-            CADERNO_COR_PRINCIPAL +" TEXT NULL,"+CADERNO_COR_SECUNDARIA +" TEXT NULL,"+
-            CADERNO_DATA+" DATE," +CADERNO_ULTIMA_MODIFICACAO+" DATE);";
-
-    private static final String CREATE_FOLHA = "CREATE TABLE "+TABLE_FOLHA+"("+FOLHA_ID+" INTEGER PRIMARY KEY, " +
-            FOLHA_LOCAL_IMAGEM+" TEXT, "+FOLHA_DATA+" DATE, "+FOLHA_FK_CADERNO+" INTEGER, " +
-            FOLHA_TITULO+" TEXT NULL, "+FOLHA_CONTADOR+" INTEGER, "+
-            "FOREIGN KEY ("+FOLHA_FK_CADERNO+") REFERENCES "+TABLE_CADERNO+"("+CADERNO_ID+") ON DELETE CASCADE);";
-
-    private static final String CREATE_TAG = "CREATE TABLE "+TABLE_TAG+"("+TAG_ID+" INTEGER PRIMARY KEY, "+
-            TAG_TAG+" TEXT, "+TAG_MIN_TAG+" TEXT);";
-
-    private static final String CREATE_TAG_DA_FOLHA = "CREATE TABLE "+TABLE_TAG_DA_FOLHA+
-            "("+TAG_DA_FOLHA_ID+" INTEGER PRIMARY KEY, "+TAG_DA_FOLHA_ID_TAG+" INTEGER, "+TAG_DA_FOLHA_ID_FOLHA+" INTEGER, " +
-            " UNIQUE("+TAG_DA_FOLHA_ID_TAG+" , "+TAG_DA_FOLHA_ID_FOLHA+") ON CONFLICT REPLACE " +
-            "FOREIGN KEY ("+TAG_DA_FOLHA_ID_FOLHA+") REFERENCES "+TABLE_FOLHA+"("+FOLHA_ID+") ON DELETE CASCADE," +
-            "FOREIGN KEY ("+TAG_DA_FOLHA_ID_TAG+") REFERENCES "+TABLE_TAG+"("+TAG_ID+
+    private static final String BANCO_DADOS = "CadernoDatabase.db";
+    private static final String CREATE_CADERNO = "CREATE TABLE " + TABLE_CADERNO + "(" + CADERNO_ID + " INTEGER PRIMARY KEY," +
+            CADERNO_TITULO + " TEXT," + CADERNO_BADGE + " TEXT NULL," + CADERNO_DESCRICAO + " TEXT NULL," +
+            CADERNO_COR_PRINCIPAL + " TEXT NULL," + CADERNO_COR_SECUNDARIA + " TEXT NULL," +
+            CADERNO_DATA + " DATE," + CADERNO_ULTIMA_MODIFICACAO + " DATE);";
+    private static final String CREATE_FOLHA = "CREATE TABLE " + TABLE_FOLHA + "(" + FOLHA_ID + " INTEGER PRIMARY KEY, " +
+            FOLHA_LOCAL_IMAGEM + " TEXT, " + FOLHA_DATA + " DATE, " + FOLHA_FK_CADERNO + " INTEGER, " +
+            FOLHA_TITULO + " TEXT NULL, " + FOLHA_CONTADOR + " INTEGER, " +
+            "FOREIGN KEY (" + FOLHA_FK_CADERNO + ") REFERENCES " + TABLE_CADERNO + "(" + CADERNO_ID + ") ON DELETE CASCADE);";
+    private static final String CREATE_TAG = "CREATE TABLE " + TABLE_TAG + "(" + TAG_ID + " INTEGER PRIMARY KEY, " +
+            TAG_TAG + " TEXT, " + TAG_MIN_TAG + " TEXT);";
+    private static final String CREATE_TAG_DA_FOLHA = "CREATE TABLE " + TABLE_TAG_DA_FOLHA +
+            "(" + TAG_DA_FOLHA_ID + " INTEGER PRIMARY KEY, " + TAG_DA_FOLHA_ID_TAG + " INTEGER, " + TAG_DA_FOLHA_ID_FOLHA + " INTEGER, " +
+            " UNIQUE(" + TAG_DA_FOLHA_ID_TAG + " , " + TAG_DA_FOLHA_ID_FOLHA + ") ON CONFLICT REPLACE " +
+            "FOREIGN KEY (" + TAG_DA_FOLHA_ID_FOLHA + ") REFERENCES " + TABLE_FOLHA + "(" + FOLHA_ID + ") ON DELETE CASCADE," +
+            "FOREIGN KEY (" + TAG_DA_FOLHA_ID_TAG + ") REFERENCES " + TABLE_TAG + "(" + TAG_ID +
             ") ON DELETE CASCADE);";//, PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
+    private static int VERSAO = 1;
 
 
     public Database(Context context) {

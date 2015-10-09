@@ -16,6 +16,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,16 +30,21 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.lab11.nolram.components.BitmapHelper;
+import com.lab11.nolram.components.DatePickerFragment;
 import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 import com.lab11.nolram.database.model.Tag;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,32 +57,31 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class EditarFolhaActivityFragment extends Fragment implements OnClickListener{
+public class EditarFolhaActivityFragment extends Fragment implements OnClickListener {
 
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMAGE = 2;
-
+    String mCurrentPhotoPath = "";
     private long fk_caderno;
     private long id_folha;
     private String nomeCaderno;
     private List<String> velhas_tags;
-
     private int cor_principal;
     private int cor_secundaria;
-
     private EditText edtTitulo;
     private EditText edtTags;
     private ImageView imgThumb;
     private Button btnAddFolha;
-    private Button btnGetCamera;
+    private Button btnCancelar;
+    private Button date_chooser;
+    private FloatingActionButton btnGetCamera;
     //private Button btnGetGallery;
     private Toolbar toolbar;
-
     private FolhaDataSource folhaDataSource;
-
-    String mCurrentPhotoPath = "";
     private ProgressBar progressBarEditar;
+    private DateTime dateTime;
+    private CollapsingToolbarLayout collapsing_toolbar;
 
     public EditarFolhaActivityFragment() {
     }
@@ -84,7 +91,6 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setBackgroundColor(cor_principal);
         toolbar.setNavigationOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,12 +119,12 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
-                if(resultCode == getActivity().RESULT_OK){
-                    File imgFile = new  File(mCurrentPhotoPath);
+                if (resultCode == getActivity().RESULT_OK) {
+                    File imgFile = new File(mCurrentPhotoPath);
                     int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
-                    if(imgFile.exists()){
+                    if (imgFile.exists()) {
                         Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                         Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
                                 myBitmap, screenWidth, 500);
@@ -126,10 +132,10 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
                     }
                     //Bitmap photo = (Bitmap) data.getExtras().get("data");
                     //saveBitmap(photo);
-                }else if (resultCode == getActivity().RESULT_CANCELED){
+                } else if (resultCode == getActivity().RESULT_CANCELED) {
                     File imgFile = new File(mCurrentPhotoPath);
                     //Log.d("local", mCurrentPhotoPath);
-                    if(imgFile.exists()){
+                    if (imgFile.exists()) {
                         imgFile.delete();
                         mCurrentPhotoPath = "";
                         imgThumb.setImageDrawable(null);
@@ -137,7 +143,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
                 }
                 break;
             case RESULT_LOAD_IMAGE:
-                if(resultCode == getActivity().RESULT_OK && null != data){
+                if (resultCode == getActivity().RESULT_OK && null != data) {
                     Uri selectedImage = data.getData();
                     try {
                         int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
@@ -163,7 +169,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
 
     private String getStringFromUri(Uri contentUri) {
         String path = null;
-        String[] projection = { MediaStore.Images.Media.DATA };
+        String[] projection = {MediaStore.Images.Media.DATA};
         Cursor cursor = getActivity().getContentResolver().query(contentUri, projection, null, null, null);
         if (cursor.moveToFirst()) {
             int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -199,19 +205,19 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = nomeCaderno.toUpperCase()+"_" + timeStamp + "_";
+        String imageFileName = nomeCaderno.toUpperCase() + "_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));
 
-        if(!storageDir.isDirectory()){
+        if (!storageDir.isDirectory()) {
             storageDir.mkdirs();
         }
 
-        if(!mCurrentPhotoPath.isEmpty()){
+        if (!mCurrentPhotoPath.isEmpty()) {
             File mExistente = new File(mCurrentPhotoPath);
-            if(mExistente.exists()){
+            if (mExistente.exists()) {
                 boolean temp = mExistente.delete();
-                if(temp){
+                if (temp) {
                     Log.d("img_deletado", "Imagem deletada");
                 }
             }
@@ -235,8 +241,12 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         edtTags = (EditText) view.findViewById(R.id.edtxt_tags);
         imgThumb = (ImageView) view.findViewById(R.id.img_thumb);
         btnAddFolha = (Button) view.findViewById(R.id.btn_adicionar_folha);
-        btnGetCamera = (Button) view.findViewById(R.id.btn_camera);
+        btnCancelar = (Button) view.findViewById(R.id.btn_cancelar);
+        date_chooser = (Button) view.findViewById(R.id.date_chooser);
+        btnGetCamera = (FloatingActionButton) view.findViewById(R.id.fab_cam);
+        btnCancelar = (Button) view.findViewById(R.id.btn_cancelar);
         progressBarEditar = (ProgressBar) view.findViewById(R.id.progressBarEditar);
+        collapsing_toolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
         //btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
@@ -248,6 +258,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
         nomeCaderno = bundle.getString(Database.CADERNO_TITULO);
         id_folha = bundle.getLong(Database.FOLHA_ID);
+        dateTime = new DateTime(bundle.getString(Database.FOLHA_DATA));
         cor_principal = bundle.getInt(Database.CADERNO_COR_PRINCIPAL);
         cor_secundaria = bundle.getInt(Database.CADERNO_COR_SECUNDARIA);
         String titulo = bundle.getString(Database.FOLHA_TITULO);
@@ -256,25 +267,88 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         List<Tag> tags_list = folhaDataSource.getFolha(id_folha).getTags();
         velhas_tags = new ArrayList<>();
         if (tags != null) {
-            for(int i=0; i < tags_list.size(); i++) {
+            for (int i = 0; i < tags_list.size(); i++) {
                 velhas_tags.add(tags_list.get(i).getTagMin());
             }
         }
 
+        collapsing_toolbar.setContentScrimColor(cor_principal);
+
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+        date_chooser.setText(dtf.print(dateTime));
+
         edtTitulo.setText(titulo);
-        edtTags.setText(tags.replace("[","").replace("]",""));
+        edtTags.setText(tags.replace("[", "").replace("]", ""));
 
-        File imgFile = new  File(mCurrentPhotoPath);
+        File imgFile = new File(mCurrentPhotoPath);
 
-        if(imgFile.exists()){
+        if (imgFile.exists()) {
             loadBitmap(mCurrentPhotoPath, imgThumb);
         }
 
         btnGetCamera.setOnClickListener(this);
         //btnGetGallery.setOnClickListener(this);
         btnAddFolha.setOnClickListener(this);
+        date_chooser.setOnClickListener(this);
+        btnCancelar.setOnClickListener(this);
 
         return view;
+    }
+
+    public void loadBitmap(String localImagem, ImageView imageView) {
+        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
+        task.execute(localImagem);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.btn_adicionar_folha) {
+            String titulo = edtTitulo.getText().toString();
+            String tags = edtTags.getText().toString();
+            String[] res_tags = null;
+            List<String> novasTagsList = new ArrayList<>();
+            if (!tags.isEmpty()) {
+                res_tags = tags.split("[#.;,]");
+                for (int i = 0; i < res_tags.length; i++) {
+                    novasTagsList.add(res_tags[i].toLowerCase().trim());
+                }
+            }
+            //Toast.makeText(v.getContext(), Arrays.toString(res_tags), Toast.LENGTH_SHORT).show();
+            if (!mCurrentPhotoPath.isEmpty()) {
+                WorkerUpdate workerUpdate = new WorkerUpdate(getContext(), titulo, tags,
+                        novasTagsList);
+                workerUpdate.execute();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getResources().getString(R.string.alert_empty_img),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }else if (id == R.id.fab_cam) {
+            if (mCurrentPhotoPath.isEmpty()) {
+                dispatchTakePictureIntent();
+            } else {
+                //Log.d("local", mCurrentPhotoPath);
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.alert_attention)
+                        .setMessage(R.string.alert_mensage_img)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dispatchTakePictureIntent();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+            }
+        }else if(id == R.id.btn_cancelar){
+            getActivity().onBackPressed();
+        }else if(id == R.id.date_chooser){
+            showDatePickerDialog();
+        }
     }
 
     class WorkerUpdate extends AsyncTask<Void, Void, Void> {
@@ -283,7 +357,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         String tags;
         List<String> novasTagsList = new ArrayList<>();
 
-        public WorkerUpdate(Context context, String titulo, String tags, List<String> novasTags){
+        public WorkerUpdate(Context context, String titulo, String tags, List<String> novasTags) {
             progressDialog = new ProgressDialog(context);
             progressDialog.setIndeterminate(true);
             progressDialog.setTitle(context.getString(R.string.txt_alterando));
@@ -296,7 +370,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         @Override
         protected Void doInBackground(Void... params) {
             folhaDataSource.editarFolha(mCurrentPhotoPath, id_folha, fk_caderno, titulo,
-                    novasTagsList, velhas_tags);
+                    novasTagsList, velhas_tags, dateTime);
             return null;
         }
 
@@ -304,7 +378,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         protected void onPostExecute(Void voidd) {
             Bundle b = new Bundle();
             b.putString(Database.FOLHA_TITULO, titulo);
-            tags = "["+tags+"]";
+            tags = "[" + tags + "]";
             b.putString(Database.TAG_TAG, tags);
             b.putString(Database.FOLHA_LOCAL_IMAGEM, mCurrentPhotoPath);
             Intent i = getActivity().getIntent();
@@ -314,7 +388,6 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
             progressDialog.cancel();
         }
     }
-
 
     class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
@@ -326,7 +399,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         }
 
         @Override
-        protected void onPreExecute(){
+        protected void onPreExecute() {
             progressBarEditar.setVisibility(View.VISIBLE);
         }
 
@@ -340,7 +413,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
                 int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
                 newBitmap = BitmapFactory.decodeFile(data);
                 ThumbImage = ThumbnailUtils.extractThumbnail(newBitmap, screenWidth, 500);
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 ThumbImage = null;
             }
             return ThumbImage;
@@ -360,79 +433,15 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
         }
     }
 
-    public void loadBitmap(String localImagem, ImageView imageView) {
-        BitmapWorkerTask task = new BitmapWorkerTask(imageView);
-        task.execute(localImagem);
-    }
-
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        if(id == R.id.btn_adicionar_folha){
-            String titulo = edtTitulo.getText().toString();
-            String tags = edtTags.getText().toString();
-            String[] res_tags = null;
-            List<String> novasTagsList = new ArrayList<>();
-            if(!tags.isEmpty()){
-                res_tags = tags.split("[#.;,]");
-                for(int i=0; i < res_tags.length; i++){
-                    novasTagsList.add(res_tags[i].toLowerCase().trim());
-                }
+    public void showDatePickerDialog() {
+        DialogFragment newFragment = new DatePickerFragment() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                dateTime = new DateTime(year, month + 1, day, 0, 0);
+                DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+                date_chooser.setText(dtf.print(dateTime));
             }
-            //Toast.makeText(v.getContext(), Arrays.toString(res_tags), Toast.LENGTH_SHORT).show();
-            if(!mCurrentPhotoPath.isEmpty()) {
-                WorkerUpdate workerUpdate = new WorkerUpdate(getContext(), titulo, tags,
-                        novasTagsList);
-                workerUpdate.execute();
-            }else {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        getResources().getString(R.string.alert_empty_img),
-                        Toast.LENGTH_SHORT).show();
-            }
-        }/*else if(id == R.id.btn_galeria){
-            if(mCurrentPhotoPath.isEmpty()){
-                Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, RESULT_LOAD_IMAGE);
-            }else{
-                new AlertDialog.Builder(getActivity())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(R.string.alert_attention)
-                        .setMessage(R.string.alert_mensage_img)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(
-                                        Intent.ACTION_PICK,
-                                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                startActivityForResult(i, RESULT_LOAD_IMAGE);
-                            }
-
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-            }
-        }*/
-        else if(id == R.id.btn_camera){
-            if(mCurrentPhotoPath.isEmpty()){
-                dispatchTakePictureIntent();
-            }else{
-                //Log.d("local", mCurrentPhotoPath);
-                new AlertDialog.Builder(getActivity())
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle(R.string.alert_attention)
-                        .setMessage(R.string.alert_mensage_img)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dispatchTakePictureIntent();
-                            }
-
-                        })
-                        .setNegativeButton(R.string.no, null)
-                        .show();
-            }
-        }
+        };
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 }

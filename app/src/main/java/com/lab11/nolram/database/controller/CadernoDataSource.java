@@ -20,15 +20,28 @@ import java.util.List;
  * Created by nolram on 24/08/15.
  */
 public class CadernoDataSource {
-    private SQLiteDatabase database;
-    private Database dbHelper;
-    public static final String[] allColumnsCaderno = { Database.CADERNO_ID,
+    public static final String[] allColumnsCaderno = {Database.CADERNO_ID,
             Database.CADERNO_TITULO, Database.CADERNO_BADGE,
             Database.CADERNO_DESCRICAO, Database.CADERNO_DATA, Database.CADERNO_ULTIMA_MODIFICACAO,
             Database.CADERNO_COR_PRINCIPAL, Database.CADERNO_COR_SECUNDARIA};
+    private SQLiteDatabase database;
+    private Database dbHelper;
 
     public CadernoDataSource(Context context) {
         dbHelper = new Database(context);
+    }
+
+    public static Caderno cursorToCaderno(Cursor cursor) {
+        Caderno caderno = new Caderno();
+        caderno.setId(cursor.getLong(0));
+        caderno.setTitulo(cursor.getString(1));
+        caderno.setBadge(cursor.getString(2));
+        caderno.setDescricao(cursor.getString(3));
+        caderno.setDataAdicionado(cursor.getString(4));
+        caderno.setUltimaModificao(cursor.getString(5));
+        caderno.setCorPrincipal(cursor.getString(6));
+        caderno.setCorSecundaria(cursor.getString(7));
+        return caderno;
     }
 
     public void open() throws SQLException {
@@ -39,7 +52,7 @@ public class CadernoDataSource {
         dbHelper.close();
     }
 
-    public Caderno criarCadernoERetornar(String titulo, String descricao){
+    public Caderno criarCadernoERetornar(String titulo, String descricao) {
         DateTime now = new DateTime();
         ContentValues values = new ContentValues();
         values.put(Database.CADERNO_TITULO, titulo);
@@ -56,7 +69,7 @@ public class CadernoDataSource {
         return caderno;
     }
 
-    public void criarCaderno(String titulo, String descricao, String[] cor, String badge){
+    public void criarCaderno(String titulo, String descricao, String[] cor, String badge) {
         DateTime now = new DateTime();
         ContentValues values = new ContentValues();
         values.put(Database.CADERNO_TITULO, titulo);
@@ -70,7 +83,7 @@ public class CadernoDataSource {
         long dbInsert = database.insert(Database.TABLE_CADERNO, null, values);
     }
 
-    public void updateCaderno(String titulo, String descricao, String[] cor, String badge, long id){
+    public void updateCaderno(String titulo, String descricao, String[] cor, String badge, long id) {
         DateTime now = new DateTime();
         ContentValues values = new ContentValues();
         values.put(Database.CADERNO_TITULO, titulo);
@@ -111,19 +124,18 @@ public class CadernoDataSource {
     public Caderno getCaderno(long fk_caderno) {
         Caderno caderno;
         Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumnsCaderno, Database.CADERNO_ID+" = "+fk_caderno, null, null, null, null);
+                allColumnsCaderno, Database.CADERNO_ID + " = " + fk_caderno, null, null, null, null);
         cursor.moveToFirst();
         caderno = cursorToCaderno(cursor);
         return caderno;
     }
 
-
     public List<Caderno> searchCadernos(String query) {
         List<Caderno> cadernos = new ArrayList<Caderno>();
 
         Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumnsCaderno, Database.CADERNO_TITULO+" LIKE ?",
-                new String[]{"%"+query+"%"}, null, null, null);
+                allColumnsCaderno, Database.CADERNO_TITULO + " LIKE ?",
+                new String[]{"%" + query + "%"}, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -139,8 +151,8 @@ public class CadernoDataSource {
         List<Tag> tags = new ArrayList<Tag>();
 
         Cursor cursor = database.query(Database.TABLE_TAG,
-                FolhaDataSource.ALL_COLUMNS_TAG, Database.TAG_MIN_TAG+" LIKE ?",
-                new String[]{"%"+query.toLowerCase()+"%"}, null, null, null);
+                FolhaDataSource.ALL_COLUMNS_TAG, Database.TAG_MIN_TAG + " LIKE ?",
+                new String[]{"%" + query.toLowerCase() + "%"}, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -156,8 +168,8 @@ public class CadernoDataSource {
         List<Folha> folhas = new ArrayList<Folha>();
 
         Cursor cursor = database.query(Database.TABLE_FOLHA,
-                FolhaDataSource.ALL_COLUMNS_FOLHA, Database.FOLHA_TITULO+" LIKE ?",
-                new String[]{"%"+query+"%"}, null, null, null);
+                FolhaDataSource.ALL_COLUMNS_FOLHA, Database.FOLHA_TITULO + " LIKE ?",
+                new String[]{"%" + query + "%"}, null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -169,16 +181,15 @@ public class CadernoDataSource {
         return folhas;
     }
 
-
-    public List<Tag> getAllTagsGroupBy(){
+    public List<Tag> getAllTagsGroupBy() {
         List<Tag> tags = new ArrayList<>();
-        final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
-                ", t."+Database.TAG_MIN_TAG+", t."+Database.TAG_ID+" FROM "+Database.TABLE_TAG+" t INNER JOIN "+
-                Database.TABLE_TAG_DA_FOLHA+" tt ON tt."+Database.TAG_DA_FOLHA_ID_TAG+"=t."+Database.TAG_ID+
-                " GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG+" ORDER BY COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+") DESC";
+        final String QUERY = "SELECT COUNT(tt." + Database.TAG_DA_FOLHA_ID_TAG + "), t." + Database.TAG_TAG +
+                ", t." + Database.TAG_MIN_TAG + ", t." + Database.TAG_ID + " FROM " + Database.TABLE_TAG + " t INNER JOIN " +
+                Database.TABLE_TAG_DA_FOLHA + " tt ON tt." + Database.TAG_DA_FOLHA_ID_TAG + "=t." + Database.TAG_ID +
+                " GROUP BY tt." + Database.TAG_DA_FOLHA_ID_TAG + " ORDER BY COUNT(tt." + Database.TAG_DA_FOLHA_ID_TAG + ") DESC";
         Cursor cursor = database.rawQuery(QUERY, null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Tag tag = cursorToTagGroupBy(cursor);
             tags.add(tag);
             cursor.moveToNext();
@@ -187,16 +198,16 @@ public class CadernoDataSource {
         return tags;
     }
 
-    public List<Tag> getAllTagsGroupByLimited(){
+    public List<Tag> getAllTagsGroupByLimited() {
         List<Tag> tags = new ArrayList<>();
-        final String QUERY = "SELECT COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+"), t."+Database.TAG_TAG+
-                ", t."+Database.TAG_MIN_TAG+", t."+Database.TAG_ID+" FROM "+Database.TABLE_TAG+" t INNER JOIN "+
-                Database.TABLE_TAG_DA_FOLHA+" tt ON tt."+Database.TAG_DA_FOLHA_ID_TAG+"=t."+Database.TAG_ID+
-                " GROUP BY tt."+Database.TAG_DA_FOLHA_ID_TAG+" ORDER BY COUNT(tt."+Database.TAG_DA_FOLHA_ID_TAG+") DESC" +
-                " LIMIT 10" ;
+        final String QUERY = "SELECT COUNT(tt." + Database.TAG_DA_FOLHA_ID_TAG + "), t." + Database.TAG_TAG +
+                ", t." + Database.TAG_MIN_TAG + ", t." + Database.TAG_ID + " FROM " + Database.TABLE_TAG + " t INNER JOIN " +
+                Database.TABLE_TAG_DA_FOLHA + " tt ON tt." + Database.TAG_DA_FOLHA_ID_TAG + "=t." + Database.TAG_ID +
+                " GROUP BY tt." + Database.TAG_DA_FOLHA_ID_TAG + " ORDER BY COUNT(tt." + Database.TAG_DA_FOLHA_ID_TAG + ") DESC" +
+                " LIMIT 10";
         Cursor cursor = database.rawQuery(QUERY, null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Tag tag = cursorToTagGroupBy(cursor);
             tags.add(tag);
             cursor.moveToNext();
@@ -205,26 +216,12 @@ public class CadernoDataSource {
         return tags;
     }
 
-    private Tag cursorToTagGroupBy(Cursor cursor){
+    private Tag cursorToTagGroupBy(Cursor cursor) {
         Tag tag = new Tag();
         tag.setContador(cursor.getInt(0));
         tag.setTag(cursor.getString(1));
         tag.setTagMin(cursor.getString(2));
         tag.setId(cursor.getLong(3));
         return tag;
-    }
-
-
-    public static Caderno cursorToCaderno(Cursor cursor) {
-        Caderno caderno = new Caderno();
-        caderno.setId(cursor.getLong(0));
-        caderno.setTitulo(cursor.getString(1));
-        caderno.setBadge(cursor.getString(2));
-        caderno.setDescricao(cursor.getString(3));
-        caderno.setDataAdicionado(cursor.getString(4));
-        caderno.setUltimaModificao(cursor.getString(5));
-        caderno.setCorPrincipal(cursor.getString(6));
-        caderno.setCorSecundaria(cursor.getString(7));
-        return caderno;
     }
 }

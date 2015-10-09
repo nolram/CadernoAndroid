@@ -25,10 +25,6 @@ public class Caderno {
         this.corSecundaria = corSecundaria;
     }
 
-    public void setUltimaModificacao(String ultimaModificacao) {
-        this.ultimaModificacao = ultimaModificacao;
-    }
-
     public String getCorPrincipal() {
         return corPrincipal;
     }
@@ -81,7 +77,11 @@ public class Caderno {
         return ultimaModificacao;
     }
 
-    public void setUltimaModificao(String ultimaModificacao){
+    public void setUltimaModificacao(String ultimaModificacao) {
+        this.ultimaModificacao = ultimaModificacao;
+    }
+
+    public void setUltimaModificao(String ultimaModificacao) {
         //DateTime now = new DateTime();
         DateTime dt = new DateTime(ultimaModificacao);
         /*Period period = new Period(dt, now);
@@ -94,8 +94,8 @@ public class Caderno {
                 .toFormatter();
         String tmp = daysHoursMinutes.print(period);*/
         //if(tmp.isEmpty()){
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss dd/MM/yyyy");
-            this.ultimaModificacao = dtf.print(dt);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss dd/MM/yyyy");
+        this.ultimaModificacao = dtf.print(dt);
         //}else {
         //    this.ultimaModificacao = "Atualizado há: " + tmp;
         //}

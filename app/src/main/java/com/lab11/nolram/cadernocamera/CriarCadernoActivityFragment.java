@@ -22,8 +22,9 @@ import com.lab11.nolram.database.controller.CadernoDataSource;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CriarCadernoActivityFragment extends Fragment{
+public class CriarCadernoActivityFragment extends Fragment {
 
+    public static final int IDENTIFY_INTEGER = 11;
     private Button btnCriar;
     private ImageButton btnImgPicker;
     private EditText edtDescricao;
@@ -31,9 +32,6 @@ public class CriarCadernoActivityFragment extends Fragment{
     private RadioGroup radioGroupCor;
     private RadioButton radioCor;
     private Toolbar toolbar;
-
-    public static final int IDENTIFY_INTEGER = 11;
-
     private CadernoDataSource cadernoDataSource;
     private int icon;
 
@@ -56,8 +54,8 @@ public class CriarCadernoActivityFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (IDENTIFY_INTEGER) : {
+        switch (requestCode) {
+            case (IDENTIFY_INTEGER): {
                 if (resultCode == Activity.RESULT_OK) {
                     icon = data.getIntExtra(IconPickerActivityFragment.ICONE_ESCOLHIDO,
                             R.drawable.book_2);
@@ -80,9 +78,9 @@ public class CriarCadernoActivityFragment extends Fragment{
         super.onPause();
     }
 
-    public String[] escolher_cor(int id){
+    public String[] escolher_cor(int id) {
         String[] escolhas = new String[2];
-        switch (id){
+        switch (id) {
             case R.id.rd_alizarin:
                 escolhas[0] = getResources().getResourceName(R.color.flatui_alizarin);
                 escolhas[1] = getResources().getResourceName(R.color.flatui_pomegranate);

@@ -39,11 +39,14 @@ public class SearchTagActivityFragment extends Fragment {
     private List<Folha> folhas;
 
 
+    public SearchTagActivityFragment() {
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
-        getActivity().setTitle("#"+query);
+        getActivity().setTitle("#" + query);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //toolbar.setTitle(titulo);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -64,9 +67,6 @@ public class SearchTagActivityFragment extends Fragment {
     public void onPause() {
         folhaDataSource.close();
         super.onPause();
-    }
-
-    public SearchTagActivityFragment() {
     }
 
     @Override

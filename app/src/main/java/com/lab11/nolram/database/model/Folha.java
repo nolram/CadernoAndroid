@@ -14,6 +14,7 @@ public class Folha {
     private String local_folha;
     private String titulo;
     private String data;
+    private String dataBanco;
     private long fk_caderno;
     private List<Tag> tags;
     private int contador;
@@ -63,12 +64,23 @@ public class Folha {
     }
 
     public void setData(String data) {
+        setDataBanco(data);
         DateTime dt = new DateTime(data);
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss dd/MM/yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
         this.data = dtf.print(dt);
     }
 
-    public String toString(){
+
+
+    public String getDataBanco() {
+        return dataBanco;
+    }
+
+    public void setDataBanco(String dataBanco) {
+        this.dataBanco = dataBanco;
+    }
+
+    public String toString() {
         return titulo;
     }
 

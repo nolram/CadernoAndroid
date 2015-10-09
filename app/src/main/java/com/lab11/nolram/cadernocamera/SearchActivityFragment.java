@@ -1,8 +1,6 @@
 package com.lab11.nolram.cadernocamera;
 
-import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -35,19 +33,16 @@ import java.util.List;
  */
 public class SearchActivityFragment extends Fragment {
 
+    private static final int FOLHAS = 1;
+    private static final int CADERNO = 2;
+    private static final int TAGS = 3;
     private CadernoDataSource cadernoDataSource;
-
     private List<CadernoTagFolha> myDataset;
-
     private RecyclerView mRecyclerView;
     private ProgressBar progressBar;
     private LinearLayoutManager linearLayoutManager;
     private AdapterCardsSearchCaderno mAdapter;
     private Toolbar toolbar;
-
-    private static final int FOLHAS = 1;
-    private static final int CADERNO = 2;
-    private static final int TAGS = 3;
 
     public SearchActivityFragment() {
     }
@@ -105,7 +100,7 @@ public class SearchActivityFragment extends Fragment {
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        if(getTypeClass(position) == CADERNO) {
+                        if (getTypeClass(position) == CADERNO) {
                             Intent intent = new Intent(view.getContext(), NotesActivity.class);
                             Bundle bundle = new Bundle();
                             Caderno caderno = myDataset.get(position).getCaderno();
@@ -116,12 +111,12 @@ public class SearchActivityFragment extends Fragment {
                             bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
                             intent.putExtras(bundle);
                             startActivity(intent);
-                        }else if (getTypeClass(position) == FOLHAS){
+                        } else if (getTypeClass(position) == FOLHAS) {
                             Intent intent = new Intent(view.getContext(), FolhaActivity.class);
                             Bundle bundle = new Bundle();
                             Folha folha = myDataset.get(position).getFolha();
                             Caderno cad = cadernoDataSource.getCaderno(folha.getFk_caderno());
-                            bundle.putInt(FolhaActivity.INDICE, folha.getContador()-1);
+                            bundle.putInt(FolhaActivity.INDICE, folha.getContador() - 1);
                             bundle.putLong(Database.FOLHA_FK_CADERNO, folha.getFk_caderno());
                             bundle.putString(Database.CADERNO_TITULO, cad.getTitulo());
                             bundle.putString(Database.CADERNO_BADGE, cad.getBadge());
@@ -141,7 +136,7 @@ public class SearchActivityFragment extends Fragment {
                                         getActivity().getTheme());
                                 cor_secundaria = getResources().getColor(id_cor_secundaria,
                                         getActivity().getTheme());
-                            }else{
+                            } else {
                                 cor_principal = getResources().getColor(id_cor_principal);
                                 cor_secundaria = getResources().getColor(id_cor_secundaria);
                             }
@@ -151,7 +146,7 @@ public class SearchActivityFragment extends Fragment {
                             bundle.putInt(Database.CADERNO_ID_COR_PRINCIPAL, id_cor_principal);
                             intent.putExtras(bundle);
                             startActivity(intent);
-                        }else {
+                        } else {
                             Tag tag = myDataset.get(position).getTag();
                             Intent intent = new Intent(view.getContext(), SearchTagActivity.class);
                             Bundle bundle = new Bundle();
@@ -167,9 +162,33 @@ public class SearchActivityFragment extends Fragment {
         return view;
     }
 
+    public int getTypeClass(int position) {
+        CadernoTagFolha ctf = myDataset.get(position);
+        if (ctf.getFolha() == null && ctf.getCaderno() == null) {
+            return TAGS;
+        } else if (ctf.getTag() == null && ctf.getCaderno() == null) {
+            return FOLHAS;
+        } else {
+            return CADERNO;
+        }
+    }
+
+    public void carregarDataset(List<Caderno> mCadernos, List<Folha> mFolhas, List<Tag> mTags) {
+        myDataset = new ArrayList<CadernoTagFolha>();
+        for (Caderno c : mCadernos) {
+            myDataset.add(new CadernoTagFolha(c));
+        }
+        for (Folha f : mFolhas) {
+            myDataset.add(new CadernoTagFolha(f));
+        }
+        for (Tag t : mTags) {
+            myDataset.add(new CadernoTagFolha(t));
+        }
+    }
+
     class AsyncPesquisa extends AsyncTask<String, Void, Void> {
 
-        public AsyncPesquisa(){
+        public AsyncPesquisa() {
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -189,30 +208,6 @@ public class SearchActivityFragment extends Fragment {
             mAdapter = new AdapterCardsSearchCaderno(myDataset, getContext());
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.setHasFixedSize(true);
-        }
-    }
-
-    public int getTypeClass (int position) {
-        CadernoTagFolha ctf = myDataset.get(position);
-        if(ctf.getFolha() == null && ctf.getCaderno() == null){
-            return TAGS;
-        }else if(ctf.getTag() == null && ctf.getCaderno() == null){
-            return FOLHAS;
-        }else {
-            return CADERNO;
-        }
-    }
-
-    public void carregarDataset(List<Caderno> mCadernos, List<Folha> mFolhas, List<Tag> mTags){
-        myDataset = new ArrayList<CadernoTagFolha>();
-        for(Caderno c: mCadernos){
-            myDataset.add(new CadernoTagFolha(c));
-        }
-        for(Folha f: mFolhas){
-            myDataset.add(new CadernoTagFolha(f));
-        }
-        for(Tag t: mTags){
-            myDataset.add(new CadernoTagFolha(t));
         }
     }
 }

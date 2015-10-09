@@ -82,7 +82,7 @@ public class BitmapHelper {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             display.getSize(size);
             displayWidth = size.x;
-        }else {
+        } else {
             displayWidth = display.getWidth();  // deprecated
         }
         // Get margin to use it for calculating to max width of the ImageView
@@ -95,9 +95,8 @@ public class BitmapHelper {
         int imageViewWidth = displayWidth - (leftMargin + rightMargin);
 
         // Calculate scaling factor and return it
-        return ( (float) imageViewWidth / (float) bm.getWidth() );
+        return ((float) imageViewWidth / (float) bm.getWidth());
     }
-
 
 
 }
