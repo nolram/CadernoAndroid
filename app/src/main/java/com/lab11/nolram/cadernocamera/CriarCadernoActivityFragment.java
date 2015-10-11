@@ -2,6 +2,7 @@ package com.lab11.nolram.cadernocamera;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,6 +29,7 @@ public class CriarCadernoActivityFragment extends Fragment {
 
     public static final int IDENTIFY_INTEGER = 11;
     private Button btnCriar;
+    private Button btnCancelar;
     private ImageButton btnImgPicker;
     private EditText edtDescricao;
     private EditText edtTitulo;
@@ -138,6 +142,7 @@ public class CriarCadernoActivityFragment extends Fragment {
         radioGroupCor = (RadioGroup) v.findViewById(R.id.rd_cor);
 
         btnCriar = (Button) v.findViewById(R.id.btn_criar_caderno);
+        btnCancelar = (Button) v.findViewById(R.id.btn_cancelar);
         edtDescricao = (EditText) v.findViewById(R.id.edtxt_descricao);
         edtTitulo = (EditText) v.findViewById(R.id.edtxt_titulo);
         btnImgPicker = (ImageButton) v.findViewById(R.id.btn_img_picker);
@@ -145,6 +150,40 @@ public class CriarCadernoActivityFragment extends Fragment {
 
         cadernoDataSource = new CadernoDataSource(v.getContext());
         cadernoDataSource.open();
+
+        radioGroupCor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                String[] cores = escolher_cor(checkedId);
+                int cor_principal;
+                int cor_secundaria;
+                int id_cor_principal = getResources().getIdentifier(cores[0], "drawable",
+                        getActivity().getPackageName());
+                int id_cor_secundaria = getResources().getIdentifier(cores[1], "drawable",
+                        getActivity().getPackageName());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    cor_principal = getResources().getColor(id_cor_principal, getActivity().getTheme());
+                    cor_secundaria = getResources().getColor(id_cor_secundaria, getActivity().getTheme());
+                } else {
+                    cor_principal = getResources().getColor(id_cor_principal);
+                    cor_secundaria = getResources().getColor(id_cor_secundaria);
+                }
+                toolbar.setBackgroundColor(cor_principal);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getActivity().getWindow();
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(cor_secundaria);
+                }
+            }
+        });
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
         btnCriar.setOnClickListener(new View.OnClickListener() {
             @Override

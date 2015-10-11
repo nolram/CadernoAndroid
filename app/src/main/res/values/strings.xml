@@ -27,11 +27,11 @@
     <string name="transition_color">transition:COLOR</string>
     <string name="transition_image">transition:IMAGE</string>
     <string name="criar_caderno">Criar Caderno</string>
-    <string name="title_activity_icon_picker">Escolher Badge</string>
-    <string name="txt_icon">Icone</string>
+    <string name="title_activity_icon_picker">Escolha o ícone do caderno</string>
+    <string name="txt_icon">Ícone</string>
     <string name="txt_cor">Cor</string>
     <string name="txt_description">Descrição (Opcional)</string>
-    <string name="txt_title">Titulo</string>
+    <string name="txt_title">Título</string>
     <string name="add_folha">Adicionar Folha</string>
     <string name="txt_criar_caderno">Criar Caderno</string>
     <string name="txt_export_to_gallery">Exportar para a galeria</string>

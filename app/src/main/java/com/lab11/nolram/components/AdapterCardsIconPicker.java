@@ -65,7 +65,6 @@ public class AdapterCardsIconPicker extends RecyclerView.Adapter<AdapterCardsIco
     public void onBindViewHolder(ViewHolder holder, int position) {
         int img = mDataset[position];
         holder.mImgPicker.setImageResource(img);
-        ;
     }
 
     public int getItem(int position) {
@@ -78,9 +77,7 @@ public class AdapterCardsIconPicker extends RecyclerView.Adapter<AdapterCardsIco
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         public ImageView mImgPicker;
-
         public ViewHolder(View v) {
             super(v);
             mImgPicker = (ImageView) v.findViewById(R.id.img_picker);

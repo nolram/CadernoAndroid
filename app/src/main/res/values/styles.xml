@@ -18,6 +18,10 @@
         <item name="colorButtonNormal">@color/button_color_cancel</item>
     </style>
 
+    <style name="ButtonIcon" parent="Base.Widget.AppCompat.Button">
+        <item name="colorButtonNormal">@color/branco</item>
+    </style>
+
     <style name="MyTheme" parent="MyTheme.Base">
     </style>
     <!-- Base theme applied no matter what API -->

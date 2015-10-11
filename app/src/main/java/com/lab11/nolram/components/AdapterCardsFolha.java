@@ -91,13 +91,8 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
         holder.mDate.setText(folha.getData());
         File file = new File(folha.getLocal_folha());
         if (file.exists()) {
-            //int screenWidth = DeviceDimensionsHelper.getDisplayWidth(mContext);
-            //Bitmap myBitmap = Bitmap.createScaledBitmap(BitmapFactory.decodeFile(file.getAbsolutePath()),
-            //        screenWidth, (int) DeviceDimensionsHelper.convertDpToPixel(150 ,mContext), true);
-            //holder.mThumbFolhaView.setImageBitmap(myBitmap);
             loadBitmap(file.getAbsolutePath(), holder.mThumbFolhaView);
         }
-        //holder.mThumbFolhaView
         holder.mTitleView.setText(folha.getTitulo());
     }
 
@@ -108,20 +103,13 @@ public class AdapterCardsFolha extends RecyclerView.Adapter<AdapterCardsFolha.Vi
 
     @Override
     public void onItemMove(int dePosicao, int paraPosicao) {
-        //FIXME Quando movimenta mais de uma posição o contador fica bugado pode ser problema de sincronismo
-        //Log.d("Elements Before", mDataset.toString());
         Folha deFolha = mDataset.remove(dePosicao);
         mDataset.add(paraPosicao, deFolha);
         notifyItemMoved(dePosicao, paraPosicao);
         Folha paraFolha = mDataset.get(dePosicao);
-        //Log.d("Para", String.valueOf(paraPosicao) + " " + paraFolha.getTitulo());
-        //Log.d("De", String.valueOf(dePosicao) + " " + deFolha.getTitulo());
-        //Log.d("Elements After", mDataset.toString());
         paraFolha.setContador(paraPosicao + 1);
         deFolha.setContador(dePosicao + 1);
         folhaDataSource.moveItem(paraFolha, deFolha);
-        //WorkerUpdate workerDatabase = new WorkerUpdate(mContext);
-        //workerDatabase.execute(paraFolha, deFolha);
     }
 
     public void loadBitmap(String locaImagem, ImageView imageView) {
