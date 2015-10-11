@@ -32,6 +32,7 @@ public class EditarCadernoActivityFragment extends Fragment {
     private int cor_principal;
     private int cor_secundaria;
     private Button btnEditar;
+    private Button btnCancelar;
     private ImageButton btnImgPicker;
     private EditText edtDescricao;
     private EditText edtTitulo;
@@ -190,10 +191,10 @@ public class EditarCadernoActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_editar_caderno, container, false);
-        icon = R.drawable.book_2;
         radioGroupCor = (RadioGroup) v.findViewById(R.id.rd_cor);
 
         btnEditar = (Button) v.findViewById(R.id.btn_editar_caderno);
+        btnCancelar = (Button) v.findViewById(R.id.btn_cancelar);
         edtDescricao = (EditText) v.findViewById(R.id.edtxt_descricao);
         edtTitulo = (EditText) v.findViewById(R.id.edtxt_titulo);
         btnImgPicker = (ImageButton) v.findViewById(R.id.btn_img_picker);
@@ -213,16 +214,50 @@ public class EditarCadernoActivityFragment extends Fragment {
         edtDescricao.setText(caderno.getDescricao());
         edtTitulo.setText(caderno.getTitulo());
 
-        int id_badge = getResources().getIdentifier(caderno.getBadge(),
+        icon = getResources().getIdentifier(caderno.getBadge(),
                 "drawable", getActivity().getPackageName());
 
-        btnImgPicker.setImageResource(id_badge);
+        btnImgPicker.setImageResource(icon);
 
         int id_opcao_cor = getResources().getIdentifier(caderno.getCorPrincipal(),
                 "drawable", getActivity().getPackageName());
 
         RadioButton b = (RadioButton) v.findViewById(getOptionButton(id_opcao_cor));
         b.setChecked(true);
+
+        radioGroupCor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                String[] cores = escolher_cor(checkedId);
+                int cor_principal;
+                int cor_secundaria;
+                int id_cor_principal = getResources().getIdentifier(cores[0], "drawable",
+                        getActivity().getPackageName());
+                int id_cor_secundaria = getResources().getIdentifier(cores[1], "drawable",
+                        getActivity().getPackageName());
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    cor_principal = getResources().getColor(id_cor_principal, getActivity().getTheme());
+                    cor_secundaria = getResources().getColor(id_cor_secundaria, getActivity().getTheme());
+                } else {
+                    cor_principal = getResources().getColor(id_cor_principal);
+                    cor_secundaria = getResources().getColor(id_cor_secundaria);
+                }
+                toolbar.setBackgroundColor(cor_principal);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getActivity().getWindow();
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(cor_secundaria);
+                }
+            }
+        });
+
+        btnCancelar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
 
         btnEditar.setOnClickListener(new View.OnClickListener() {
             @Override

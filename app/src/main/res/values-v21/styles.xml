@@ -10,6 +10,10 @@
         <item name="android:colorButtonNormal">@color/button_color_cancel</item>
     </style>
 
+    <style name="ButtonIcon" parent="Base.Widget.AppCompat.Button">
+        <item name="android:colorButtonNormal">@color/branco</item>
+    </style>
+
     <style name="MyTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <!--We will be using the toolbar so no need to show ActionBar-->

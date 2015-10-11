@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lab11.nolram.cadernocamera.CriarCadernoActivityFragment">
+    tools:context="com.lab11.nolram.cadernocamera.EditarCadernoActivityFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
@@ -71,6 +71,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_gravity="center_horizontal"
                     android:padding="10dp"
                     android:layout_centerHorizontal="true">
 
@@ -189,8 +190,7 @@
                 android:padding="20dp"
                 android:background="?attr/selectableItemBackground"
                 android:id="@+id/btn_img_picker"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/book_2"/>
+                android:layout_gravity="center_horizontal"/>
 
             <LinearLayout
                 android:id="@+id/LinearLayout02"
@@ -209,11 +209,11 @@
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/txt_criar_caderno"
+                    android:text="@string/txt_editar_caderno"
                     android:theme="@style/ButtonConfirm"
                     android:textColor="@color/branco"
                     android:layout_margin="10dp"
-                    android:id="@+id/btn_criar_caderno"
+                    android:id="@+id/btn_editar_caderno"
                     android:layout_weight="1"/>
             </LinearLayout>
         </LinearLayout>
