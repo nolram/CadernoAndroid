@@ -16,6 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,9 +29,31 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
 
     @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        GoogleAnalytics.getInstance(MainActivity.this).reportActivityStart(this);
+    }
+
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        GoogleAnalytics.getInstance(MainActivity.this).reportActivityStop(this);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /*  Analytics */
+        Tracker t = ((FlynNoteApp) getApplication()).getTracker(FlynNoteApp.TrackerName.APP_TRACKER);
+        t.setScreenName(MainActivity.class.getName());
+        t.send(new HitBuilders.AppViewBuilder().build());
+        /* Fim Analytics */
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         setTitle(getString(R.string.txt_meus_cadernos));

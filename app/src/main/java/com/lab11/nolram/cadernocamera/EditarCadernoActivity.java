@@ -5,12 +5,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 public class EditarCadernoActivity extends AppCompatActivity {
+
+    @Override
+    protected void onStart() {
+        // TODO Auto-generated method stub
+        super.onStart();
+        GoogleAnalytics.getInstance(EditarCadernoActivity.this).reportActivityStart(this);
+    }
+
+
+    @Override
+    protected void onStop() {
+        // TODO Auto-generated method stub
+        super.onStop();
+        GoogleAnalytics.getInstance(EditarCadernoActivity.this).reportActivityStop(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_caderno);
+        /*  Analytics */
+        Tracker t = ((FlynNoteApp) getApplication()).getTracker(FlynNoteApp.TrackerName.APP_TRACKER);
+        t.setScreenName(EditarCadernoActivity.class.getName());
+        t.send(new HitBuilders.AppViewBuilder().build());
+        /* Fim Analytics */
     }
 
 
