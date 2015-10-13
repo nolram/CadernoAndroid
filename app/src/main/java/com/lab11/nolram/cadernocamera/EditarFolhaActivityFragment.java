@@ -204,7 +204,7 @@ public class EditarFolhaActivityFragment extends Fragment implements OnClickList
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat(getString(R.string.time_stamp)).format(new Date());
         String imageFileName = nomeCaderno.toUpperCase() + "_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));

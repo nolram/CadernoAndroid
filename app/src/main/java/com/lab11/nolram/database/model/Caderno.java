@@ -81,7 +81,7 @@ public class Caderno {
         this.ultimaModificacao = ultimaModificacao;
     }
 
-    public void setUltimaModificao(String ultimaModificacao) {
+    public void setUltimaModificao(String ultimaModificacao, String pattern) {
         //DateTime now = new DateTime();
         DateTime dt = new DateTime(ultimaModificacao);
         /*Period period = new Period(dt, now);
@@ -94,7 +94,7 @@ public class Caderno {
                 .toFormatter();
         String tmp = daysHoursMinutes.print(period);*/
         //if(tmp.isEmpty()){
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm:ss dd/MM/yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
         this.ultimaModificacao = dtf.print(dt);
         //}else {
         //    this.ultimaModificacao = "Atualizado há: " + tmp;

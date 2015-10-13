@@ -279,10 +279,10 @@ public class EditarCadernoActivityFragment extends Fragment {
                     getActivity().setResult(Activity.RESULT_OK, i);
                     getActivity().finish();
                 } else if (selectedId == -1) {
-                    Toast.makeText(v.getContext(), "Escolha uma cor",
+                    Toast.makeText(v.getContext(), getString(R.string.txt_choice_color),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(v.getContext(), "O Titulo não pode estar em branco",
+                    Toast.makeText(v.getContext(), getString(R.string.txt_title_msg),
                             Toast.LENGTH_SHORT).show();
                 }
             }

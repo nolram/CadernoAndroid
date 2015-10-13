@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.lab11.nolram.cadernocamera.R;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
@@ -32,10 +33,12 @@ public class FolhaDataSource {
             Database.TAG_DA_FOLHA_ID_FOLHA, Database.TAG_DA_FOLHA_ID_TAG};
     public final static String[] ALL_COLORS = {Database.CADERNO_COR_PRINCIPAL,
             Database.CADERNO_COR_SECUNDARIA};
+    private static Context mContext;
     private SQLiteDatabase database;
     private Database dbHelper;
 
     public FolhaDataSource(Context context) {
+        mContext = context;
         dbHelper = new Database(context);
     }
 
@@ -60,7 +63,7 @@ public class FolhaDataSource {
         folha.setId(cursor.getLong(0));
         folha.setLocal_folha(cursor.getString(1));
         folha.setFk_caderno(cursor.getLong(2));
-        folha.setData(cursor.getString(3));
+        folha.setData(cursor.getString(3), mContext.getString(R.string.date_format));
         folha.setTitulo(cursor.getString(4));
         //folha.setTags(getAllTagsByFolha(folha.getId()));
         folha.setContador(cursor.getInt(5));
@@ -422,7 +425,7 @@ public class FolhaDataSource {
         folha.setId(cursor.getLong(0));
         folha.setLocal_folha(cursor.getString(1));
         folha.setFk_caderno(cursor.getLong(2));
-        folha.setData(cursor.getString(3));
+        folha.setData(cursor.getString(3), mContext.getString(R.string.date_format));
         folha.setTitulo(cursor.getString(4));
         folha.setTags(getAllTagsByFolha(folha.getId()));
         folha.setContador(cursor.getInt(5));

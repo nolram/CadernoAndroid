@@ -389,7 +389,7 @@ public class NotesActivityFragment extends Fragment {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat(getString(R.string.time_stamp)).format(new Date());
         String imageFileName = titulo.toUpperCase() + "_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));
@@ -537,7 +537,7 @@ public class NotesActivityFragment extends Fragment {
             canvas.drawText(titulo, x, y, paint);
 
             DateTime now = new DateTime();
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+            DateTimeFormatter dtf = DateTimeFormat.forPattern(getString(R.string.date_format));
             //canvas.drawText();
 
             paint.setTextSize(20);
@@ -548,7 +548,7 @@ public class NotesActivityFragment extends Fragment {
             canvas.drawRect(rect, paintRect);
 
             canvas.drawText(dtf.print(now), x, y + 50, paint);
-            canvas.drawText("Gerado por: " + getString(R.string.app_name), x, y + 200, paint);
+            canvas.drawText(getString(R.string.txt_generate_by), x, y + 200, paint);
         }
 
 
@@ -567,7 +567,7 @@ public class NotesActivityFragment extends Fragment {
             int ySummary = y + 35;
             int xSummary = 54;
 
-            canvas.drawText("Sumário", x, y, paint);
+            canvas.drawText(getString(R.string.txt_summary), x, y, paint);
 
             paint.setTextAlign(Paint.Align.LEFT);
             paint.setTextSize(18);
@@ -769,7 +769,7 @@ public class NotesActivityFragment extends Fragment {
             canvas.drawText(titulo, x, y, paint);
 
             DateTime now = new DateTime();
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+            DateTimeFormatter dtf = DateTimeFormat.forPattern(getString(R.string.date_format));
             //canvas.drawText();
 
             paint.setTextSize(20);
@@ -780,7 +780,7 @@ public class NotesActivityFragment extends Fragment {
             canvas.drawRect(rect, paintRect);
 
             canvas.drawText(dtf.print(now), x, y + 50, paint);
-            canvas.drawText("Gerado por: " + getString(R.string.app_name), x, y + 200, paint);
+            canvas.drawText(getString(R.string.txt_generate_by), x, y + 200, paint);
         }
 
 
@@ -799,9 +799,8 @@ public class NotesActivityFragment extends Fragment {
             int ySummary = y + 35;
             int xSummary = 54;
 
-            canvas.drawText("Sumário", x, y, paint);
+            canvas.drawText(getString(R.string.txt_summary), x, y, paint);
 
-            //FIXME: Modificar para que possa suportar multiplas páginas de sumário
             paint.setTextAlign(Paint.Align.LEFT);
             paint.setTextSize(18);
 

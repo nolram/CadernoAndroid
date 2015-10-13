@@ -202,7 +202,7 @@ public class CriarFolhaActivityFragment extends Fragment {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat(getString(R.string.time_stamp)).format(new Date());
         String imageFileName = nomeCaderno.toUpperCase() + "_" + timeStamp + "_";
         File storageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 getString(R.string.app_name));
@@ -260,7 +260,7 @@ public class CriarFolhaActivityFragment extends Fragment {
         collapsing_toolbar.setContentScrimColor(cor_principal);
 
         dateTime = new DateTime();
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern(getString(R.string.date_format));
         date_chooser.setText(dtf.print(dateTime));
 
         btnGetCamera.setOnClickListener(new View.OnClickListener() {
@@ -363,7 +363,7 @@ public class CriarFolhaActivityFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 dateTime = new DateTime(year, month + 1, day, 0, 0);
-                DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+                DateTimeFormatter dtf = DateTimeFormat.forPattern(getString(R.string.date_format));
                 date_chooser.setText(dtf.print(dateTime));
             }
         };

@@ -197,10 +197,10 @@ public class CriarCadernoActivityFragment extends Fragment {
                     cadernoDataSource.criarCaderno(titulo, descricao, cor, badge);
                     getActivity().finish();
                 } else if (selectedId == -1) {
-                    Toast.makeText(v.getContext(), "Escolha uma cor",
+                    Toast.makeText(v.getContext(), getString(R.string.txt_choice_color),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(v.getContext(), "O Titulo não pode estar em branco",
+                    Toast.makeText(v.getContext(), getString(R.string.txt_title_msg),
                             Toast.LENGTH_SHORT).show();
                 }
             }

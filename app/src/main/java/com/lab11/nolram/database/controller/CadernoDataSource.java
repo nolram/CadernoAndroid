@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.lab11.nolram.cadernocamera.R;
 import com.lab11.nolram.database.Database;
 import com.lab11.nolram.database.model.Caderno;
 import com.lab11.nolram.database.model.Folha;
@@ -26,8 +27,10 @@ public class CadernoDataSource {
             Database.CADERNO_COR_PRINCIPAL, Database.CADERNO_COR_SECUNDARIA};
     private SQLiteDatabase database;
     private Database dbHelper;
+    private static Context mContext;
 
     public CadernoDataSource(Context context) {
+        mContext = context;
         dbHelper = new Database(context);
     }
 
@@ -38,7 +41,7 @@ public class CadernoDataSource {
         caderno.setBadge(cursor.getString(2));
         caderno.setDescricao(cursor.getString(3));
         caderno.setDataAdicionado(cursor.getString(4));
-        caderno.setUltimaModificao(cursor.getString(5));
+        caderno.setUltimaModificao(cursor.getString(5), mContext.getString(R.string.time_stamp_hour));
         caderno.setCorPrincipal(cursor.getString(6));
         caderno.setCorSecundaria(cursor.getString(7));
         return caderno;

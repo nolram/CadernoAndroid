@@ -63,14 +63,12 @@ public class Folha {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(String data, String pattern) {
         setDataBanco(data);
         DateTime dt = new DateTime(data);
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern(pattern);
         this.data = dtf.print(dt);
     }
-
-
 
     public String getDataBanco() {
         return dataBanco;

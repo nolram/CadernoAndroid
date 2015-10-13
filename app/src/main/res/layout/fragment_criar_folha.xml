@@ -108,7 +108,7 @@
                         android:textSize="15sp"
                         android:layout_above="@+id/date_chooser"
                         android:clickable="true"
-                        android:text="Data"/>
+                        android:text="@string/txt_date"/>
 
                     <Button
                         android:layout_width="150dp"

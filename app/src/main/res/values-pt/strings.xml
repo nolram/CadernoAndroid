@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flyn Note</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_generate_pdf">Gerar PDF</string>
+    <string name="txt_teste_card">Descrição do Card</string>
+    <string name="txt_ultima_modificacao">Última Modificação</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_categorias">Categorias</string>
+    <string name="menu_favoritos">Favoritos</string>
+    <string name="menu_configuracoes">Configurações</string>
+    <string name="menu_contato">Contato</string>
+    <string name="tags">Tags</string>
+    <string name="txt_tags">Tags - utlize , ; . # para separar as tags</string>
+    <string name="action_search">Pesquisa</string>
+    <string name="action_search_hint_caderno">Procure caderno, folha ou tag</string>
+
+    <string name="transition_name_name">transition:NAME</string>
+    <string name="transition_color">transition:COLOR</string>
+    <string name="transition_image">transition:IMAGE</string>
+    <string name="criar_caderno">Criar Caderno</string>
+    <string name="txt_icon">Ícone</string>
+    <string name="txt_cor">Cor</string>
+    <string name="txt_description">Descrição (Opcional)</string>
+    <string name="txt_title">Título</string>
+    <string name="add_folha">Adicionar Folha</string>
+    <string name="txt_criar_caderno">Criar Caderno</string>
+    <string name="txt_export_to_gallery">Exportar para a galeria</string>
+    <string name="txt_gallery">Galeria</string>
+    <string name="txt_camera">Câmera</string>
+
+    <string name="action_edit_caderno">Editar Caderno</string>
+    <string name="action_delete_caderno">Deletar Caderno</string>
+    <string name="action_imprimir_caderno">Imprimir Caderno</string>
+
+    <string name="no">Não</string>
+    <string name="yes">Sim</string>
+    <string name="alert_attention">Atenção</string>
+    <string name="alert_mensage_img">Deseja substituir a imagem atual?</string>
+
+    <string name="alert_empty_img">Tire uma foto!</string>
+    <string name="txt_edit">Editar</string>
+    <string name="txt_delete_paper">Deletar Folha</string>
+    <string name="txt_share_paper">Compartilhar Folha</string>
+
+    <string name="txt_info">Informações</string>
+
+    <string name="alert_delete_paper_warning">Deseja deletar a folha? (A imagem também será deletada)</string>
+    <string name="alert_folha_deletada">Folha deletada com sucesso!</string>
+    <string name="alert_caderno_deletado">Caderno deletado com sucesso!</string>
+
+
+    <string name="txt_editar_caderno">Editar</string>
+    <string name="txt_error_file_not_found">Essa imagem está com problema, por favor selecione outra imagem.</string>
+    <string name="txt_mensage_remove_image">A imagem foi removida ou foi movida de lugar, por favor escolha uma nova imagem.</string>
+    <string name="txt_plus">Mais</string>
+
+    <string name="open_drawer">Abrir Navegação</string>
+    <string name="close_drawer">Fechar Navegação</string>
+    <string name="sobre">Sobre</string>
+    <string name="author">Por Marlon Baptista de Quadros</string>
+    <string name="send_to">Compartilhar no...</string>
+    <string name="txt_alterando">Alterando...</string>
+    <string name="txt_msg_email">Você não tem nenhum aplicativo de email instalado.</string>
+    <string name="title_msg_enviar_email">Enviar email...</string>
+    <string name="my_email">marlonbquadros@gmail.com</string>
+    <string name="msg_erro_menu">Tem algo de errado.</string>
+    <string name="alert_no_paper">Esse caderno não possui folhas!</string>
+    <string name="txt_title_async_pdf">Gerando</string>
+    <string name="txt_message_async_pdf">Gerando PDF...</string>
+    <string name="alert_no_pdf_reader">Você não possui leitor de PDF instalado</string>
+    <string name="txt_open_file">Abrir Arquivo</string>
+    <string name="txt_error_pdf_io">Ocorreu um erro ao gerar o PDF</string>
+
+    <string name="txt_meus_cadernos">Meus Cadernos</string>
+    <string name="txt_cancelar">Cancelar</string>
+    <string name="txt_add_folha">Adicionar</string>
+
+    <string name="date_format">dd/MM/yyyy</string>
+    <string name="time_stamp">yyyyMMdd_HHmmss</string>
+    <string name="time_stamp_hour">HH:mm:ss dd/MM/yyyy</string>
+    <string name="txt_date">Data</string>
+    <string name="txt_choice_color">Escolha uma cor.</string>
+    <string name="txt_title_msg">O Titulo não pode estar em branco.</string>
+    <string name="txt_generate_by">Gerado por Flyn Note</string>
+    <string name="txt_summary">Sumário</string>
+
+    <string-array name="list_about">
+        <item>Twitter</item>
+        <item>Recursos de Terceiros</item>
+        <item>Avalie-nos no Google Play</item>
+        <item>Site - http://lab11.info/</item>
+        <item>Github</item>
+    </string-array>
+
+    <string-array name="list_recursos">
+        <item>Joda Time</item>
+        <item>Google Icons</item>
+        <item>Circle Image View</item>
+        <item>iconmonstr</item>
+    </string-array>
+
+
+    <string name="title_activity_notes">Folhas</string>
+    <string name="title_activity_camera">Câmera</string>
+    <string name="title_activity_third_licenses">Recursos de Terceiros</string>
+    <string name="title_activity_criar_caderno">Criar Caderno</string>
+    <string name="title_activity_folha">Folha</string>
+    <string name="title_activity_criar_folha">Adicionar Folha</string>
+    <string name="title_activity_tags">Tags</string>
+    <string name="title_activity_about">Sobre</string>
+    <string name="title_activity_editar_folha">Editar Folha</string>
+    <string name="title_activity_editar_caderno">Editar Caderno</string>
+    <string name="title_activity_icon_picker">Escolha o ícone do caderno</string>
+    <string name="title_activity_search">Pesquisar</string>
+    <string name="title_activity_search_tag">Pesquisar Tag</string>
+    <string name="title_activity_settings">Configurações</string>
+    <string name="title_activity_main">Main</string>
+
+</resources>
