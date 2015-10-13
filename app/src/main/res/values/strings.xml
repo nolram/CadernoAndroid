@@ -79,6 +79,8 @@
     <string-array name="list_about">
         <item>Twitter</item>
         <item>Recursos de Terceiros</item>
+        <item>Avalie-nos no Google Play</item>
+        <item>Site - http://lab11.info/</item>
         <item>Github</item>
     </string-array>
 
@@ -105,23 +107,5 @@
     <string name="title_activity_search_tag">Pesquisar Tag</string>
     <string name="title_activity_settings">Configurações</string>
     <string name="title_activity_main">Main</string>
-
-    <!-- concluir -->
-    <string name="name_activity_notes">NotesActivity</string>
-    <string name="name_activity_camera">CameraActivity</string>
-    <string name="name_activity_third_licenses">ThirdLicencesActivity</string>
-    <string name="name_activity_criar_caderno">CriarCadernoActivity</string>
-    <string name="name_activity_folha">Folha</string>
-    <string name="name_activity_criar_folha">Adicionar Folha</string>
-    <string name="name_activity_tags">Tags</string>
-    <string name="name_activity_about">Sobre</string>
-    <string name="name_activity_editar_folha">Editar Folha</string>
-    <string name="name_activity_editar_caderno">Editar Caderno</string>
-    <string name="name_activity_icon_picker">Escolha o ícone do caderno</string>
-    <string name="name_activity_search">Pesquisar</string>
-    <string name="name_activity_search_tag">Pesquisar Tag</string>
-    <string name="name_activity_settings">Configurações</string>
-    <string name="name_activity_main">Main</string>
-
 
 </resources>

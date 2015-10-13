@@ -68,6 +68,21 @@ public class AboutActivityFragment extends Fragment {
                         break;
 
                     case 2:
+                        final String appPackageName = getActivity().getPackageName();
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                        } catch (android.content.ActivityNotFoundException anfe) {
+                            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                        }
+
+                    case 3:
+                        url = "http://lab11.info/";
+                        i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        startActivity(i);
+                        break;
+
+                    case 4:
                         url = "https://github.com/nolram/";
                         i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
