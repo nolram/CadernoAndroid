@@ -14,7 +14,7 @@
     <string name="tags">Tags</string>
     <string name="txt_tags">Tags - uses , ; . # to split the tags</string>
     <string name="action_search">Search</string>
-    <string name="action_search_hint_caderno">Search notebooks, folha ou tag</string>
+    <string name="action_search_hint_caderno">Search notebooks, leaf or tag</string>
 
     <string name="transition_name_name">transition:NAME</string>
     <string name="transition_color">transition:COLOR</string>
@@ -25,7 +25,7 @@
     <string name="txt_description">Description (Optional)</string>
     <string name="txt_title">Title</string>
     <string name="add_folha">Add Leaf</string>
-    <string name="txt_criar_caderno">Create Notebook</string>
+    <string name="txt_criar_caderno">Create</string>
     <string name="txt_export_to_gallery">Export to gallery</string>
     <string name="txt_gallery">Gallery</string>
     <string name="txt_camera">Camera</string>

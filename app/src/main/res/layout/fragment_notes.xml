@@ -31,13 +31,11 @@
             android:id="@+id/fab_cam"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:layout_anchorGravity="center|top"
             android:layout_gravity="center|top"
             android:layout_marginBottom="82dp"
             app:layout_anchor="@id/fab"
             android:src="@drawable/ic_camera_alt_white_24dp"
-
             app:layout_behavior="com.lab11.nolram.components.ScrollAwareFABBehavior"/>
 
         <android.support.design.widget.FloatingActionButton

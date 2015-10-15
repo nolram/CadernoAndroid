@@ -1,6 +1,7 @@
 package com.lab11.nolram.cadernocamera;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -39,9 +40,14 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -65,7 +71,7 @@ public class CriarFolhaActivityFragment extends Fragment {
     private Button btnCancelar;
     private Button date_chooser;
     private FloatingActionButton btnGetCamera;
-    //private Button btnGetGallery;
+    private FloatingActionButton btnGetGallery;
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsing_toolbar;
     private FolhaDataSource folhaDataSource;
@@ -135,17 +141,34 @@ public class CriarFolhaActivityFragment extends Fragment {
             case RESULT_LOAD_IMAGE:
                 if (resultCode == getActivity().RESULT_OK && null != data) {
                     Uri selectedImage = data.getData();
+                    Log.d("path_gallery", selectedImage.getPath());
+
                     try {
                         int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
-                        Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(
-                                bitmap, screenWidth, 500);
+                        if(isNewGooglePhotosUri(selectedImage)){
+                            selectedImage = getImageUrlWithAuthority(getContext(), selectedImage);
+                        }
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                                getActivity().getContentResolver(), selectedImage);
+                        Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(bitmap,
+                                screenWidth, 500);
                         imgThumb.setImageBitmap(ThumbImage);
-                        mCurrentPhotoPath = getStringFromUri(selectedImage);
+
+                        File f = createImageFile();
+
+                        try {
+                            f.createNewFile();
+                            copyFile(new File(getStringFromUri(selectedImage)), f);
+                            mCurrentPhotoPath = f.getAbsolutePath();
+                            Log.d("path_gallery_copy", mCurrentPhotoPath);
+                        } catch (IOException e) {
+                            mCurrentPhotoPath = "";
+                            e.printStackTrace();
+                        }
                     } catch (FileNotFoundException f) {
                         mCurrentPhotoPath = "";
-                        Toast.makeText(getActivity().getApplicationContext(), getString(
-                                        R.string.txt_error_file_not_found),
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                getString(R.string.txt_error_file_not_found),
                                 Toast.LENGTH_SHORT).show();
                         f.printStackTrace();
                     } catch (IOException e) {
@@ -162,6 +185,37 @@ public class CriarFolhaActivityFragment extends Fragment {
             default:
                 break;
         }
+    }
+
+    public static boolean isNewGooglePhotosUri(Uri uri) {
+        return "com.google.android.apps.photos.contentprovider".equals(uri.getAuthority());
+    }
+
+    public static Uri getImageUrlWithAuthority(Context context, Uri uri) {
+        InputStream is = null;
+        if (uri.getAuthority() != null) {
+            try {
+                is = context.getContentResolver().openInputStream(uri);
+                Bitmap bmp = BitmapFactory.decodeStream(is);
+                return writeToTempImageAndGetPathUri(context, bmp);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }finally {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Uri writeToTempImageAndGetPathUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
 
@@ -197,6 +251,28 @@ public class CriarFolhaActivityFragment extends Fragment {
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
+    }
+
+    private void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!sourceFile.exists()) {
+            return;
+        }
+
+        FileChannel source = null;
+        FileChannel destination = null;
+        source = new FileInputStream(sourceFile).getChannel();
+        destination = new FileOutputStream(destFile).getChannel();
+        if (destination != null && source != null) {
+            destination.transferFrom(source, 0, source.size());
+        }
+        if (source != null) {
+            source.close();
+        }
+        if (destination != null) {
+            destination.close();
+        }
+
+
     }
 
 
@@ -244,7 +320,7 @@ public class CriarFolhaActivityFragment extends Fragment {
         btnCancelar = (Button) view.findViewById(R.id.btn_cancelar);
         btnGetCamera = (FloatingActionButton) view.findViewById(R.id.fab_cam);
         collapsing_toolbar = (CollapsingToolbarLayout) view.findViewById(R.id.collapsing_toolbar);
-        //btnGetGallery = (Button) view.findViewById(R.id.btn_galeria);
+        btnGetGallery = (FloatingActionButton) view.findViewById(R.id.fab_gal);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
 
@@ -288,7 +364,7 @@ public class CriarFolhaActivityFragment extends Fragment {
             }
         });
 
-       /* btnGetGallery.setOnClickListener(new View.OnClickListener() {
+        btnGetGallery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(mCurrentPhotoPath.isEmpty()){
@@ -312,7 +388,7 @@ public class CriarFolhaActivityFragment extends Fragment {
                             .show();
                 }
             }
-        });*/
+        });
 
         btnAddFolha.setOnClickListener(new View.OnClickListener() {
             @Override

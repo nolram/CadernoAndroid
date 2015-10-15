@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.lab11.nolram.Constants;
 
 
 public class SearchTagActivity extends AppCompatActivity {
@@ -16,7 +17,9 @@ public class SearchTagActivity extends AppCompatActivity {
     protected void onStart() {
         // TODO Auto-generated method stub
         super.onStart();
-        GoogleAnalytics.getInstance(SearchTagActivity.this).reportActivityStart(this);
+        if(!Constants.DEBUG) {
+            GoogleAnalytics.getInstance(SearchTagActivity.this).reportActivityStart(this);
+        }
     }
 
 
@@ -24,18 +27,22 @@ public class SearchTagActivity extends AppCompatActivity {
     protected void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        GoogleAnalytics.getInstance(SearchTagActivity.this).reportActivityStop(this);
+        if(!Constants.DEBUG) {
+            GoogleAnalytics.getInstance(SearchTagActivity.this).reportActivityStop(this);
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_tag);
+        if(!Constants.DEBUG) {
         /*  Analytics */
-        Tracker t = ((FlynNoteApp) getApplication()).getTracker(FlynNoteApp.TrackerName.APP_TRACKER);
-        t.setScreenName(SearchTagActivity.class.getName());
-        t.send(new HitBuilders.AppViewBuilder().build());
+            Tracker t = ((FlynNoteApp) getApplication()).getTracker(FlynNoteApp.TrackerName.APP_TRACKER);
+            t.setScreenName(SearchTagActivity.class.getName());
+            t.send(new HitBuilders.AppViewBuilder().build());
         /* Fim Analytics */
+        }
     }
 
 
