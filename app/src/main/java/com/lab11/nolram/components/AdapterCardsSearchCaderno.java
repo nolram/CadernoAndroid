@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ThumbnailUtils;
@@ -151,9 +152,19 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
 
         public ViewHolderCaderno(View v) {
             super(v);
+            Typeface typeTitle= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_title));
+            Typeface typeRest= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_rest));
             mTextView = (TextView) v.findViewById(R.id.txt_descricao);
+            mTextView.setTypeface(typeRest);
+
             mTitleView = (TextView) v.findViewById(R.id.txt_title);
+            mTextView.setTypeface(typeTitle);
+
             mDateView = (TextView) v.findViewById(R.id.txt_modificacao);
+            mDateView.setTypeface(typeRest);
+
             mCor = (ImageView) v.findViewById(R.id.img_cor);
             mBadge = (ImageView) v.findViewById(R.id.img_badge);
         }
@@ -169,11 +180,23 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
 
         public ViewHolderFolha(View v) {
             super(v);
+            Typeface typeTitle= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_title));
+            Typeface typeRest= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_rest));
             mTagView = (TextView) v.findViewById(R.id.txt_tags);
+            mTagView.setTypeface(typeRest);
+
             mTitleView = (TextView) v.findViewById(R.id.txt_title);
+            mTitleView.setTypeface(typeTitle);
+
             mNumPageView = (TextView) v.findViewById(R.id.txt_num_pagina);
+            mNumPageView.setTypeface(typeRest);
+
             mThumbFolhaView = (ImageView) v.findViewById(R.id.img_thumb_folha);
+
             mDate = (TextView) v.findViewById(R.id.txt_data);
+            mDate.setTypeface(typeRest);
         }
     }
 
@@ -183,8 +206,16 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
 
         public ViewHolderTag(View v) {
             super(v);
+            Typeface typeTitle= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_title));
+            Typeface typeRest= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_rest));
+
             mTagView = (TextView) v.findViewById(R.id.txt_label);
+            mTagView.setTypeface(typeTitle);
+
             mContadorView = (TextView) v.findViewById(R.id.txt_contador);
+            mContadorView.setTypeface(typeRest);
         }
     }
 

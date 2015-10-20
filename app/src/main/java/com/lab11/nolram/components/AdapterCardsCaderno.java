@@ -1,6 +1,7 @@
 package com.lab11.nolram.components;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,9 +75,19 @@ public class AdapterCardsCaderno extends RecyclerView.Adapter<AdapterCardsCadern
 
         public ViewHolder(View v) {
             super(v);
+            Typeface typeTitle= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_title));
+            Typeface typeRest= Typeface.createFromAsset(v.getContext().getAssets(),
+                    v.getContext().getString(R.string.type_rest));
             mTextView = (TextView) v.findViewById(R.id.txt_descricao);
+            mTextView.setTypeface(typeRest);
+
             mTitleView = (TextView) v.findViewById(R.id.txt_title);
+            mTitleView.setTypeface(typeTitle);
+
             mDateView = (TextView) v.findViewById(R.id.txt_modificacao);
+            mDateView.setTypeface(typeRest);
+
             mCor = (ImageView) v.findViewById(R.id.img_cor);
             mBadge = (ImageView) v.findViewById(R.id.img_badge);
         }
