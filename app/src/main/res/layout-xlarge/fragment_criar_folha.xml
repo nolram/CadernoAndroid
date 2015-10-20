@@ -120,12 +120,12 @@
                         android:textSize="15sp"
                         android:layout_above="@+id/date_chooser"
                         android:clickable="true"
-                        android:text="Data"/>
+                        android:text="@string/txt_date"/>
 
                     <Button
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:text="Data"
+                        android:text="@string/txt_date"
                         android:textSize="20sp"
                         android:id="@+id/date_chooser"
                         style="@style/SpinnerButtonStyle" />

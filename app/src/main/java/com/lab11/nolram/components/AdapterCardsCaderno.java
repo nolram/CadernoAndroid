@@ -40,7 +40,13 @@ public class AdapterCardsCaderno extends RecyclerView.Adapter<AdapterCardsCadern
     public void onBindViewHolder(ViewHolder holder, int position) {
         Caderno caderno = mDataset.get(position);
         holder.mTitleView.setText(caderno.getTitulo());
-        holder.mTextView.setText(caderno.getDescricao());
+
+        String descricao = caderno.getDescricao();
+        if(descricao.length() > 100){
+            descricao = descricao.substring(0, 99)+"...";
+        }
+
+        holder.mTextView.setText(descricao);
         holder.mDateView.setText(caderno.getUltimaModificacao());
         holder.mCor.setBackgroundColor(mContext.getResources().getColor(mContext.getResources().getIdentifier(
                 caderno.getCorPrincipal(), "drawable", mContext.getPackageName())));

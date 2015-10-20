@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content">
                     <EditText
                         android:layout_width="fill_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="55dp"
                         android:textSize="30sp"
                         android:id="@+id/edtxt_titulo_folha"
                         android:hint="@string/txt_title"/>
@@ -125,7 +125,7 @@
                     <Button
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:text="Data"
+                        android:text="@string/txt_date"
                         android:textSize="20sp"
                         android:id="@+id/date_chooser"
                         style="@style/SpinnerButtonStyle" />

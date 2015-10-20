@@ -33,7 +33,7 @@ public class FolhaDataSource {
             Database.TAG_DA_FOLHA_ID_FOLHA, Database.TAG_DA_FOLHA_ID_TAG};
     public final static String[] ALL_COLORS = {Database.CADERNO_COR_PRINCIPAL,
             Database.CADERNO_COR_SECUNDARIA};
-    private static Context mContext;
+    private Context mContext;
     private SQLiteDatabase database;
     private Database dbHelper;
 
@@ -56,18 +56,6 @@ public class FolhaDataSource {
         final Set<String> copy = new HashSet<>(first);
         copy.retainAll(second);
         return copy;
-    }
-
-    public static Folha cursorToFolhaSemTags(Cursor cursor) {
-        Folha folha = new Folha();
-        folha.setId(cursor.getLong(0));
-        folha.setLocal_folha(cursor.getString(1));
-        folha.setFk_caderno(cursor.getLong(2));
-        folha.setData(cursor.getString(3), mContext.getString(R.string.date_format));
-        folha.setTitulo(cursor.getString(4));
-        //folha.setTags(getAllTagsByFolha(folha.getId()));
-        folha.setContador(cursor.getInt(5));
-        return folha;
     }
 
     public static Tag cursorToTagGroupBy(Cursor cursor) {

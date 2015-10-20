@@ -47,8 +47,14 @@
 
                 <EditText
                     android:layout_width="fill_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="100dp"
                     android:textSize="20sp"
+                    android:inputType="textMultiLine"
+                    android:lines="8"
+                    android:minLines="6"
+                    android:gravity="top|left"
+                    android:maxLines="10"
+                    android:scrollbars="vertical"
                     android:hint="@string/txt_description"
                     android:id="@+id/edtxt_descricao" />
             </android.support.design.widget.TextInputLayout>

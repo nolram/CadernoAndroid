@@ -94,7 +94,13 @@ public class AdapterCardsSearchCaderno extends RecyclerView.Adapter<RecyclerView
             ViewHolderCaderno holderCaderno = (ViewHolderCaderno) holder;
             Caderno caderno = myDataset.get(position).getCaderno();
             holderCaderno.mTitleView.setText(caderno.getTitulo());
-            holderCaderno.mTextView.setText(caderno.getDescricao());
+
+            String descricao = caderno.getDescricao();
+            if(descricao.length() > 100){
+                descricao = descricao.substring(0, 99)+"...";
+            }
+
+            holderCaderno.mTextView.setText(descricao);
             holderCaderno.mDateView.setText(caderno.getUltimaModificacao());
             holderCaderno.mCor.setBackgroundColor(mContext.getResources().getColor(mContext.getResources().getIdentifier(
                     caderno.getCorPrincipal(), "drawable", mContext.getPackageName())));

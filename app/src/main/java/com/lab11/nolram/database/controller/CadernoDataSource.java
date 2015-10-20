@@ -176,12 +176,24 @@ public class CadernoDataSource {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Folha folha = FolhaDataSource.cursorToFolhaSemTags(cursor);
+            Folha folha = cursorToFolhaSemTags(cursor);
             folhas.add(folha);
             cursor.moveToNext();
         }
         cursor.close();
         return folhas;
+    }
+
+    public Folha cursorToFolhaSemTags(Cursor cursor) {
+        Folha folha = new Folha();
+        folha.setId(cursor.getLong(0));
+        folha.setLocal_folha(cursor.getString(1));
+        folha.setFk_caderno(cursor.getLong(2));
+        folha.setData(cursor.getString(3), mContext.getString(R.string.date_format));
+        folha.setTitulo(cursor.getString(4));
+        //folha.setTags(getAllTagsByFolha(folha.getId()));
+        folha.setContador(cursor.getInt(5));
+        return folha;
     }
 
     public List<Tag> getAllTagsGroupBy() {
