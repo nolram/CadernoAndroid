@@ -241,6 +241,9 @@ public class NotesActivityFragment extends Fragment {
         mAdapter.updateAll(folhas);
         mAdapter.notifyDataSetChanged();
 
+        btnAddFolha.show();
+        btnCamera.show();
+        
         super.onResume();
     }
 

@@ -44,6 +44,7 @@ public class MainActivityFragment extends Fragment {
         cadernos = cadernoDataSource.getAllCadernos();
         mAdapter.updateAll(cadernos);
         mAdapter.notifyDataSetChanged();
+        btnCaderno.show();
         super.onResume();
     }
 
