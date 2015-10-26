@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.lab11.nolram.Constants;
 import com.lab11.nolram.components.DatePickerFragment;
 import com.lab11.nolram.components.DeviceDimensionsHelper;
 import com.lab11.nolram.database.Database;
@@ -51,11 +52,14 @@ import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CriarFolhaActivityFragment extends Fragment {
+public class CriarFolhaActivityFragment extends Fragment implements CriarFolhaActivity.Callbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int RESULT_LOAD_IMAGE = 2;
@@ -271,10 +275,7 @@ public class CriarFolhaActivityFragment extends Fragment {
         if (destination != null) {
             destination.close();
         }
-
-
     }
-
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -326,6 +327,20 @@ public class CriarFolhaActivityFragment extends Fragment {
 
         folhaDataSource = new FolhaDataSource(view.getContext());
         folhaDataSource.open();
+
+        /* ShowCase */
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(500); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(),
+                Constants.SHOW_HOW_TO_CREATE_SHEET);
+        sequence.setConfig(config);
+        sequence.addSequenceItem(btnGetGallery, getString(R.string.txt_tut_sheet_gallery),
+                getString(R.string.txt_got_it));
+        sequence.addSequenceItem(btnGetCamera, getString(R.string.txt_tut_sheet_camera),
+                getString(R.string.txt_got_it));
+        sequence.start();
+        /* End */
 
         Bundle bundle = getActivity().getIntent().getExtras();
         fk_caderno = bundle.getLong(Database.FOLHA_FK_CADERNO);
@@ -407,7 +422,7 @@ public class CriarFolhaActivityFragment extends Fragment {
         btnCancelar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                getActivity().onBackPressed();
             }
         });
 
@@ -446,4 +461,12 @@ public class CriarFolhaActivityFragment extends Fragment {
         newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
     }
 
+    @Override
+    public void onBackPressedCallback() {
+        File folha = new File(mCurrentPhotoPath);
+        if(folha.exists()){
+            folha.delete();
+        }
+        Toast.makeText(getContext(), R.string.txt_canceled_add_sheet, Toast.LENGTH_SHORT).show();
+    }
 }

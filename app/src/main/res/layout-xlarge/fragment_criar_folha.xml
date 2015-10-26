@@ -93,7 +93,7 @@
                         android:layout_height="70dp"
                         android:textSize="30sp"
                         android:id="@+id/edtxt_titulo_folha"
-                        android:hint="@string/txt_title"/>
+                        android:hint="@string/txt_title_folha"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout

@@ -12,7 +12,7 @@
     <string name="menu_configuracoes">Configurações</string>
     <string name="menu_contato">Contato</string>
     <string name="tags">Tags</string>
-    <string name="txt_tags">Tags - utlize , ; . # para separar as tags</string>
+    <string name="txt_tags">Tags - utlize , ; . # para separar as tags (Opcional)</string>
     <string name="action_search">Pesquisa</string>
     <string name="action_search_hint_caderno">Procure caderno, folha ou tag</string>
 
@@ -24,6 +24,7 @@
     <string name="txt_cor">Cor</string>
     <string name="txt_description">Descrição (Opcional)</string>
     <string name="txt_title">Título</string>
+    <string name="txt_title_folha">Título</string>
     <string name="add_folha">Adicionar Folha</string>
     <string name="txt_criar_caderno">Criar Caderno</string>
     <string name="txt_export_to_gallery">Exportar para a galeria</string>
@@ -39,7 +40,7 @@
     <string name="alert_attention">Atenção</string>
     <string name="alert_mensage_img">Deseja substituir a imagem atual?</string>
 
-    <string name="alert_empty_img">Tire uma foto!</string>
+    <string name="alert_empty_img">Tire uma foto ou escolha da galeria!</string>
     <string name="txt_edit">Editar</string>
     <string name="txt_delete_paper">Deletar Folha</string>
     <string name="txt_share_paper">Compartilhar Folha</string>
@@ -117,5 +118,23 @@
     <string name="title_activity_search_tag">Pesquisar Tag</string>
     <string name="title_activity_settings">Configurações</string>
     <string name="title_activity_main">Main</string>
+
+    <string name="txt_got_it">ENTENDI</string>
+    <string name="txt_no_notebook">Yeahhhh! Pronto para começar? Clique no botão para criar um novo caderno.</string>
+    <string name="txt_first_camera">Aqui você pode tirar uma foto rapidamente, sem título ou tags. Se você quiser, poderá editar em outro momento.</string>
+    <string name="txt_first_sheet">Se você prefere adicionar um título, tag ou escolher a imagem da galeria, esse é o local.</string>
+
+    <string name="txt_tut_sheet_gallery">Pressione aqui se você quer adicionar uma imagem da sua galeria ou...</string>
+    <string name="txt_tut_sheet_camera">pressione aqui se você quiser tirar uma foto.</string>
+
+    <string name="tut_desc_01">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_02">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_03">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_04">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_05">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_06">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+
+    <string name="txt_canceled_add_sheet">Adicionar folha cancelado!</string>
+    <string name="txt_canceled_edit_sheet">Editar folha cancelado!</string>
 
 </resources>

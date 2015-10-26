@@ -16,4 +16,5 @@
     <dimen name="btn_flat_min_height">36dp</dimen>
     <dimen name="btn_flat_padding">8dp</dimen>
     <dimen name="btn_flat_margin">4dp</dimen>
+    <dimen name="padding_phone">20dp</dimen>
 </resources>

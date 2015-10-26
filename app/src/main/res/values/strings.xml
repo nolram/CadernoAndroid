@@ -12,7 +12,7 @@
     <string name="menu_configuracoes">Settings</string>
     <string name="menu_contato">Contact</string>
     <string name="tags">Tags</string>
-    <string name="txt_tags">Tags - uses , ; . # to split the tags</string>
+    <string name="txt_tags">Tags - uses , ; . # to split the tags (Optional)</string>
     <string name="action_search">Search</string>
     <string name="action_search_hint_caderno">Search notebooks, sheet or tag</string>
 
@@ -24,6 +24,7 @@
     <string name="txt_cor">Color</string>
     <string name="txt_description">Description (Optional)</string>
     <string name="txt_title">Title</string>
+    <string name="txt_title_folha">Title (Optional)</string>
     <string name="add_folha">Add sheet</string>
     <string name="txt_criar_caderno">Create</string>
     <string name="txt_export_to_gallery">Export to gallery</string>
@@ -39,7 +40,7 @@
     <string name="alert_attention">Caution!</string>
     <string name="alert_mensage_img">Do you want to replace the current image?</string>
 
-    <string name="alert_empty_img">Take a picture!</string>
+    <string name="alert_empty_img">Take a picture or choice from gallery!</string>
     <string name="txt_edit">Edit</string>
     <string name="txt_delete_paper">Delete sheet</string>
     <string name="txt_share_paper">Share sheet</string>
@@ -116,8 +117,32 @@
     <string name="title_activity_search_tag">Search Tag</string>
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_main">Main</string>
+    <string name="title_activity_tutorial">Tutorial</string>
 
     <string name="type_title">fonts/Roboto-Medium.ttf</string>
     <string name="type_rest">fonts/RobotoCondensed-Regular.ttf</string>
+    <string name="txt_got_it">GOT IT</string>
+    <string name="txt_no_notebook">Yeahhhh! Ready to start? Click on the button to create a new notebook.</string>
+    <string name="txt_first_camera">Here you can take a quick picture from your camera, without title or tags.
+        You can edit later.</string>
+    <string name="txt_first_sheet">If you prefer, add title, tags or even choice a image from gallery, here it\'s your place.</string>
+
+    <string name="txt_tut_sheet_gallery">Press here if you want add a picture from your gallery or...</string>
+    <string name="txt_tut_sheet_camera">press here to take a picture.</string>
+
+
+    <!-- Necessita de tradução!! -->
+    <string name="tut_desc_01">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_02">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_03">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_04">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_05">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+    <string name="tut_desc_06">Bem vindo ao Flyn Note. Organize suas fotos de estudos de uma forma fácil e rápida.</string>
+
+    <string name="txt_tutorial">Tutorial</string>
+    <string name="txt_skip">Skip</string>
+
+    <string name="txt_canceled_add_sheet">Add sheet canceled!</string>
+    <string name="txt_canceled_edit_sheet">Edit sheet canceled!</string>
 
 </resources>

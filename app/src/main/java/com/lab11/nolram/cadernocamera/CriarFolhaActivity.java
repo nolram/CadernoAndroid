@@ -13,6 +13,9 @@ import com.lab11.nolram.Constants;
 
 public class CriarFolhaActivity extends AppCompatActivity {
 
+    private Callbacks mCallbacks;
+    private CriarFolhaActivityFragment fragment;
+
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
@@ -36,6 +39,11 @@ public class CriarFolhaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_criar_folha);
+
+        fragment = (CriarFolhaActivityFragment) getSupportFragmentManager().findFragmentById(
+                R.id.fragment_criar_folha);
+        mCallbacks = (Callbacks) fragment;
+
         if(!Constants.DEBUG) {
         /*  Analytics */
             Tracker t = ((FlynNoteApp) getApplication()).getTracker(FlynNoteApp.TrackerName.APP_TRACKER);
@@ -60,5 +68,16 @@ public class CriarFolhaActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(mCallbacks != null)
+            mCallbacks.onBackPressedCallback();
+    }
+
+    public interface Callbacks {
+        void onBackPressedCallback();
     }
 }

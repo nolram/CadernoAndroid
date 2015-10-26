@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/intro_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/flatui_sun_flower">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_04_tut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="-60dp"
+            android:paddingEnd="@dimen/padding_phone"
+            android:paddingRight="@dimen/padding_phone"
+            android:paddingStart="@dimen/padding_phone"
+            android:paddingLeft="@dimen/padding_phone"
+            android:layout_gravity="bottom|center"
+            android:src="@drawable/celular_direita" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:orientation="vertical"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:layout_gravity="center"
+                android:textColor="@android:color/white"
+                android:textSize="28sp"/>
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tut_desc_01"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                android:layout_gravity="center"
+                android:maxEms="18"
+                android:textSize="20sp"
+                android:layout_marginTop="15dp"/>
+        </LinearLayout>
+
+
+    </FrameLayout>
+</FrameLayout>

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lab11.nolram.Constants;
 import com.lab11.nolram.components.AdapterCardsCaderno;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.database.Database;
@@ -18,13 +19,13 @@ import com.lab11.nolram.database.model.Caderno;
 
 import java.util.List;
 
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-
-    private final static int QTD_MENUS = 2;
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager linearLayoutManager;
@@ -44,7 +45,7 @@ public class MainActivityFragment extends Fragment {
         cadernos = cadernoDataSource.getAllCadernos();
         mAdapter.updateAll(cadernos);
         mAdapter.notifyDataSetChanged();
-        btnCaderno.show();
+        btnCaderno.show(); // To fix bug
         super.onResume();
     }
 
@@ -79,6 +80,16 @@ public class MainActivityFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
+        if(cadernos.size() == 0) {
+            new MaterialShowcaseView.Builder(getActivity())
+                    .setTarget(btnCaderno)
+                    .setDismissText(R.string.txt_got_it)
+                    .setContentText(R.string.txt_no_notebook)
+                    .singleUse(Constants.SHOW_HOW_TO_MAIN)
+                    .setDelay(500) // optional but starting animations immediately in onCreate can make them choppy
+                    .show();
+        }
+
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(view.getContext(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -92,17 +103,6 @@ public class MainActivityFragment extends Fragment {
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
                         bundle.putString(Database.CADERNO_BADGE, caderno.getBadge());
                         intent.putExtras(bundle);
-
-                        /*ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                                // the context of the activity
-                                getActivity(),
-                                // For each shared element, add to this method a new Pair item,
-                                // which contains the reference of the view we are transitioning *from*,
-                                // and the value of the transitionName attribute
-                                new Pair<View, String>(view.findViewById(R.id.img_cor),
-                                        getString(R.string.transition_color))
-                        );
-                        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());*/
 
                         startActivity(intent);
                     }

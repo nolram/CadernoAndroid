@@ -12,6 +12,9 @@ import com.lab11.nolram.Constants;
 
 public class EditarFolhaActivity extends AppCompatActivity {
 
+    private Callbacks mCallbacks;
+    private EditarFolhaActivityFragment fragment;
+
     @Override
     protected void onStart() {
         // TODO Auto-generated method stub
@@ -35,6 +38,11 @@ public class EditarFolhaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_folha);
+
+        fragment = (EditarFolhaActivityFragment) getSupportFragmentManager().findFragmentById(
+                R.id.fragment_editar_folha);
+        mCallbacks = (Callbacks) fragment;
+
         if(!Constants.DEBUG) {
         /*  Analytics */
             Tracker t = ((FlynNoteApp) getApplication()).getTracker(FlynNoteApp.TrackerName.APP_TRACKER);
@@ -58,5 +66,16 @@ public class EditarFolhaActivity extends AppCompatActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(mCallbacks != null)
+            mCallbacks.onBackPressedCallback();
+    }
+
+    public interface Callbacks {
+        void onBackPressedCallback();
     }
 }

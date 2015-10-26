@@ -45,6 +45,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.lab11.nolram.Constants;
 import com.lab11.nolram.components.AdapterCardsFolha;
 import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
@@ -65,6 +66,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 //import com.melnykov.fab.FloatingActionButton;
 
@@ -243,7 +247,7 @@ public class NotesActivityFragment extends Fragment {
 
         btnAddFolha.show();
         btnCamera.show();
-        
+
         super.onResume();
     }
 
@@ -298,6 +302,22 @@ public class NotesActivityFragment extends Fragment {
                 folhaDataSource);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
+
+        if(folhas.size() == 0) {
+        /* ShowCase */
+            ShowcaseConfig config = new ShowcaseConfig();
+            config.setDelay(500); // half second between each showcase view
+
+            MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(),
+                    Constants.SHOW_HOW_TO_NOTES);
+            sequence.setConfig(config);
+            sequence.addSequenceItem(btnCamera, getString(R.string.txt_first_camera),
+                    getString(R.string.txt_got_it));
+            sequence.addSequenceItem(btnAddFolha, getString(R.string.txt_first_sheet),
+                    getString(R.string.txt_got_it));
+            sequence.start();
+        /* End */
+        }
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mAdapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
