@@ -137,4 +137,6 @@
     <string name="txt_canceled_add_sheet">Adicionar folha cancelado!</string>
     <string name="txt_canceled_edit_sheet">Editar folha cancelado!</string>
 
+    <string name="txt_loading_image">Carregando imagem, por favor aguarde.</string>
+
 </resources>

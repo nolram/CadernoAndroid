@@ -145,4 +145,6 @@
     <string name="txt_canceled_add_sheet">Add sheet canceled!</string>
     <string name="txt_canceled_edit_sheet">Edit sheet canceled!</string>
 
+    <string name="txt_loading_image">Loading picture, please wait.</string>
+
 </resources>

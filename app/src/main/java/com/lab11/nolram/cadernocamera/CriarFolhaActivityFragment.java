@@ -1,6 +1,8 @@
 package com.lab11.nolram.cadernocamera;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -50,7 +53,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
@@ -121,7 +126,7 @@ public class CriarFolhaActivityFragment extends Fragment implements CriarFolhaAc
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_IMAGE_CAPTURE:
-                if (resultCode == getActivity().RESULT_OK) {
+                if (resultCode == Activity.RESULT_OK) {
                     File imgFile = new File(mCurrentPhotoPath);
                     int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
                     if (imgFile.exists()) {
@@ -132,7 +137,7 @@ public class CriarFolhaActivityFragment extends Fragment implements CriarFolhaAc
                     }
                     //Bitmap photo = (Bitmap) data.getExtras().get("data");
                     //saveBitmap(photo);
-                } else if (resultCode == getActivity().RESULT_CANCELED) {
+                } else if (resultCode == Activity.RESULT_CANCELED) {
                     File imgFile = new File(mCurrentPhotoPath);
                     //Log.d("local", mCurrentPhotoPath);
                     if (imgFile.exists()) {
@@ -143,42 +148,11 @@ public class CriarFolhaActivityFragment extends Fragment implements CriarFolhaAc
                 }
                 break;
             case RESULT_LOAD_IMAGE:
-                if (resultCode == getActivity().RESULT_OK && null != data) {
+                if (resultCode == Activity.RESULT_OK && null != data) {
                     Uri selectedImage = data.getData();
                     Log.d("path_gallery", selectedImage.getPath());
-
-                    try {
-                        int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
-                        if(isNewGooglePhotosUri(selectedImage)){
-                            selectedImage = getImageUrlWithAuthority(getContext(), selectedImage);
-                        }
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(
-                                getActivity().getContentResolver(), selectedImage);
-                        Bitmap ThumbImage = ThumbnailUtils.extractThumbnail(bitmap,
-                                screenWidth, 500);
-                        imgThumb.setImageBitmap(ThumbImage);
-
-                        File f = createImageFile();
-
-                        try {
-                            f.createNewFile();
-                            copyFile(new File(getStringFromUri(selectedImage)), f);
-                            mCurrentPhotoPath = f.getAbsolutePath();
-                            Log.d("path_gallery_copy", mCurrentPhotoPath);
-                        } catch (IOException e) {
-                            mCurrentPhotoPath = "";
-                            e.printStackTrace();
-                        }
-                    } catch (FileNotFoundException f) {
-                        mCurrentPhotoPath = "";
-                        Toast.makeText(getActivity().getApplicationContext(),
-                                getString(R.string.txt_error_file_not_found),
-                                Toast.LENGTH_SHORT).show();
-                        f.printStackTrace();
-                    } catch (IOException e) {
-                        mCurrentPhotoPath = "";
-                        e.printStackTrace();
-                    }
+                    WorkerUpdate wU = new WorkerUpdate(getContext());
+                    wU.execute(selectedImage);
                     //File imgFile = new  File(mCurrentPhotoPath);
                     //Log.d("local", mCurrentPhotoPath);
                     //if(imgFile.exists()){
@@ -188,6 +162,60 @@ public class CriarFolhaActivityFragment extends Fragment implements CriarFolhaAc
                 break;
             default:
                 break;
+        }
+    }
+
+    class WorkerUpdate extends AsyncTask<Uri, Void, Void> {
+        ProgressDialog progressDialog;
+        Bitmap ThumbImage;
+
+        public WorkerUpdate(Context context) {
+            progressDialog = new ProgressDialog(context);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setTitle(R.string.txt_loading_image);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Uri... params) {
+            try {
+                Uri selectedImage = params[0];
+                int screenWidth = DeviceDimensionsHelper.getDisplayWidth(getActivity());
+                if(isNewGooglePhotosUri(selectedImage)){
+                    selectedImage = getImageUrlWithAuthority(getContext(), selectedImage);
+                }
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(
+                        getActivity().getContentResolver(), selectedImage);
+                ThumbImage = ThumbnailUtils.extractThumbnail(bitmap,
+                        screenWidth, 500);
+                File f = createImageFile();
+
+                try {
+                    f.createNewFile();
+                    copyFile(new File(getStringFromUri(selectedImage)), f);
+                    mCurrentPhotoPath = f.getAbsolutePath();
+                    Log.d("path_gallery_copy", mCurrentPhotoPath);
+                } catch (IOException e) {
+                    mCurrentPhotoPath = "";
+                    e.printStackTrace();
+                }
+            } catch (FileNotFoundException f) {
+                mCurrentPhotoPath = "";
+                Toast.makeText(getActivity().getApplicationContext(),
+                        getString(R.string.txt_error_file_not_found),
+                        Toast.LENGTH_SHORT).show();
+                f.printStackTrace();
+            } catch (IOException e) {
+                mCurrentPhotoPath = "";
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voidd) {
+            imgThumb.setImageBitmap(ThumbImage);
+            progressDialog.cancel();
         }
     }
 
