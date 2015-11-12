@@ -118,6 +118,7 @@
     <string name="title_activity_search_tag">Pesquisar Tag</string>
     <string name="title_activity_settings">Configurações</string>
     <string name="title_activity_main">Main</string>
+    <string name="title_activity_tutorial">Tutorial</string>
 
     <string name="txt_got_it">ENTENDI</string>
     <string name="txt_no_notebook">Yeahhhh! Pronto para começar? Clique no botão para criar um novo caderno.</string>
@@ -136,7 +137,12 @@
 
     <string name="txt_canceled_add_sheet">Adicionar folha cancelado!</string>
     <string name="txt_canceled_edit_sheet">Editar folha cancelado!</string>
+    <string name="txt_skip">Pular</string>
 
     <string name="txt_loading_image">Carregando imagem, por favor aguarde.</string>
+
+    <string name="type_title">fonts/Roboto-Medium.ttf</string>
+    <string name="type_rest">fonts/RobotoCondensed-Regular.ttf</string>
+    <string name="txt_tutorial">Tutorial</string>
 
 </resources>

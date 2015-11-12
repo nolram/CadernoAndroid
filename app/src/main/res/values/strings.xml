@@ -102,7 +102,7 @@
         <item>iconmonstr</item>
     </string-array>
 
-    <string name="title_activity_notes">Leaves</string>
+    <string name="title_activity_notes">Sheets</string>
     <string name="title_activity_camera">Camera</string>
     <string name="title_activity_third_licenses">Resources</string>
     <string name="title_activity_criar_caderno">Create Notebook</string>
