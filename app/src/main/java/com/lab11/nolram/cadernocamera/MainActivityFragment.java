@@ -32,6 +32,8 @@ public class MainActivityFragment extends Fragment {
     private AdapterCardsCaderno mAdapter;
     private FloatingActionButton btnCaderno;
 
+    private int type_order_by;
+
     private CadernoDataSource cadernoDataSource;
 
     private List<Caderno> cadernos;
@@ -42,9 +44,8 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onResume() {
         cadernoDataSource.open();
-        cadernos.clear();
-        cadernos = cadernoDataSource.getAllCadernos(CadernoDataSource.RECENTES_MODIFICADOS);
-        //mAdapter.updateAll(cadernos);
+        cadernos = cadernoDataSource.getAllCadernos(type_order_by);
+        mAdapter.updateAll(cadernos);
         mAdapter.notifyDataSetChanged();
         btnCaderno.show(); // To fix bug
         super.onResume();
@@ -65,6 +66,8 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
+
+        type_order_by = CadernoDataSource.RECENTES_MODIFICADOS;
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.rec_view_main);
         btnCaderno = (FloatingActionButton) view.findViewById(R.id.fab);
@@ -122,6 +125,7 @@ public class MainActivityFragment extends Fragment {
 
     public void updateList(int tipo_order_by){
         cadernos.clear();
+        type_order_by = tipo_order_by;
         cadernos = cadernoDataSource.getAllCadernos(tipo_order_by);
         mAdapter.updateAll(cadernos);
         mAdapter.notifyDataSetChanged();
