@@ -1,9 +1,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
+
     <item android:id="@+id/search_main"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/action_search"
         app:showAsAction="collapseActionView|ifRoom"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
+
+    <item android:id="@+id/action_sort_notebooks"
+        android:icon="@drawable/ic_sort_white_24dp"
+        android:title="@string/action_sort_notebooks"
+        app:showAsAction="ifRoom" />
+
 </menu>

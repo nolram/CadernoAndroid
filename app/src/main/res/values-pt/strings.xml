@@ -4,8 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_generate_pdf">Gerar PDF</string>
+    <string name="action_sort_notebooks">Ordenar os cadernos</string>
     <string name="txt_teste_card">Descrição do Card</string>
-    <string name="txt_ultima_modificacao">Última Modificação</string>
     <string name="menu_home">Home</string>
     <string name="menu_categorias">Categorias</string>
     <string name="menu_favoritos">Favoritos</string>
@@ -144,5 +144,13 @@
     <string name="type_title">fonts/Roboto-Medium.ttf</string>
     <string name="type_rest">fonts/RobotoCondensed-Regular.ttf</string>
     <string name="txt_tutorial">Tutorial</string>
+    <string name="title_dialog_sort_notebooks">Ordenar por...</string>
+
+
+    <string name="txt_r_last_modification">Última Modificação ↑</string>
+    <string name="txt_l_last_modification">Última Modificação ↓</string>
+    <string name="txt_data_criacao_r">Data de Criação ↑</string>
+    <string name="txt_data_criacao_l">Data de Criação ↓</string>
+    <string name="txt_ordem_alfabetica">Título (A a Z)</string>
 
 </resources>

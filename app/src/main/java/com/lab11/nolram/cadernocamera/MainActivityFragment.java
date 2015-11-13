@@ -42,8 +42,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onResume() {
         cadernoDataSource.open();
-        cadernos = cadernoDataSource.getAllCadernos();
-        mAdapter.updateAll(cadernos);
+        cadernos.clear();
+        cadernos = cadernoDataSource.getAllCadernos(CadernoDataSource.RECENTES_MODIFICADOS);
+        //mAdapter.updateAll(cadernos);
         mAdapter.notifyDataSetChanged();
         btnCaderno.show(); // To fix bug
         super.onResume();
@@ -74,7 +75,7 @@ public class MainActivityFragment extends Fragment {
         cadernoDataSource = new CadernoDataSource(view.getContext());
         cadernoDataSource.open();
 
-        cadernos = cadernoDataSource.getAllCadernos();
+        cadernos = cadernoDataSource.getAllCadernos(CadernoDataSource.RECENTES_MODIFICADOS);
 
         mAdapter = new AdapterCardsCaderno(cadernos, view.getContext());
         mRecyclerView.setAdapter(mAdapter);
@@ -117,5 +118,12 @@ public class MainActivityFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    public void updateList(int tipo_order_by){
+        cadernos.clear();
+        cadernos = cadernoDataSource.getAllCadernos(tipo_order_by);
+        mAdapter.updateAll(cadernos);
+        mAdapter.notifyDataSetChanged();
     }
 }

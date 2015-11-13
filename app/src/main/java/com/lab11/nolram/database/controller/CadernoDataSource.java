@@ -29,6 +29,12 @@ public class CadernoDataSource {
     private Database dbHelper;
     private static Context mContext;
 
+    public static final int RECENTES_MODIFICADOS = 1;
+    public static final int ULTIMOS_MODIFICADOS = 2;
+    public static final int RECENTES_CRIADOS = 3;
+    public static final int ULTIMOS_CRIADOS = 4;
+    public static final int ORDEM_ALFABETICA = 5;
+
     public CadernoDataSource(Context context) {
         mContext = context;
         dbHelper = new Database(context);
@@ -108,11 +114,33 @@ public class CadernoDataSource {
                 + " = " + id, null);
     }
 
-    public List<Caderno> getAllCadernos() {
+    public List<Caderno> getAllCadernos(int sort_type) {
         List<Caderno> cadernos = new ArrayList<Caderno>();
+        String type_order_by = "";
 
-        Cursor cursor = database.query(Database.TABLE_CADERNO,
-                allColumnsCaderno, null, null, null, null, null);
+        switch (sort_type){
+            case RECENTES_MODIFICADOS:
+                type_order_by = Database.CADERNO_ULTIMA_MODIFICACAO + " DESC";
+                break;
+            case ULTIMOS_MODIFICADOS:
+                type_order_by = Database.CADERNO_ULTIMA_MODIFICACAO + " ASC";
+                break;
+            case RECENTES_CRIADOS:
+                type_order_by = Database.CADERNO_DATA + " DESC";
+                break;
+            case ULTIMOS_CRIADOS:
+                type_order_by = Database.CADERNO_DATA + " ASC";
+                break;
+            case ORDEM_ALFABETICA:
+                type_order_by = Database.CADERNO_TITULO + " COLLATE LOCALIZED";
+                break;
+            default:
+                type_order_by = null;
+                break;
+        }
+
+        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno, null, null, null,
+                null, type_order_by);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

@@ -4,8 +4,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_generate_pdf">Generate PDF</string>
+    <string name="action_sort_notebooks">Sort the notebooks</string>
     <string name="txt_teste_card">Description of Card</string>
-    <string name="txt_ultima_modificacao">Last Modification</string>
     <string name="menu_home">Home</string>
     <string name="menu_categorias">Categories</string>
     <string name="menu_favoritos">Favorites</string>
@@ -146,5 +146,13 @@
     <string name="txt_canceled_edit_sheet">Edit sheet canceled!</string>
 
     <string name="txt_loading_image">Loading picture, please wait.</string>
+    <string name="title_dialog_sort_notebooks">Sort...</string>
+
+
+    <string name="txt_r_last_modification">Last Modification ↑</string>
+    <string name="txt_l_last_modification">Last Modification ↓</string>
+    <string name="txt_data_criacao_r">Creation Date ↑</string>
+    <string name="txt_data_criacao_l">Creation Date ↓</string>
+    <string name="txt_ordem_alfabetica">Title (A to Z)</string>
 
 </resources>

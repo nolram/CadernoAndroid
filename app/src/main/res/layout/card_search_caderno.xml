@@ -68,7 +68,7 @@
                 android:layout_marginBottom="20dp"
                 android:textColor="@color/preto"
                 android:id="@+id/txt_modificacao"
-                android:text="@string/txt_ultima_modificacao"/>
+                android:text="@string/txt_r_last_modification"/>
         </LinearLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
