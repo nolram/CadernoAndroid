@@ -24,7 +24,7 @@ public class CadernoDataSource {
     public static final String[] allColumnsCaderno = {Database.CADERNO_ID,
             Database.CADERNO_TITULO, Database.CADERNO_BADGE,
             Database.CADERNO_DESCRICAO, Database.CADERNO_DATA, Database.CADERNO_ULTIMA_MODIFICACAO,
-            Database.CADERNO_COR_PRINCIPAL, Database.CADERNO_COR_SECUNDARIA};
+            Database.CADERNO_COR_PRINCIPAL, Database.CADERNO_COR_SECUNDARIA, Database.CADERNO_ARQUIVADO};
     private SQLiteDatabase database;
     private Database dbHelper;
     private static Context mContext;
@@ -50,6 +50,7 @@ public class CadernoDataSource {
         caderno.setUltimaModificao(cursor.getString(5), mContext.getString(R.string.time_stamp_hour));
         caderno.setCorPrincipal(cursor.getString(6));
         caderno.setCorSecundaria(cursor.getString(7));
+        caderno.setArquivado(cursor.getInt(8) != 0);
         return caderno;
     }
 
@@ -59,23 +60,6 @@ public class CadernoDataSource {
 
     public void close() {
         dbHelper.close();
-    }
-
-    public Caderno criarCadernoERetornar(String titulo, String descricao) {
-        DateTime now = new DateTime();
-        ContentValues values = new ContentValues();
-        values.put(Database.CADERNO_TITULO, titulo);
-        values.put(Database.CADERNO_DESCRICAO, descricao);
-        values.put(Database.CADERNO_DATA, now.toString());
-        values.put(Database.CADERNO_ULTIMA_MODIFICACAO, now.toString());
-
-        long dbInsert = database.insert(Database.TABLE_CADERNO, null, values);
-        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno, Database.CADERNO_ID + " = " + dbInsert,
-                null, null, null, null);
-        cursor.moveToFirst();
-        Caderno caderno = cursorToCaderno(cursor);
-        cursor.close();
-        return caderno;
     }
 
     public void criarCaderno(String titulo, String descricao, String[] cor, String badge) {
@@ -88,6 +72,7 @@ public class CadernoDataSource {
         values.put(Database.CADERNO_COR_PRINCIPAL, cor[0]);
         values.put(Database.CADERNO_COR_SECUNDARIA, cor[1]);
         values.put(Database.CADERNO_BADGE, badge);
+        values.put(Database.CADERNO_ARQUIVADO, 0);
 
         long dbInsert = database.insert(Database.TABLE_CADERNO, null, values);
     }
@@ -107,11 +92,11 @@ public class CadernoDataSource {
                 Database.CADERNO_ID + " = " + id, null);
     }
 
-    public void deleteCaderno(Caderno caderno) {
-        long id = caderno.getId();
-        System.out.println("Comment deleted with id: " + id);
-        database.delete(Database.TABLE_CADERNO, Database.CADERNO_ID
-                + " = " + id, null);
+    public void arquivarCaderno(long id){
+        ContentValues values = new ContentValues();
+        values.put(Database.CADERNO_ARQUIVADO, 1);
+        long dbInsert = database.update(Database.TABLE_CADERNO, values,
+                Database.CADERNO_ID + " = " + id, null);
     }
 
     public List<Caderno> getAllCadernos(int sort_type) {
@@ -139,7 +124,8 @@ public class CadernoDataSource {
                 break;
         }
 
-        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno, null, null, null,
+        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno,
+                Database.CADERNO_ARQUIVADO + " = 0", null, null,
                 null, type_order_by);
 
         cursor.moveToFirst();

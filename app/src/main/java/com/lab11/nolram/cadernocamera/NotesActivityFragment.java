@@ -51,6 +51,7 @@ import com.lab11.nolram.components.BitmapHelper;
 import com.lab11.nolram.components.RecyclerItemClickListener;
 import com.lab11.nolram.components.SimpleItemTouchHelperCallback;
 import com.lab11.nolram.database.Database;
+import com.lab11.nolram.database.controller.CadernoDataSource;
 import com.lab11.nolram.database.controller.FolhaDataSource;
 import com.lab11.nolram.database.model.Folha;
 
@@ -164,6 +165,27 @@ public class NotesActivityFragment extends Fragment {
             intentUpdate.putExtras(bundle);
             startActivityForResult(intentUpdate, UPDATE);
             return true;
+        }else if (id == R.id.action_archive){
+            new AlertDialog.Builder(getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(R.string.alert_attention)
+                    .setMessage(R.string.alert_archive_notebook_warning)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            CadernoDataSource cadernoDataSource = new CadernoDataSource(getContext());
+                            cadernoDataSource.open();
+                            cadernoDataSource.arquivarCaderno(fk_caderno);
+                            cadernoDataSource.close();
+                            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
+                                    R.string.alert_caderno_arquivado), Toast.LENGTH_LONG).show();
+                            getActivity().finish();
+                        }
+
+                    })
+                    .setNegativeButton(R.string.no, null)
+                    .show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -235,8 +257,7 @@ public class NotesActivityFragment extends Fragment {
         folhaDataSource.open();
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
         if (salvarImagem) {
-            Folha folha = folhaDataSource.criarFolhaERetornar(mCurrentPhotoPath, fk_caderno,
-                    "");
+            Folha folha = folhaDataSource.criarFolhaERetornar(mCurrentPhotoPath, fk_caderno, "");
             folhas.add(folha);
             salvarImagem = false;
             mCurrentPhotoPath = "";

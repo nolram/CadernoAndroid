@@ -3,7 +3,6 @@ package com.lab11.nolram.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by nolram on 21/08/15.
@@ -12,6 +11,7 @@ public class Database extends SQLiteOpenHelper {
     public static final String TABLE_CADERNO = "caderno";
     public static final String CADERNO_ID = "_id";
     public static final String CADERNO_TITULO = "caderno_titulo";
+    public static final String CADERNO_ARQUIVADO = "arquivado";
     public static final String CADERNO_BADGE = "badge";
     public static final String CADERNO_COR_PRINCIPAL = "cor";
     public static final String CADERNO_ID_COR_PRINCIPAL = "id_cor";
@@ -52,11 +52,12 @@ public class Database extends SQLiteOpenHelper {
             "FOREIGN KEY (" + TAG_DA_FOLHA_ID_FOLHA + ") REFERENCES " + TABLE_FOLHA + "(" + FOLHA_ID + ") ON DELETE CASCADE," +
             "FOREIGN KEY (" + TAG_DA_FOLHA_ID_TAG + ") REFERENCES " + TABLE_TAG + "(" + TAG_ID +
             ") ON DELETE CASCADE);";//, PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
-    private static int VERSAO = 1;
 
+
+    private static int VERSAO_DB = 2;
 
     public Database(Context context) {
-        super(context, BANCO_DADOS, null, VERSAO);
+        super(context, BANCO_DADOS, null, VERSAO_DB);
         // TODO Auto-generated constructor stub
     }
 
@@ -81,13 +82,9 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w(Database.class.getName(),
-                "Upgrading database from version " + oldVersion + " to "
-                        + newVersion + ", which will destroy all old data");
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CADERNO);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FOLHA);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAG_DA_FOLHA);
-        onCreate(db);
+        switch (oldVersion){
+            case 1:
+                db.execSQL("ALTER TABLE "+TABLE_CADERNO+" ADD COLUMN "+ CADERNO_ARQUIVADO + " BOOLEAN NOT NULL DEFAULT 0");
+        }
     }
 }

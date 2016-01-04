@@ -24,4 +24,8 @@
         android:title="@string/action_imprimir_caderno"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_archive"
+        android:title="@string/action_archive"
+        app:showAsAction="never" />
+
 </menu>

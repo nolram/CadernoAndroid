@@ -10,6 +10,7 @@ import org.joda.time.format.DateTimeFormatter;
 public class Caderno {
     private long id;
     private String titulo;
+    private boolean arquivado;
     private String badge;
     private String descricao;
     private String dataAdicionado;
@@ -99,6 +100,15 @@ public class Caderno {
         //}else {
         //    this.ultimaModificacao = "Atualizado há: " + tmp;
         //}
+    }
+
+
+    public boolean isArquivado() {
+        return arquivado;
+    }
+
+    public void setArquivado(boolean arquivado) {
+        this.arquivado = arquivado;
     }
 
     @Override
