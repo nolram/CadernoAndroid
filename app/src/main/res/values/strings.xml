@@ -157,5 +157,6 @@
     <string name="txt_data_criacao_r">Creation Date ↓</string>
     <string name="txt_data_criacao_l">Creation Date ↑</string>
     <string name="txt_ordem_alfabetica">Title (A to Z)</string>
+    <string name="title_activity_arquivados">ArquivadosActivity</string>
 
 </resources>

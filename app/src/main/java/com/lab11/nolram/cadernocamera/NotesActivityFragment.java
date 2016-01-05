@@ -318,8 +318,7 @@ public class NotesActivityFragment extends Fragment {
 
         folhas = folhaDataSource.getAllFolhas(fk_caderno);
 
-        mAdapter = new AdapterCardsFolha(folhas, view.getContext(),
-                folhaDataSource);
+        mAdapter = new AdapterCardsFolha(folhas, view.getContext(), folhaDataSource);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setHasFixedSize(true);
 
