@@ -8,6 +8,7 @@
     <string name="txt_teste_card">Descrição do Card</string>
     <string name="menu_home">Home</string>
     <string name="menu_categorias">Categorias</string>
+    <string name="menu_arquivo">Arquivo</string>
     <string name="menu_favoritos">Favoritos</string>
     <string name="menu_configuracoes">Configurações</string>
     <string name="menu_contato">Contato</string>
@@ -35,6 +36,7 @@
     <string name="action_delete_caderno">Deletar Caderno</string>
     <string name="action_imprimir_caderno">Imprimir Caderno</string>
     <string name="action_archive">Arquivar</string>
+    <string name="action_unarchive">Desarquivar</string>
 
     <string name="no">Não</string>
     <string name="yes">Sim</string>
@@ -50,9 +52,11 @@
 
     <string name="alert_delete_paper_warning">Deseja deletar a folha? (A imagem também será deletada)</string>
     <string name="alert_archive_notebook_warning">Deseja arquivar o caderno?</string>
+    <string name="alert_unarchive_notebook_warning">Deseja desarquivar o caderno?</string>
     <string name="alert_folha_deletada">Folha deletada com sucesso!</string>
     <string name="alert_caderno_deletado">Caderno deletado com sucesso!</string>
     <string name="alert_caderno_arquivado">Caderno arquivado!</string>
+    <string name="alert_caderno_desarquivado">Caderno desarquivado!</string>
 
 
     <string name="txt_editar_caderno">Editar</string>
@@ -105,7 +109,6 @@
         <item>iconmonstr</item>
     </string-array>
 
-
     <string name="title_activity_notes">Folhas</string>
     <string name="title_activity_camera">Câmera</string>
     <string name="title_activity_third_licenses">Recursos de Terceiros</string>
@@ -122,9 +125,10 @@
     <string name="title_activity_settings">Configurações</string>
     <string name="title_activity_main">Main</string>
     <string name="title_activity_tutorial">Tutorial</string>
+    <string name="title_activity_arquivados">Arquivo</string>
 
     <string name="txt_got_it">ENTENDI</string>
-    <string name="txt_no_notebook">Yeahhhh! Pronto para começar? Clique no botão para criar um novo caderno.</string>
+    <string name="txt_no_notebook">Pronto para começar? Clique no botão para criar um novo caderno.</string>
     <string name="txt_first_camera">Aqui você pode tirar uma foto rapidamente, sem título ou tags. Se você quiser, poderá editar em outro momento.</string>
     <string name="txt_first_sheet">Se você prefere adicionar um título, tag ou escolher a imagem da galeria, esse é o local.</string>
 

@@ -31,6 +31,7 @@ import android.print.pdf.PrintedPdfDocument;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,6 +39,7 @@ import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +91,8 @@ public class NotesActivityFragment extends Fragment {
     private int id_cor_secundaria;
     private String titulo;
     private String badge;
+
+    private boolean arquivado = false;
 
     private Intent intentUpdate;
 
@@ -165,29 +169,61 @@ public class NotesActivityFragment extends Fragment {
             intentUpdate.putExtras(bundle);
             startActivityForResult(intentUpdate, UPDATE);
             return true;
-        }else if (id == R.id.action_archive){
-            new AlertDialog.Builder(getActivity())
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setTitle(R.string.alert_attention)
-                    .setMessage(R.string.alert_archive_notebook_warning)
-                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            CadernoDataSource cadernoDataSource = new CadernoDataSource(getContext());
-                            cadernoDataSource.open();
-                            cadernoDataSource.arquivarCaderno(fk_caderno);
-                            cadernoDataSource.close();
-                            Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
-                                    R.string.alert_caderno_arquivado), Toast.LENGTH_LONG).show();
-                            getActivity().finish();
-                        }
+        }else if (id == R.id.action_archive) {
+            if (!arquivado) {
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(R.drawable.ic_archive_black_24dp)
+                        .setTitle(R.string.alert_attention)
+                        .setMessage(R.string.alert_archive_notebook_warning)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                CadernoDataSource cadernoDataSource = new CadernoDataSource(getContext());
+                                cadernoDataSource.open();
+                                cadernoDataSource.arquivarCaderno(fk_caderno);
+                                cadernoDataSource.close();
+                                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
+                                        R.string.alert_caderno_arquivado), Toast.LENGTH_LONG).show();
+                            }
 
-                    })
-                    .setNegativeButton(R.string.no, null)
-                    .show();
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                arquivado = true;
+            }else{
+                new AlertDialog.Builder(getActivity())
+                        .setIcon(R.drawable.ic_unarchive_black_24dp)
+                        .setTitle(R.string.alert_attention)
+                        .setMessage(R.string.alert_unarchive_notebook_warning)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                CadernoDataSource cadernoDataSource = new CadernoDataSource(getContext());
+                                cadernoDataSource.open();
+                                cadernoDataSource.desarquivarCaderno(fk_caderno);
+                                cadernoDataSource.close();
+                                Toast.makeText(getActivity().getApplicationContext(), getResources().getString(
+                                        R.string.alert_caderno_desarquivado), Toast.LENGTH_LONG).show();
+                            }
+
+                        })
+                        .setNegativeButton(R.string.no, null)
+                        .show();
+                arquivado = false;
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu){
+        MenuItem item = menu.findItem(R.id.action_archive);
+        if(arquivado){
+            item.setTitle(R.string.action_unarchive);
+        }else{
+            item.setTitle(R.string.action_archive);
+        }
     }
 
     @Override
@@ -310,6 +346,10 @@ public class NotesActivityFragment extends Fragment {
             cor_secundaria = getResources().getColor(id_cor_secundaria);
         }
 
+        if(bundle.containsKey(Database.CADERNO_ARQUIVADO)){
+            arquivado = bundle.getBoolean(Database.CADERNO_ARQUIVADO);
+        }
+
         titulo = bundle.getString(Database.CADERNO_TITULO);
         badge = bundle.getString(Database.CADERNO_BADGE);
 
@@ -326,7 +366,6 @@ public class NotesActivityFragment extends Fragment {
         /* ShowCase */
             ShowcaseConfig config = new ShowcaseConfig();
             config.setDelay(500); // half second between each showcase view
-
             MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(getActivity(),
                     Constants.SHOW_HOW_TO_NOTES);
             sequence.setConfig(config);

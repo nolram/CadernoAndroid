@@ -99,6 +99,13 @@ public class CadernoDataSource {
                 Database.CADERNO_ID + " = " + id, null);
     }
 
+    public void desarquivarCaderno(long id){
+        ContentValues values = new ContentValues();
+        values.put(Database.CADERNO_ARQUIVADO, 0);
+        long dbInsert = database.update(Database.TABLE_CADERNO, values,
+                Database.CADERNO_ID + " = " + id, null);
+    }
+
     public List<Caderno> getAllCadernos(int sort_type) {
         List<Caderno> cadernos = new ArrayList<Caderno>();
         String type_order_by = "";
@@ -126,6 +133,45 @@ public class CadernoDataSource {
 
         Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno,
                 Database.CADERNO_ARQUIVADO + " = 0", null, null,
+                null, type_order_by);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Caderno caderno = cursorToCaderno(cursor);
+            cadernos.add(caderno);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return cadernos;
+    }
+
+    public List<Caderno> getAllCadernosArquivados(int sort_type) {
+        List<Caderno> cadernos = new ArrayList<Caderno>();
+        String type_order_by = "";
+
+        switch (sort_type){
+            case RECENTES_MODIFICADOS:
+                type_order_by = Database.CADERNO_ULTIMA_MODIFICACAO + " DESC";
+                break;
+            case ULTIMOS_MODIFICADOS:
+                type_order_by = Database.CADERNO_ULTIMA_MODIFICACAO + " ASC";
+                break;
+            case RECENTES_CRIADOS:
+                type_order_by = Database.CADERNO_DATA + " DESC";
+                break;
+            case ULTIMOS_CRIADOS:
+                type_order_by = Database.CADERNO_DATA + " ASC";
+                break;
+            case ORDEM_ALFABETICA:
+                type_order_by = Database.CADERNO_TITULO + " COLLATE LOCALIZED";
+                break;
+            default:
+                type_order_by = Database.CADERNO_ULTIMA_MODIFICACAO + " DESC";
+                break;
+        }
+
+        Cursor cursor = database.query(Database.TABLE_CADERNO, allColumnsCaderno,
+                Database.CADERNO_ARQUIVADO + " = 1", null, null,
                 null, type_order_by);
 
         cursor.moveToFirst();

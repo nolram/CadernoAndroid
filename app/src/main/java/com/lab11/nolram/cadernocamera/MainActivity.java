@@ -105,6 +105,10 @@ public class MainActivity extends AppCompatActivity{
                         intent = new Intent(MainActivity.this, AboutActivity.class);
                         startActivity(intent);
                         return true;
+                    case R.id.menu_arquivo:
+                        intent = new Intent(MainActivity.this, ArquivadosActivity.class);
+                        startActivity(intent);
+                        return true;
                     default:
                         Toast.makeText(getApplicationContext(), R.string.msg_erro_menu, Toast.LENGTH_SHORT).show();
                         return true;

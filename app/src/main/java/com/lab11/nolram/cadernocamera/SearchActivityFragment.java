@@ -105,6 +105,7 @@ public class SearchActivityFragment extends Fragment {
                             Bundle bundle = new Bundle();
                             Caderno caderno = myDataset.get(position).getCaderno();
                             bundle.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
+                            bundle.putBoolean(Database.CADERNO_ARQUIVADO, caderno.isArquivado());
                             bundle.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
                             bundle.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
                             bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());

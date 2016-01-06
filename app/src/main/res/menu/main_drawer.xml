@@ -7,6 +7,11 @@
             android:icon="@drawable/ic_label_black_24dp"
             android:title="@string/tags" />
         <item
+            android:id="@+id/menu_arquivo"
+            android:checked="false"
+            android:icon="@drawable/ic_archive_black_24dp"
+            android:title="@string/menu_arquivo" />
+        <item
             android:id="@+id/menu_contato"
             android:checked="false"
             android:icon="@drawable/ic_email_black_24dp"

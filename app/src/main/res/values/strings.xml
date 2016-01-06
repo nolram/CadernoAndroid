@@ -8,6 +8,7 @@
     <string name="txt_teste_card">Description of Card</string>
     <string name="menu_home">Home</string>
     <string name="menu_categorias">Categories</string>
+    <string name="menu_arquivo">Archive</string>
     <string name="menu_favoritos">Favorites</string>
     <string name="menu_configuracoes">Settings</string>
     <string name="menu_contato">Contact</string>
@@ -50,9 +51,11 @@
 
     <string name="alert_delete_paper_warning">Do you want delete the sheet? (The image will be deleted too)</string>
     <string name="alert_archive_notebook_warning">Do you want archive the notebook?</string>
+    <string name="alert_unarchive_notebook_warning">Do you want unarchive the notebook?</string>
     <string name="alert_folha_deletada">Sheet deleted!</string>
     <string name="alert_caderno_deletado">Notebook deleted!</string>
     <string name="alert_caderno_arquivado">Notebook archived!</string>
+    <string name="alert_caderno_desarquivado">Notebook unarchived!</string>
 
 
     <string name="txt_editar_caderno">Edit</string>
@@ -121,11 +124,13 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_main">Main</string>
     <string name="title_activity_tutorial">Tutorial</string>
+    <string name="title_activity_arquivados">Archive</string>
+    <string name="action_unarchive">Unarchive</string>
 
     <string name="type_title">fonts/Roboto-Medium.ttf</string>
     <string name="type_rest">fonts/RobotoCondensed-Regular.ttf</string>
     <string name="txt_got_it">GOT IT</string>
-    <string name="txt_no_notebook">Yeahhhh! Ready to start? Click on the button to create a new notebook.</string>
+    <string name="txt_no_notebook">Ready to start? Click on the button to create a new notebook.</string>
     <string name="txt_first_camera">Here you can take a quick picture from your camera, without title or tags.
         You can edit later.</string>
     <string name="txt_first_sheet">If you prefer, add title, tags or even choice a image from gallery, here it\'s your place.</string>
@@ -157,6 +162,5 @@
     <string name="txt_data_criacao_r">Creation Date ↓</string>
     <string name="txt_data_criacao_l">Creation Date ↑</string>
     <string name="txt_ordem_alfabetica">Title (A to Z)</string>
-    <string name="title_activity_arquivados">ArquivadosActivity</string>
 
 </resources>

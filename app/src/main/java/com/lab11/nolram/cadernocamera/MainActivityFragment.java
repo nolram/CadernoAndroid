@@ -148,6 +148,7 @@ public class MainActivityFragment extends Fragment {
                         Bundle bundle = new Bundle();
                         Caderno caderno = cadernos.get(position);
                         bundle.putLong(Database.FOLHA_FK_CADERNO, caderno.getId());
+                        bundle.putBoolean(Database.CADERNO_ARQUIVADO, caderno.isArquivado());
                         bundle.putString(Database.CADERNO_COR_PRINCIPAL, caderno.getCorPrincipal());
                         bundle.putString(Database.CADERNO_COR_SECUNDARIA, caderno.getCorSecundaria());
                         bundle.putString(Database.CADERNO_TITULO, caderno.getTitulo());
