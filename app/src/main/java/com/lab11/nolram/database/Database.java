@@ -2,7 +2,11 @@ package com.lab11.nolram.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.lab11.nolram.Constants;
 
 /**
  * Created by nolram on 21/08/15.
@@ -38,7 +42,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String BANCO_DADOS = "CadernoDatabase.db";
     private static final String CREATE_CADERNO = "CREATE TABLE " + TABLE_CADERNO + "(" + CADERNO_ID + " INTEGER PRIMARY KEY," +
             CADERNO_TITULO + " TEXT," + CADERNO_BADGE + " TEXT NULL," + CADERNO_DESCRICAO + " TEXT NULL," +
-            CADERNO_COR_PRINCIPAL + " TEXT NULL," + CADERNO_COR_SECUNDARIA + " TEXT NULL," +
+            CADERNO_COR_PRINCIPAL + " TEXT NULL," + CADERNO_COR_SECUNDARIA + " TEXT NULL," + CADERNO_ARQUIVADO + " BOOLEAN NOT NULL DEFAULT 0,"+
             CADERNO_DATA + " DATE," + CADERNO_ULTIMA_MODIFICACAO + " DATE);";
     private static final String CREATE_FOLHA = "CREATE TABLE " + TABLE_FOLHA + "(" + FOLHA_ID + " INTEGER PRIMARY KEY, " +
             FOLHA_LOCAL_IMAGEM + " TEXT, " + FOLHA_DATA + " DATE, " + FOLHA_FK_CADERNO + " INTEGER, " +
@@ -54,7 +58,7 @@ public class Database extends SQLiteOpenHelper {
             ") ON DELETE CASCADE);";//, PRIMARY KEY("+TAG_DA_FOLHA_ID_TAG+","+TAG_DA_FOLHA_ID_FOLHA+"));";
 
 
-    private static int VERSAO_DB = 2;
+    private static int VERSAO_DB = 3;
 
     public Database(Context context) {
         super(context, BANCO_DADOS, null, VERSAO_DB);
@@ -85,6 +89,17 @@ public class Database extends SQLiteOpenHelper {
         switch (oldVersion){
             case 1:
                 db.execSQL("ALTER TABLE "+TABLE_CADERNO+" ADD COLUMN "+ CADERNO_ARQUIVADO + " BOOLEAN NOT NULL DEFAULT 0");
+                break;
+            case 2:
+                // Para corrigir a cagada de não criar a coluna para as novas versões do aplicativo
+                try {
+                    db.execSQL("ALTER TABLE " + TABLE_CADERNO + " ADD COLUMN " + CADERNO_ARQUIVADO + " BOOLEAN NOT NULL DEFAULT 0");
+                }catch (SQLiteException sqlException){
+                    if (Constants.DEBUG) {
+                        Log.e("ERRO_DATABASE","Coluna já existente.");
+                    }
+                }
+                break;
         }
     }
 }

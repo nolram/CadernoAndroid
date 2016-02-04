@@ -8,8 +8,8 @@ android {
         applicationId "com.lab11.nolram.cadernocamera"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 7
-        versionName "1.0.5"
+        versionCode 9
+        versionName "1.0.6"
     }
     buildTypes {
         release {
